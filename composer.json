@@ -14,10 +14,10 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "rmzamora/media-bundle": "2.2.*@dev"
+        "rmzamora/media-bundle": "2.2.*@dev",
+        "rz/admin-bundle": "2.2.*@dev"
     },
     "require-dev": {
-        "rz/doctrine-orm-admin-bundle": "2.2.*@dev",
         "rz/formatter-bundle": "2.2.*@dev"
     },
     "autoload": {
