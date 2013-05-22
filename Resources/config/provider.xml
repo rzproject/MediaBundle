@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="rz_media.provider.image.class">Rz\MediaBundle\Provider\ImageProvider</parameter>
+        <parameter key="rz_media.provider.file.class">Rz\MediaBundle\Provider\FileProvider</parameter>
+    </parameters>
+
+    <!--<services>-->
+
+
+        <!--<service id="rz_media.provider.image" class="%rz_media.provider.image.class%">-->
+            <!--<tag name="rz_media.provider" />-->
+            <!--<argument>rz_media.provider.image</argument>-->
+            <!--<argument />-->
+            <!--<argument />-->
+            <!--<argument />-->
+            <!--<argument type="service" id="rz_media.thumbnail.format" />-->
+            <!--<argument />-->
+            <!--<argument />-->
+            <!--<argument />-->
+            <!--<argument type="service" id="rz_media.metadata.proxy" />-->
+
+            <!--<call method="setTemplates">-->
+                <!--<argument type="collection">-->
+                    <!--<argument key='helper_thumbnail'>SonataMediaBundle:Provider:thumbnail.html.twig</argument>-->
+                    <!--<argument key='helper_view'>SonataMediaBundle:Provider:view_image.html.twig</argument>-->
+                <!--</argument>-->
+            <!--</call>-->
+        <!--</service>-->
+
+        <!--<service id="rz_media.provider.file" class="%rz_media.provider.file.class%">-->
+            <!--<tag name="rz_media.provider" />-->
+            <!--<argument>rz_media.provider.file</argument>-->
+            <!--<argument />-->
+            <!--<argument />-->
+            <!--<argument />-->
+            <!--<argument type="service" id="rz_media.thumbnail.format" />-->
+            <!--<argument />-->
+            <!--<argument />-->
+            <!--<argument type="service" id="rz_media.metadata.proxy" />-->
+
+            <!--<call method="setTemplates">-->
+                <!--<argument type="collection">-->
+                    <!--<argument key='helper_thumbnail'>SonataMediaBundle:Provider:thumbnail.html.twig</argument>-->
+                    <!--<argument key='helper_view'>SonataMediaBundle:Provider:view_file.html.twig</argument>-->
+                <!--</argument>-->
+            <!--</call>-->
+        <!--</service>-->
+
+    <!--</services>-->
+</container>

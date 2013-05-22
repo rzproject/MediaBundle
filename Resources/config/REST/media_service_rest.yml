@@ -1,0 +1,9 @@
+rz_media_service_rest:
+    type: rest
+    resource: 'Rz\MediaBundle\Controller\MediaServiceRestController'
+    defaults: { _format: json }
+    name_prefix:  rz_media_service_
+    requirements:
+      _method: POST
+    options:
+        expose: false

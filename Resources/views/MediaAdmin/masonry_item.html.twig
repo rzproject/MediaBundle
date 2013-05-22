@@ -1,0 +1,46 @@
+{% extends 'RzAdminBundle:CRUD:base_list_masonry_item.html.twig' %}
+
+{% block masonry_batch %}{% endblock masonry_batch %}
+
+{% block masonry_action %}
+    {% if (admin.list.has('batch') or admin.list.has('_action')) and not app.request.isXmlHttpRequest %}
+        <div class="row-fluid rz_grid_actions">
+            {% if admin.list.has('batch')  %}
+                {{ block('masonry_media_batch') }}
+            {% endif %}
+
+            {% if admin.list.has('_action') %}
+                {{ block('masonry_media_action') }}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock masonry_action %}
+
+{% block masonry_media_action %}
+    <div class="span6 sonata-ba-list-field sonata-ba-list-field-inline-fields" style="text-align: right">
+        {{ object|render_list_element(admin.list['_action']) }}
+    </div>
+{% endblock masonry_media_action %}
+
+
+{% block masonry_media_batch %}
+<div class="span6 sonata-ba-list-field sonata-ba-list-field-batch">
+    <label>
+        {{ object|render_list_element(admin.list['batch']) }} Delete
+    </label>
+</div>
+{% endblock masonry_media_batch %}
+
+{% block masonry_details_row %}
+    <div class="row-fluid">
+        <div class="span12 sonata-ba-list-field"  objectId="{{ admin.id(object) }}">
+            <a href="{{ admin.generateUrl('edit', {'id' : object|sonata_urlsafeid }) }}">{% thumbnail object, 'admin' with {'width': '100%', 'height': 'auto'} %}</a>
+        </div>
+    </div>
+
+    <div class="row-fluid rz_grid_title rz_grid_items">
+        <div class="span12 sonata-ba-list-field">
+            <a href="{{ admin.generateUrl('edit', {'id' : object|sonata_urlsafeid }) }}">{{ object.name }}</a>
+        </div>
+    </div>
+{% endblock %}

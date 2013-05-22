@@ -1,0 +1,35 @@
+{% extends 'SonataAdminBundle:CRUD:action.html.twig' %}
+
+{% block title %}{{ 'title_select_provider'|trans({}, 'SonataMediaBundle') }}{% endblock %}
+
+{% block content %}
+    {% if app.request.isxmlhttprequest %}
+        <div class="modal-header modal-primary">
+            <button class="close" data-dismiss="modal"><i class="icon-remove-sign"></i></button>
+            {# TODO: add to config #}
+            <h3>Select Media Provider</h3>
+        </div>
+        <div class="modal-body">
+            {{ block('provider_selector') }}
+        </div>
+    {% else %}
+        {{ block('provider_selector') }}
+    {% endif %}
+{% endblock %}
+
+{% block provider_selector %}
+<div class="row-fluid rz-provider-selector">
+    <div class="span12 well sepV_c">
+        <div class="row-fluid offset4 span4">
+            {% for code, provider in providers %}
+                <a class="btn btn-large btn-block btn-{{ rz_str_replace('.', '-', provider.name) }}" href="{{ admin.generateUrl('create', {'provider': provider.name}) }}">{{ provider.name|trans({}, 'SonataMediaBundle') }}</a>
+            {% else %}
+                <div class="alert alert-error">
+                    {{ 'no_provider_available'|trans({}, 'SonataMediaBundle') }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
