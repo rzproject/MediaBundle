@@ -1,13 +1,11 @@
 <?php
 
-
 namespace Rz\MediaBundle\Admin;
 
 use Sonata\MediaBundle\Admin\GalleryHasMediaAdmin as BaseGalleryHasMediaAdmin;
 
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 
 class GalleryHasMediaAdmin extends BaseGalleryHasMediaAdmin
 {

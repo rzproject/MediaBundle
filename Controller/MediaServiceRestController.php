@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request,
 
 use FOS\RestBundle\Controller\FOSRestController;
 
-
 class MediaServiceRestController extends FOSRestController
 {
     protected $admin;
@@ -22,6 +21,7 @@ class MediaServiceRestController extends FOSRestController
     {
         $this->getAdmin();
         $view = $this->fetchMedia($context, 'small');
+
         return $view;
     }
 
@@ -49,7 +49,8 @@ class MediaServiceRestController extends FOSRestController
         return new JsonResponse($result);
     }
 
-    public function getAdmin() {
+    public function getAdmin()
+    {
         $this->admin = $this->container->get('sonata.media.admin.media');
     }
 

@@ -21,6 +21,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $node = $treeBuilder->root('rz_media');
         $this->addBundleSettings($node);
+
         return $treeBuilder;
     }
 

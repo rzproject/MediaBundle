@@ -4,8 +4,6 @@ namespace Rz\MediaBundle\Provider;
 
 use Sonata\MediaBundle\Provider\FileProvider as BaseProvider;
 use Sonata\AdminBundle\Form\FormMapper;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Form\FormBuilder;
 
 class FileProvider extends BaseProvider
 {

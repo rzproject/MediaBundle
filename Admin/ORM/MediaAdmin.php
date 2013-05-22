@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Rz\MediaBundle\Admin\ORM;
 
 use Sonata\MediaBundle\Admin\ORM\MediaAdmin as BaseMediaAdmin;

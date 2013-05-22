@@ -10,6 +10,3 @@
         <parameter key="rz_media.admin.gallery_has_media.class">Rz\MediaBundle\Admin\GalleryHasMediaAdmin</parameter>
     </parameters>
 </container>
-
-
-
