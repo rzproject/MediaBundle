@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the RzMediaBundle package.
+ *
+ * (c) mell m. zamora <mell@rzproject.org>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Rz\MediaBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -26,10 +35,10 @@ class RzMediaExtension extends Extension
         /**
          * TODO: create configuration file
          */
-        $loader->load('services.xml');
         $loader->load('admin_orm.xml');
         $loader->load('orm.xml');
         $loader->load('provider.xml');
+        $loader->load('block.xml');
 
         $this->configureAdminClass($config, $container);
         $this->configureTranslationDomain($config, $container);
