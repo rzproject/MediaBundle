@@ -1,0 +1,20 @@
+{% extends 'SonataBlockBundle:Block:block_base.html.twig' %}
+
+{% block block %}
+    {% if settings.title %}
+        <h3 class="sonata-media-block-media-title">{{ settings.title }}</h3>
+    {% endif %}
+
+    <div class="sonata-media-block-media-container">
+        {% if media %}
+            {% if settings.format is not null %}
+                {% media media, settings.format %}
+            {% else %}
+                {# TODO: fix error temp solution #}
+                {% media media, 'small' %}
+            {% endif %}
+        {% else %}
+            {# no media selected ... #}
+        {% endif %}
+    </div>
+{% endblock %}
