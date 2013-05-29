@@ -129,11 +129,11 @@ class MediaBlockService extends BaseMediaBlockService
 
         if ($media instanceof MediaInterface) {
             $formats = $this->getMediaPool()->getFormatNamesByContext($media->getContext());
-
             foreach ($formats as $code => $format) {
-                $formatChoices[$code] = $code;
+                $formatChoices[$code] = ucwords(preg_replace('/default_/', '', strtolower($code)));
             }
         }
+        $formatChoices = array_merge($formatChoices, array(''=>'Original Size'));
 
         return $formatChoices;
     }
