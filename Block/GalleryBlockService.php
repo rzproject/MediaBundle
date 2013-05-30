@@ -125,6 +125,7 @@ class GalleryBlockService extends BaseGalleryBlockService
         $fieldDescription->setOption('edit', 'list');
         $fieldDescription->setAssociationMapping(array('fieldName' => 'gallery', 'type' => \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_ONE));
 
+        // TODO: add label on config
         $builder = $formMapper->create('galleryId', 'sonata_type_model', array(
             'sonata_field_description' => $fieldDescription,
             'class'             => $this->getGalleryAdmin()->getClass(),
