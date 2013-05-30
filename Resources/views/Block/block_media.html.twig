@@ -7,7 +7,7 @@
 
     <div class="sonata-media-block-media-container">
         {% if media %}
-            {% if settings.format is not null %}
+            {% if settings.format is not null and settings.format != 'reference'%}
                 {% media media, settings.format %}
             {% else %}
                 {# TODO: fix error temp solution #}

@@ -133,7 +133,7 @@ class MediaBlockService extends BaseMediaBlockService
                 $formatChoices[$code] = ucwords(preg_replace('/default_/', '', strtolower($code)));
             }
         }
-        $formatChoices = array_merge($formatChoices, array(''=>'Original Size'));
+        $formatChoices = array_merge($formatChoices, array('reference'=>'Original Size'));
 
         return $formatChoices;
     }
