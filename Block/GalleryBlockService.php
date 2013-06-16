@@ -112,10 +112,10 @@ class GalleryBlockService extends BaseGalleryBlockService
         if ($gallery instanceof GalleryInterface) {
 
             $formats = $this->getMediaPool()->getFormatNamesByContext($gallery->getContext());
-
             foreach ($formats as $code => $format) {
-                $formatChoices[$code] = $code;
+                $formatChoices[$code] = ucwords(preg_replace('/default_/', '', strtolower($code)));
             }
+            $formatChoices = array_merge($formatChoices, array('reference'=>'Original Size'));
         }
 
         // simulate an association ...
