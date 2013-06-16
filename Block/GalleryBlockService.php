@@ -206,10 +206,10 @@ class GalleryBlockService extends BaseGalleryBlockService
     /**
      * {@inheritdoc}
      */
-    public function getJavacripts($media)
+    public function getJavascripts($media)
     {
         return array(
-            '/bundles/rmzamorajquery/jquery-plugins/jquery.nivo.gallery.js'
+            '/bundles/rmzamorajquery/jquery-plugins/nivo-gallery/jquery.nivo.gallery.js'
         );
     }
 
