@@ -199,7 +199,7 @@ class GalleryBlockService extends BaseGalleryBlockService
     public function getStylesheets($media)
     {
         return array(
-            '/bundles/sonatamedia/nivo-gallery/nivo-gallery.css'
+            '/bundles/rmzamorajquery/jquery-plugins/nivo-gallery/nivo-gallery.css'
         );
     }
 
@@ -209,7 +209,7 @@ class GalleryBlockService extends BaseGalleryBlockService
     public function getJavacripts($media)
     {
         return array(
-            '/bundles/sonatamedia/nivo-gallery/jquery.nivo.gallery.js'
+            '/bundles/rmzamorajquery/jquery-plugins/jquery.nivo.gallery.js'
         );
     }
 
