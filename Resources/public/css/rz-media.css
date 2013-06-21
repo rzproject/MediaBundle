@@ -2,6 +2,11 @@
     margin-top: 20px;
 }
 
+.rz-media-provider-selector .nav {
+    margin-bottom: 0px !important;
+    margin-top: 10px !important;
+}
+
 .rz-media-show-format, .rz-media-show-info {
     margin-top: 20px !important;
 }

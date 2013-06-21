@@ -6,14 +6,28 @@
 {% block list_filters_standard %}{% endblock list_filters_standard %}
 
 {% block list_table_standard %}
+    <div class="row-fluid admin-action-buttons">
+        {{ block('media_provider_selector') }}
+        {% if not app.request.isxmlhttprequest %}
+            <div class="span6">
+                {{ block('media_action_buttons') }}
+            </div>
+        {% endif %}
+    </div>
     {{ block('media_filters') }}
     <div class="tabbable tabbable-bordered admin-media-context">
         <ul class="nav nav-tabs tabdrop">
+            {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
+
             {% for name, context in media_pool.contexts %}
                 {% if context.providers|length == 0 %}
                     {% set urlParams = {'context' : name } %}
                 {% else %}
-                    {% set urlParams = {'context' : name, 'provider' : context.providers[0] } %}
+                    {% if providers|length > 1 and persistent_parameters.provider is not null %}
+                        {% set urlParams = {'context' : name, 'provider' : persistent_parameters.provider } %}
+                    {% else %}
+                        {% set urlParams = {'context' : name } %}
+                    {% endif %}
                 {% endif %}
 
                 {% if name == persistent_parameters.context %}
@@ -24,21 +38,13 @@
             {% endfor %}
         </ul>
         <div class="tab-content">
-            <div class="row-fluid admin-action-buttons">
-                {{ block('media_provider_selector') }}
-                {% if not app.request.isxmlhttprequest %}
-                <div class="span6">
-                    {{ block('media_action_buttons') }}
-                </div>
-                {% endif %}
-            </div>
             {{ parent() }}
         </div>
     </div>
 {% endblock list_table_standard %}
 
 {% block media_provider_selector %}
-<div class="{% if not app.request.isxmlhttprequest %}span6{% else %}span12{% endif %}">
+<div class="rz-media-provider-selector {% if not app.request.isxmlhttprequest %}span6{% else %}span12{% endif %}">
     <ul class="nav nav-pills tabdrop">
     {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
     {% if providers|length > 1 %}
