@@ -39,7 +39,7 @@
     </div>
 
     <div class="row-fluid rz_grid_title rz_grid_items">
-        <div class="span12 sonata-ba-list-field">
+        <div class="span12 sonata-ba-list-field" objectId="{{ admin.id(object) }}">
             <a href="{{ admin.generateUrl('edit', {'id' : object|sonata_urlsafeid }) }}">{{ object.name }}</a>
         </div>
     </div>
