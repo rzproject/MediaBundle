@@ -55,7 +55,7 @@ class Configuration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('list')->defaultValue('RzMediaBundle:MediaAdmin:list.html.twig')->cannotBeEmpty()->end()
                                         ->scalarNode('inner_list_row')->defaultValue('RzMediaBundle:MediaAdmin:masonry_item.html.twig')->cannotBeEmpty()->end()
-                                        ->scalarNode('short_object_description')->defaultValue('RzMediaBundle:Helper:short-object-description.html.twig')->cannotBeEmpty()->end()
+                                        //->scalarNode('short_object_description')->defaultValue('RzMediaBundle:Helper:short-object-description.html.twig')->cannotBeEmpty()->end()
                                     ->end()
                                 ->end()
                             ->end()

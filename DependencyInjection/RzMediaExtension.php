@@ -40,6 +40,7 @@ class RzMediaExtension extends Extension
         $loader->load('provider.xml');
         $loader->load('block.xml');
         $loader->load('form.xml');
+        $loader->load('service.xml');
 
 
         $this->configureAdminClass($config, $container);

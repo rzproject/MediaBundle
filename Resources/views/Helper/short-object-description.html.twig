@@ -1,7 +1,7 @@
 {% if admin.hasRoute('edit') and admin.isGranted('EDIT') %}
     <div class="row-fluid">
         <div class="span12">
-            {% media object, 'reference'  with {'class': 'img-polaroid'} %}
+            {% media object, 'small' %}
         </div>
         <div class="span12">
             <a href="{{ admin.generateObjectUrl('edit', object) }}" target="new">{{ description }}</a>
@@ -10,7 +10,7 @@
 {% else %}
     <div class="row-fluid">
         <div class="span12">
-            {% media object, 'reference'  with {'class': 'img-polaroid'} %}
+            {% media object, 'small' %}
         </div>
     </div>
 {% endif %}

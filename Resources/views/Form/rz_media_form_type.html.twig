@@ -6,7 +6,7 @@
                 <div class="row-fluid">
                     <div id="field_widget_{{ id }}" class="span12 field-short-description dummy-image-container">
                         {% if sonata_admin.field_description.associationadmin.id(sonata_admin.value) %}
-                            {% render url('sonata_admin_short_object_information',{
+                            {% render url('rz_media_short_object_information',{
                             'code':     sonata_admin.field_description.associationadmin.code,
                             'objectId': sonata_admin.field_description.associationadmin.id(sonata_admin.value),
                             'uniqid':   sonata_admin.field_description.associationadmin.uniqid
@@ -64,5 +64,5 @@
         <div class="modal hide fade  sonata-ba-modal sonata-ba-modal-edit-one-to-one" data-backdrop="static" id="field_dialog_{{ id }}" aria-hidden="false"></div>
     </div>
 
-    {% include 'SonataDoctrineORMAdminBundle:CRUD:edit_orm_many_association_script.html.twig' %}
+    {% include 'RzMediaBundle:CRUD:edit_orm_many_association_script.html.twig' %}
 {% endblock %}
