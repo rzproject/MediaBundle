@@ -39,11 +39,20 @@ class RzMediaExtension extends Extension
         $loader->load('orm.xml');
         $loader->load('provider.xml');
         $loader->load('block.xml');
+        $loader->load('form.xml');
+
 
         $this->configureAdminClass($config, $container);
         $this->configureTranslationDomain($config, $container);
         $this->configureController($config, $container);
         $this->configureRzTemplates($config, $container);
+
+        // merge RzFieldTypeBundle to RzAdminBundle
+        $container->setParameter('twig.form.resources',
+                                 array_merge(
+                                     $container->getParameter('twig.form.resources'),
+                                     array('RzMediaBundle:Form:rz_media_form_type.html.twig')
+                                 ));
     }
 
     /**
