@@ -15,6 +15,37 @@ class MediaImageTypeList extends AbstractType
     protected $modelManager;
     protected $class;
 
+
+    /**
+     * {@inheritDoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+        ->resetViewTransformers()
+        ->addViewTransformer(new ModelToIdTransformer($options['model_manager'], $options['class']));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        if (isset($view->vars['sonata_admin'])) {
+            // set the correct edit mode
+            $view->vars['sonata_admin']['edit'] = 'list';
+        }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getParent()
+    {
+        return 'text';
+    }
+
     public function __construct($modelManager, $class) {
         $this->modelManager = $modelManager;
         $this->class = $class;
@@ -30,15 +61,6 @@ class MediaImageTypeList extends AbstractType
                            'class'             => $this->class,
                            'parent'            => 'text',
         ));
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getParent()
-    {
-        return 'sonata_type_model_list';
     }
 
     /**
