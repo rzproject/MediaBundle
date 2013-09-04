@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="rz_media.manager.media.class">Rz\MediaBundle\Entity\MediaManager</parameter>
+        <parameter key="rz_media.manager.category.class">Sonata\NewsBundle\Entity\CategoryManager</parameter>
     </parameters>
 
     <services>
@@ -13,6 +14,11 @@
             <argument type="service" id="sonata.media.pool" />
             <argument type="service" id="sonata.media.entity_manager" />
             <argument>%sonata.media.media.class%</argument>
+        </service>
+
+        <service id="rz_media.manager.category" class="%rz_media.manager.category.class%">
+            <argument type="service" id="sonata.media.entity_manager" />
+            <argument>%rz_media.manager.category.class%</argument>
         </service>
     </services>
 

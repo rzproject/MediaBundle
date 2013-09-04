@@ -30,7 +30,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $node = $treeBuilder->root('rz_media');
         $this->addBundleSettings($node);
-
+        $this->addModelSection($node);
         return $treeBuilder;
     }
 
@@ -88,8 +88,42 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
+                        ->arrayNode('category')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('class')->cannotBeEmpty()->defaultValue('Rz\\MediaBundle\\Admin\\CategoryAdmin')->end()
+                                ->scalarNode('controller')->cannotBeEmpty()->defaultValue('SonataAdminBundle:CRUD')->end()
+                                ->scalarNode('translation')->cannotBeEmpty()->defaultValue('SonataMediaBundle')->end()
+                                ->arrayNode('templates')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('list')->defaultValue('SonataAdminBundle:CRUD:list.html.twig')->cannotBeEmpty()->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end();
+    }
+
+        /**
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addModelSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('class')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('media')->defaultValue('Application\\Sonata\\MediaBundle\\Entity\\Media')->end()
+                        ->scalarNode('gallery')->defaultValue('Application\\Sonata\\MediaBundle\\Entity\\Gallery')->end()
+                        ->scalarNode('gallery_has_media')->defaultValue('Application\\Sonata\\MediaBundle\\Entity\\GalleryHasMedia')->end()
+                        ->scalarNode('category')->defaultValue('Application\\Sonata\\MediaBundle\\Entity\\Category')->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 }

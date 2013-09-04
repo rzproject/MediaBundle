@@ -15,6 +15,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\Config\Definition\Processor;
+use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
+
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -43,6 +49,7 @@ class RzMediaExtension extends Extension
         $loader->load('service.xml');
 
 
+        $this->configureParameterClass($container, $config);
         $this->configureAdminClass($config, $container);
         $this->configureTranslationDomain($config, $container);
         $this->configureController($config, $container);
@@ -54,6 +61,8 @@ class RzMediaExtension extends Extension
                                      $container->getParameter('twig.form.resources'),
                                      array('RzMediaBundle:Form:rz_media_form_type.html.twig')
                                  ));
+
+        $this->registerDoctrineMapping($config);
     }
 
     /**
@@ -67,6 +76,8 @@ class RzMediaExtension extends Extension
         $container->setParameter('sonata.media.admin.media.class', $config['admin']['media']['class']);
         $container->setParameter('sonata.media.admin.gallery.class', $config['admin']['gallery']['class']);
         $container->setParameter('sonata.media.admin.gallery_has_media.class', $config['admin']['gallery_has_media']['class']);
+
+        $container->setParameter('rz_media.admin.category.class', $config['admin']['category']['class']);
     }
 
     /**
@@ -80,6 +91,8 @@ class RzMediaExtension extends Extension
         $container->setParameter('sonata.media.admin.media.translation_domain', $config['admin']['media']['translation']);
         $container->setParameter('sonata.media.admin.gallery.translation_domain', $config['admin']['gallery']['translation']);
         $container->setParameter('sonata.media.admin.gallery_has_media.translation_domain', $config['admin']['gallery_has_media']['translation']);
+
+        $container->setParameter('rz_media.admin.category.translation_domain', $config['admin']['category']['translation']);
     }
 
     /**
@@ -93,6 +106,8 @@ class RzMediaExtension extends Extension
         $container->setParameter('sonata.media.admin.media.controller', $config['admin']['media']['controller']);
         $container->setParameter('sonata.media.admin.gallery.controller', $config['admin']['gallery']['controller']);
         $container->setParameter('sonata.media.admin.gallery_has_media.controller', $config['admin']['gallery_has_media']['controller']);
+
+        $container->setParameter('rz_media.admin.category.controller', $config['admin']['category']['controller']);
     }
 
     /**
@@ -106,5 +121,105 @@ class RzMediaExtension extends Extension
         $container->setParameter('rz_media.configuration.media.templates', $config['admin']['media']['templates']);
         $container->setParameter('rz_media.configuration.gallery.templates', $config['admin']['gallery']['templates']);
         $container->setParameter('rz_media.configuration.gallery_has_media.templates', $config['admin']['gallery_has_media']['templates']);
+
+        $container->setParameter('rz_media.configuration.category.templates', $config['admin']['category']['templates']);
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param array                                                   $config
+     */
+    public function configureParameterClass(ContainerBuilder $container, array $config)
+    {
+        $container->setParameter('sonata.media.admin.media.entity', $config['class']['media']);
+        $container->setParameter('sonata.media.admin.gallery.entity', $config['class']['gallery']);
+        $container->setParameter('sonata.media.admin.gallery_has_media.entity', $config['class']['gallery_has_media']);
+
+        $container->setParameter('rz_media.admin.category.entity', $config['class']['category']);
+
+        $container->setParameter('sonata.media.media.class', $config['class']['media']);
+        $container->setParameter('sonata.media.gallery.class', $config['class']['gallery']);
+//        $container->getDefinition('sonata.media.form.type.media')->replaceArgument(1, $config['class']['media']);
+
+        $container->setParameter('rz_media.category.class', $config['class']['category']);
+    }
+
+    /**
+     * @param array $config
+     *
+     * @return void
+     */
+    public function registerDoctrineMapping(array $config)
+    {
+        $collector = DoctrineCollector::getInstance();
+
+        $collector->addAssociation($config['class']['gallery'], 'mapManyToOne', array(
+            'fieldName' => 'image',
+            'targetEntity' => $config['class']['media'],
+            'cascade' =>
+            array(
+                0 => 'remove',
+                1 => 'persist',
+                2 => 'refresh',
+                3 => 'merge',
+                4 => 'detach',
+            ),
+            'mappedBy' => NULL,
+            'inversedBy' => NULL,
+            'joinColumns' =>
+            array(
+                array(
+                    'name' => 'image_id',
+                    'referencedColumnName' => 'id',
+                ),
+            ),
+            'orphanRemoval' => false,
+        ));
+
+        $collector->addAssociation($config['class']['gallery'], 'mapManyToOne', array(
+            'fieldName' => 'category',
+            'targetEntity' => $config['class']['category'],
+            'cascade' =>
+            array(
+                0 => 'remove',
+                1 => 'persist',
+                2 => 'refresh',
+                3 => 'merge',
+                4 => 'detach',
+            ),
+            'mappedBy' => NULL,
+            'inversedBy' => NULL,
+            'joinColumns' =>
+            array(
+                array(
+                    'name' => 'category_id',
+                    'referencedColumnName' => 'id',
+                ),
+            ),
+            'orphanRemoval' => false,
+        ));
+
+        $collector->addAssociation($config['class']['media'], 'mapManyToOne', array(
+            'fieldName' => 'category',
+            'targetEntity' => $config['class']['category'],
+            'cascade' =>
+            array(
+                0 => 'remove',
+                1 => 'persist',
+                2 => 'refresh',
+                3 => 'merge',
+                4 => 'detach',
+            ),
+            'mappedBy' => NULL,
+            'inversedBy' => NULL,
+            'joinColumns' =>
+            array(
+                array(
+                    'name' => 'category_id',
+                    'referencedColumnName' => 'id',
+                ),
+            ),
+            'orphanRemoval' => false,
+        ));
     }
 }
