@@ -69,7 +69,7 @@ abstract class Category implements CategoryInterface
      */
     public function setSlug($slug)
     {
-        $this->slug = Tag::slugify($slug);
+        $this->slug = $slug;
     }
 
     /**

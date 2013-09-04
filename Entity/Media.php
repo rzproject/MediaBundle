@@ -6,7 +6,7 @@ use Sonata\MediaBundle\Entity\BaseMedia;
 
 abstract class Media extends BaseMedia
 {
-        protected $category;
+     protected $category;
 
     /**
      * @param mixed $category
