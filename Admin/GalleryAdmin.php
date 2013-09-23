@@ -41,14 +41,20 @@ class GalleryAdmin extends BaseGalleryAdmin
         }
 
         $formMapper
-            ->with('Details')
+            ->with('Settings')
                 ->add('context', 'sonata_type_translatable_choice', array(
                     'choices' => $contexts,
                     'catalogue' => 'SonataMediaBundle'
                 ))
                 ->add('enabled', null, array('required' => false))
-                ->add('name')
                 ->add('defaultFormat', 'choice', array('choices' => $formats))
+                ->add('name')
+            ->end()
+            ->with('Details')
+                ->add('category', 'sonata_type_model_list',array('required' => false, 'attr'=>array('class'=>'span8')))
+                ->add('image', 'sonata_type_model_list',array('required' => false, 'attr'=>array('class'=>'span8')))
+                ->add('abstract')
+                ->add('content', 'rz_ckeditor', array('required' => false))
             ->end()
             ->with('Assets')
                 ->add('galleryHasMedias', 'sonata_type_collection', array(
