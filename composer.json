@@ -28,7 +28,7 @@
     "target-dir": "Rz/MediaBundle",
     "extra": {
         "branch-alias": {
-            "dev-2.3.0": "2.3.0.x-dev"
+            "dev-2.3.0": "2.3.0.1.x-dev"
         }
     }
 }
