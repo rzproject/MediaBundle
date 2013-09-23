@@ -14,9 +14,9 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "rmzamora/media-bundle": "2.3.*@dev",
-        "rz/admin-bundle": "2.3.*@dev",
-        "rz/doctrine-orm-admin-bundle": "2.3.*@dev",
+        "rmzamora/media-bundle": "2.3.0.1",
+        "rz/admin-bundle": "2.3.0.*@dev",
+        "rz/doctrine-orm-admin-bundle": "2.3.0.*@dev",
         "stof/doctrine-extensions-bundle": "1.1.*"
     },
     "require-dev": {
