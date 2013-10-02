@@ -1,11 +1,12 @@
 {% extends 'RzAdminBundle:CRUD:base_list_masonry.html.twig' %}
 
 
-{% block actions %}{% endblock %}
+
 {% block preview %}{% endblock %}
 {% block list_filters_standard %}{% endblock list_filters_standard %}
 
 {% block list_table_standard %}
+<div class="rz-gallery-container{% if app.request.isxmlhttprequest %} rz-gallery-container-modal{% endif %}">
     {{ block('media_provider_selector') }}
     <div class="box box-color box-bordered">
         <div class="box-title">
@@ -26,7 +27,96 @@
             {% set batchactions = admin.batchactions %}
             <div class="tab-content nopadding tab-content-inline tab-content-bottom">
                 <div class="tab-pane active" id="data">
-                    {{ parent() }}
+                    <div {% if not app.request.isxmlhttprequest %}class="rz-admin-list-main-data"{% endif %}>
+                        {% if admin.hasRoute('batch') %}
+                        <form action="{{ admin.generateUrl('batch', {'filter': admin.filterParameters}) }}" method="POST" class="rz-datagird-form rz-masonry">
+                            {% endif %}
+                            {% if not app.request.isxmlhttprequest %}
+                                <div class="rz-admin-list-main-data-toolbar">
+                                    <a href="#"
+                                       class="btn"
+                                       id="rz-admin-list-settings-batch-action-trigger"
+                                       title="Action"
+                                       data-toggle="popover"
+                                       data-trigger="click"
+                                            {% if batchactions|length > 0  %}
+                                        {% block table_batch %}
+                                            data-content="{% include admin.getTemplate('rz_list_table_batch') %}"
+                                        {% endblock table_batch %}
+                                            {% endif %}>
+                                        <i class="icon-wrench"></i><span class="hidden-phone hidden-tablet visible-desktop">Action</span>
+                                    </a>
+                                    <a href="#"
+                                       class="btn"
+                                       id="rz-admin-list-settings-download-action-trigger"
+                                       title="Export"
+                                       data-toggle="popover"
+                                       data-trigger="click"
+                                            {% if admin.hasRoute('export') and admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
+                                        {% block table_download %}
+                                            data-content="{% include admin.getTemplate('rz_list_table_download') %}"
+                                        {% endblock  table_download %}
+                                            {% endif %}>
+                                        <i class="icon-download-alt"></i><span class="hidden-phone hidden-tablet visible-desktop">Export</span>
+                                    </a>
+                                    <a href="#"
+                                       class="btn"
+                                       id="rz-admin-list-settings-per-page-action-trigger"
+                                       title="Per Page"
+                                       data-toggle="popover"
+                                       data-trigger="click"
+                                            {% if admin.hasRoute('export') and admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
+                                        {% block  table_per_page %}
+                                            data-content="{% include admin.getTemplate('rz_list_table_per_page') %}"
+                                        {% endblock  table_per_page %}
+                                            {% endif %}>
+                                        <i class="icon-list-ol"></i><span class="hidden-phone hidden-tablet visible-desktop">Pager</span>
+                                    </a>
+                                </div>
+                            {% endif %}
+                            <ul class="nav nav-tabs tabdrop rz-tablinks rz-media-context-selector{% if app.request.isxmlhttprequest %} rz-media-context-selector-modal{% endif %}">
+                                {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
+
+                                {% for name, context in media_pool.contexts %}
+                                    {% if context.providers|length == 0 %}
+                                        {% set urlParams = {'context' : name } %}
+                                    {% else %}
+                                        {% if providers|length > 1 and persistent_parameters.provider is not null %}
+                                            {% set urlParams = {'context' : name, 'provider' : persistent_parameters.provider } %}
+                                        {% else %}
+                                            {% set urlParams = {'context' : name } %}
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if name == persistent_parameters.context %}
+                                        <li class="active{% if loop.first %} rz-media-first-context{% endif %}"><a href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, 'SonataMediaBundle') }}</a></li>
+                                    {% else %}
+                                        <li><a {% if loop.first %}class="rz-media-first-context" {% endif %}href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, 'SonataMediaBundle') }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            {% if admin.datagrid.results|length > 0 %}
+                                <div class="rz-masonry-container">
+                                    <div class="rz-masonry-gallery" data-masonry-options="{ 'isFitWidth': true }">
+                                        {% for object in admin.datagrid.results %}
+                                            {% include admin.getTemplate('inner_list_row') %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="rz-admin-list-no-result rz-masonry-container {% if not app.request.isxmlhttprequest %}rz-admin-list-no-result-container{% endif %}">
+                                    <div class="alert">
+                                        <strong>{{ 'no_result'|trans({}, 'SonataAdminBundle') }}</strong>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if not app.request.isxmlhttprequest %}
+                                {{   block('list_settings') }}
+                            {% endif %}
+                            {% if admin.hasRoute('batch') %}
+                        </form>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="tab-pane" id="filter">
                     {{ block('media_filters')}}
@@ -34,11 +124,12 @@
             </div>
         </div>
     </div>
+</div>
 {% endblock list_table_standard %}
 
 {% block media_provider_selector %}
 <div class="rz-media-provider-selector{% if app.request.isxmlhttprequest %} rz-media-provider-selector-modal{% endif %}">
-    <ul class="nav nav-pills tabdrop">
+    <ul class="nav nav-tabs rz-tablinks tabdrop">
     {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
     {% if providers|length > 1 %}
         {% if not persistent_parameters.provider %}
@@ -83,7 +174,7 @@
  {% if admin.datagrid.filters %}
      <form class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }} form-vertical form-bordered" action="{{ admin.generateUrl('list') }}" method="GET">
          {% for filter in admin.datagrid.filters %}
-             <div class="control-group formSepH_pa formSepV_pc" id="filter_{{ filter.name }}_row">
+             <div class="control-group" id="filter_{{ filter.name }}_row">
                  <div class="row-fluid">
                      <div class="span3">
                          <label class="control-label">{{ admin.trans(filter.label) }}</label>

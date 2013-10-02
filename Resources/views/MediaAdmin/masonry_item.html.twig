@@ -31,6 +31,13 @@
 </div>
 {% endblock masonry_media_batch %}
 
+
+{% block masonry_container %}
+    <div class="rz-gallery-item sonata-ba-list-field" objectId="{{ admin.id(object) }}">
+        {{ block('masonry_details_row') }}
+    </div>
+{% endblock masonry_container %}
+
 {% block masonry_details_row %}
     <a href="{{ admin.generateUrl('edit', {'id' : object|sonata_urlsafeid }) }}">
         {% thumbnail object, 'reference' with {'style':'max-width:200px;', 'height': 'auto'} %}
