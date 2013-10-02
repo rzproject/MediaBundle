@@ -6,45 +6,38 @@
 {% block list_filters_standard %}{% endblock list_filters_standard %}
 
 {% block list_table_standard %}
-    <div class="row-fluid admin-action-buttons">
-        {{ block('media_provider_selector') }}
-        {% if not app.request.isxmlhttprequest %}
-            <div class="span6">
-                {{ block('media_action_buttons') }}
+    {{ block('media_provider_selector') }}
+    <div class="box box-color box-bordered">
+        <div class="box-title">
+            <h3>
+                <i class="icon-film"></i>
+                {# TODO: set on configuration #}
+            </h3>
+            <ul class="tabs">
+                <li class="active">
+                    <a href="#data" class="filter admin-ajax-ignore-tabbable" data-toggle="tab"><i class="icon-list-ul"></i></a>
+                </li>
+                <li>
+                    <a href="#filter" class="filter admin-ajax-ignore-tabbable" data-toggle="tab"><i class="icon-search"></i></a>
+                </li>
+            </ul>
+        </div>
+        <div class="box-content nopadding">
+            {% set batchactions = admin.batchactions %}
+            <div class="tab-content nopadding tab-content-inline tab-content-bottom">
+                <div class="tab-pane active" id="data">
+                    {{ parent() }}
+                </div>
+                <div class="tab-pane" id="filter">
+                    {{ block('media_filters')}}
+                </div>
             </div>
-        {% endif %}
-    </div>
-    {{ block('media_filters') }}
-    <div class="tabbable tabbable-bordered admin-media-context">
-        <ul class="nav nav-tabs tabdrop">
-            {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
-
-            {% for name, context in media_pool.contexts %}
-                {% if context.providers|length == 0 %}
-                    {% set urlParams = {'context' : name } %}
-                {% else %}
-                    {% if providers|length > 1 and persistent_parameters.provider is not null %}
-                        {% set urlParams = {'context' : name, 'provider' : persistent_parameters.provider } %}
-                    {% else %}
-                        {% set urlParams = {'context' : name } %}
-                    {% endif %}
-                {% endif %}
-
-                {% if name == persistent_parameters.context %}
-                    <li class="active"><a href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, 'SonataMediaBundle') }}</a></li>
-                {% else %}
-                    <li><a href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, 'SonataMediaBundle') }}</a></li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-        <div class="tab-content">
-            {{ parent() }}
         </div>
     </div>
 {% endblock list_table_standard %}
 
 {% block media_provider_selector %}
-<div class="rz-media-provider-selector {% if not app.request.isxmlhttprequest %}span6{% else %}span12{% endif %}">
+<div class="rz-media-provider-selector{% if app.request.isxmlhttprequest %} rz-media-provider-selector-modal{% endif %}">
     <ul class="nav nav-pills tabdrop">
     {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
     {% if providers|length > 1 %}
@@ -88,50 +81,34 @@
 
 {% block media_filters %}
  {% if admin.datagrid.filters %}
-     <div class="collapse admin-filter{% if app.request.isxmlhttprequest %} admin-filter-ajax{% else %} in{% endif %}" id="admin-filter">
-         <div class="row-fluid">
-             <div class="span12 admin-filter-content sonata-ba-filter">
-                 <div class="widget-title">
-                    <span class="icon">
-                        <i class="micon-search"></i>
-                    </span>
-                     {# TODO: add label to configuration #}
-                     <h5>Filter</h5>
-                     <a {% if app.request.isxmlhttprequest %}class="admin-ajax-ignore-event" {% endif %}href="#rz-page-slider-modal" data-toggle="collapse" data-target="#admin-filter"><i class="icon-remove-sign icon-large"></i></a>
-                 </div>
-                 <div class="widget-content nopadding">
-                     <form class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}" action="{{ admin.generateUrl('list') }}" method="GET">
-                         {% for filter in admin.datagrid.filters %}
-                             <div class="control-group formSepH_pa formSepV_pc" id="filter_{{ filter.name }}_row">
-                                 <div class="row-fluid">
-                                     <div class="span3">
-                                         <label class="control-label">{{ admin.trans(filter.label) }}</label>
-                                     </div>
-                                     <div class="span3">
-                                         <div class="controls">
-                                             {{ form_widget(form.children[filter.formName].children['type']) }}
-                                         </div>
-                                     </div>
-                                     <div class="span6">
-                                         <div class="controls">
-                                             {{ form_widget(form.children[filter.formName].children['value']) }}
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
-                         {% endfor %}
-
-                         <input type="hidden" name="filter[_page]" id="filter__page" value="1" />
-                         {% set foo = form.children['_page'].setRendered() %}
-                         {{ form_rest(form) }}
-                         <div class="form-actions formSepH_pa formSepV_pc">
-                             <a class="btn btn-danger pull-right" href="{{ admin.generateUrl('list') }}">{{ 'link_reset_filter'|trans({}, 'SonataAdminBundle') }}</a>
-                             <input type="submit" class="btn btn-success pull-right sepV_a" value="{{ 'btn_filter'|trans({}, 'SonataAdminBundle') }}" value="{{ 'btn_filter'|trans({}, 'SonataAdminBundle') }}" />
+     <form class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }} form-vertical form-bordered" action="{{ admin.generateUrl('list') }}" method="GET">
+         {% for filter in admin.datagrid.filters %}
+             <div class="control-group formSepH_pa formSepV_pc" id="filter_{{ filter.name }}_row">
+                 <div class="row-fluid">
+                     <div class="span3">
+                         <label class="control-label">{{ admin.trans(filter.label) }}</label>
+                     </div>
+                     <div class="span3">
+                         <div class="controls">
+                             {{ form_widget(form.children[filter.formName].children['type']) }}
                          </div>
-                     </form>
+                     </div>
+                     <div class="span6">
+                         <div class="controls">
+                             {{ form_widget(form.children[filter.formName].children['value']) }}
+                         </div>
+                     </div>
                  </div>
              </div>
+         {% endfor %}
+
+         <input type="hidden" name="filter[_page]" id="filter__page" value="1" />
+         {% set foo = form.children['_page'].setRendered() %}
+         {{ form_rest(form) }}
+         <div class="form-actions">
+             <a class="btn btn-primary pull-right rz-admin-filter-reset-button" href="{{ admin.generateUrl('list') }}"><i class="icon-undo"></i> {{ 'link_reset_filter'|trans({}, 'SonataAdminBundle') }}</a>
+             <button type="submit" class="btn btn-primary pull-right" value="{{ 'btn_filter'|trans({}, 'SonataAdminBundle') }}"><i class="icon-search"></i> {{ 'btn_filter'|trans({}, 'SonataAdminBundle') }}</button>
          </div>
-     </div>
+     </form>
  {% endif %}
 {% endblock media_filters %}
