@@ -38,7 +38,7 @@ class HelperController extends BaseHelperController
      */
     public function getShortObjectDescriptionAction(Request $request)
     {
-        $code     = $request->get('code');
+         $code     = $request->get('code');
         $objectId = $request->get('objectId');
         $uniqid   = $request->get('uniqid');
 
@@ -57,25 +57,22 @@ class HelperController extends BaseHelperController
         $object = $admin->getObject($objectId);
 
         if (!$object) {
-            return new Response();
+            throw new NotFoundHttpException();
         }
 
-        $description = 'no description available';
-        foreach (array('getAdminTitle', 'getTitle', 'getName', '__toString') as $method) {
-            if (method_exists($object, $method)) {
-                $description = call_user_func(array($object, $method));
-                break;
-            }
+        if ('json' == $request->get('_format')) {
+            return new JsonResponse(array('result' => array(
+                'id'    => $admin->id($object),
+                'label' => $admin->toString($object)
+            )));
+        } elseif ('html' == $request->get('_format')) {
+            return new Response($this->twig->render('RzMediaBundle:Helper:short-object-description.html.twig', array(
+                'admin'       => $admin,
+                'description' => $admin->toString($object),
+                'object'      => $object,
+            )));
+        } else {
+            throw new \RuntimeException('Invalid format');
         }
-
-        $htmlOutput = $this->twig->render('RzMediaBundle:Helper:short-object-description.html.twig',
-            array(
-                'admin' => $admin,
-                'description' => $description,
-                'object' => $object,
-            )
-        );
-
-        return new Response($htmlOutput);
     }
 }

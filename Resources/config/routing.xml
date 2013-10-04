@@ -6,5 +6,7 @@
 
     <route id="rz_media_short_object_information" path="/core/rz-media-get-short-object-description">
         <default key="_controller">rz_media.controller.admin_helper:getShortObjectDescriptionAction</default>
+        <default key="_format">html</default>
+        <requirement key="_format">html|json</requirement>
     </route>
 </routes>
