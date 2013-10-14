@@ -30,6 +30,7 @@
                     <div {% if not app.request.isxmlhttprequest %}class="rz-admin-list-main-data"{% endif %}>
                         {% if admin.hasRoute('batch') %}
                         <form action="{{ admin.generateUrl('batch', {'filter': admin.filterParameters}) }}" method="POST" class="rz-datagird-form rz-masonry">
+                            <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}" />
                             {% endif %}
                             {% if not app.request.isxmlhttprequest %}
                                 <div class="rz-admin-list-main-data-toolbar">

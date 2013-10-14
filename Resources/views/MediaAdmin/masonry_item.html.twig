@@ -45,8 +45,10 @@
     <div class="extras">
         <div class="extras-inner">
             <span class="batch">{{ object|render_list_element(admin.list['batch']) }}</span>
-            <a href="{{ admin.generateUrl('edit', {'id' : object|sonata_urlsafeid }) }}"><i class="icon-pencil"></i></a>
+            <a href="{{ admin.generateUrl('edit', {'id' : object|sonata_urlsafeid }) }}">{% if not app.request.isxmlhttprequest %}<i class="icon-pencil"></i>{% else %}<i class="icon-ok"></i>{% endif %}</a>
+            {% if not app.request.isxmlhttprequest %}
             <a href="{{ admin.generateUrl('delete', {'id' : object|sonata_urlsafeid }) }}" class='del-gallery-pic'><i class="icon-trash"></i></a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

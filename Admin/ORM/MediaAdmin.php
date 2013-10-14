@@ -61,9 +61,13 @@ class MediaAdmin extends BaseMediaAdmin
         }
 
         $filters = $this->getRequest()->query->get('filter');
-        $context   = $filters? $filters['context']['value'] :$this->getRequest()->get('context', $this->pool->getDefaultContext());
+//        $context   = $filters? $filters['context']['value'] :$this->getRequest()->get('context', $this->pool->getDefaultContext());
+//        $providers = $this->pool->getProvidersByContext($context);
+//        $provider  = $filters ? $filters['providerName']['value'] : $this->getRequest()->get('provider');
+
+        $context   = $this->getRequest()->get('context', $this->pool->getDefaultContext());
         $providers = $this->pool->getProvidersByContext($context);
-        $provider  = $filters ? $filters['providerName']['value'] : $this->getRequest()->get('provider');
+        $provider  = $this->getRequest()->get('provider');
 
         // if the context has only one provider, set it into the request
         // so the intermediate provider selection is skipped
