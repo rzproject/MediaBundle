@@ -8,19 +8,5 @@
         <parameter key="rz_media.admin.media.class">Rz\MediaBundle\Admin\ORM\MediaAdmin</parameter>
         <parameter key="rz_media.admin.gallery.class">Rz\MediaBundle\Admin\GalleryAdmin</parameter>
         <parameter key="rz_media.admin.gallery_has_media.class">Rz\MediaBundle\Admin\GalleryHasMediaAdmin</parameter>
-        <parameter key="rz_media.admin.category.class">Rz\MediaBundle\Admin\CategoryAdmin</parameter>
     </parameters>
-
-    <services>
-        <service id="rz_media.admin.category" class="%rz_media.admin.category.class%">
-            <tag name="sonata.admin" manager_type="orm" group="sonata_media" label="Categories"  label_catalogue="%rz_media.admin.category.translation_domain%" label_translator_strategy="sonata.admin.label.strategy.underscore" />
-            <argument />
-            <argument>%rz_media.admin.category.entity%</argument>
-            <argument>%rz_media.admin.category.controller%</argument>
-
-            <call method="setTranslationDomain">
-                <argument>%rz_media.admin.category.translation_domain%</argument>
-            </call>
-        </service>
-    </services>
 </container>
