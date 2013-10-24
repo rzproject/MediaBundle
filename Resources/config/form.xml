@@ -9,6 +9,12 @@
             <argument>%sonata.media.media.class%</argument>
             <tag name="form.type" alias="rz_type_media_image_list" />
         </service>
+
+        <service id="rz_media.form.type.media" class="Rz\MediaBundle\Form\Type\MediaType">
+            <tag name="form.type_extension" alias="sonata_media_type" />
+            <argument type="service" id="sonata.media.pool" />
+            <argument />
+        </service>
     </services>
 
 </container>
