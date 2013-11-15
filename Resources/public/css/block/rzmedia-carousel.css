@@ -1,0 +1,13 @@
+.rz-media-image {
+    width: 100%;
+    max-height: 400px;
+}
+
+.rz-media-carousel-control {
+    height: 45px;
+    width: 45px;
+    -webkit-border-radius: 45px;
+    -moz-border-radius: 45px;
+    border-radius: 45px;
+    background-color: #2a2a2a;
+}

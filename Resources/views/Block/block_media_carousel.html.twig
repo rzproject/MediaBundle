@@ -1,0 +1,55 @@
+{% extends 'SonataBlockBundle:Block:block_base.html.twig' %}
+
+{% block block %}
+    {% if settings.format %}
+        {% if settings.title %}
+            <h3 class="sonata-media-block-media-title">{{ settings.title }}</h3>
+        {% endif %}
+        <!-- starts carousel -->
+        <div class="container-fluid fullwidthbanner-container">
+            <div class="row-fluid animated fadeInDown">
+                <div id="rz-media-carousel-{{ block.id }}" class="rz-media-carousel carousel slide">
+                    <!-- carousel items -->
+                    <div class="carousel-inner">
+                        {% for element in elements %}
+                        <!-- slide -->
+                        <div class="{% if loop.first %}active {% endif %}item">
+                            <div class="row-fluid">
+                                <div class="span12" data-type="{{ element.type }}" data-title="{{ element.title }}" data-caption="{{ element.caption }}">
+                                    {% if element.type == 'image' %}
+                                        <img src="{%  path element.media, 'reference' %}" class="rz-media-image">
+                                    {#{% elseif element.type == 'video' %}#}
+                                        {#{% media element.media, settings.format %}#}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                            {# no elements #}
+                        {% endfor %}
+                        <!-- Carousel nav -->
+                        <a class="carousel-control left rz-media-carousel-control" href="#rz-media-carousel-{{ block.id }}" data-slide="prev">&lsaquo;</a>
+                        <a class="carousel-control right rz-media-carousel-control" href="#rz-media-carousel-{{ block.id }}" data-slide="next">&rsaquo;</a>
+                    </div>
+                    <!-- end carousel items -->
+                </div>
+            </div>
+        </div><!-- end carousel -->
+
+        <script type="text/javascript">
+            jQuery(document).ready(function () {
+                rzmediacarousel.interval = {{ settings.interval }};
+                rzmediacarousel.pause = {{ settings.interval }};
+                rzmediacarousel.init();
+            });
+        </script>
+    {% else %}
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <p>Carousel settings is not yet set.</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
