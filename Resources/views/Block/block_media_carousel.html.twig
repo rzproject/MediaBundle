@@ -7,40 +7,88 @@
         {% endif %}
         <!-- starts carousel -->
         <div class="container-fluid fullwidthbanner-container">
-            <div class="row-fluid animated fadeInDown">
+            <div class="row-fluid">
                 <div id="rz-media-carousel-{{ block.id }}" class="rz-media-carousel carousel slide">
-                    <!-- carousel items -->
-                    <div class="carousel-inner">
+                    <ul class="bxslider rz-media-carousel">
                         {% for element in elements %}
-                        <!-- slide -->
-                        <div class="{% if loop.first %}active {% endif %}item">
-                            <div class="row-fluid">
-                                <div class="span12" data-type="{{ element.type }}" data-title="{{ element.title }}" data-caption="{{ element.caption }}">
-                                    {% if element.type == 'image' %}
-                                        <img src="{%  path element.media, 'reference' %}" class="rz-media-image">
-                                    {#{% elseif element.type == 'video' %}#}
-                                        {#{% media element.media, settings.format %}#}
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
+                            <li>
+                                {% if element.type == 'image' %}
+                                    <img src="{%  path element.media, 'reference' %}" class="rz-media-image">
+                                {% elseif element.type == 'video' %}
+                                    {% media element.media, settings.format %}
+                                {% endif %}
+                            </li>
                         {% else %}
                             {# no elements #}
                         {% endfor %}
-                        <!-- Carousel nav -->
-                        <a class="carousel-control left rz-media-carousel-control" href="#rz-media-carousel-{{ block.id }}" data-slide="prev">&lsaquo;</a>
-                        <a class="carousel-control right rz-media-carousel-control" href="#rz-media-carousel-{{ block.id }}" data-slide="next">&rsaquo;</a>
-                    </div>
-                    <!-- end carousel items -->
+                    </ul>
                 </div>
             </div>
         </div><!-- end carousel -->
 
         <script type="text/javascript">
             jQuery(document).ready(function () {
-                rzmediacarousel.interval = {{ settings.interval }};
-                rzmediacarousel.pause = {{ settings.interval }};
+                var settings = {};
+
+                {#settings.mode = '{{ settings.mode }}';#}
+                {#settings.speed = {{ settings.speed }};#}
+                {#settings.slideMargin = {{ settings.slideMargin }};#}
+                {#settings.startSlide = {{ settings.startSlide }};#}
+                {#settings.randomStart = {% if settings.randomStart %}true{% else %}false{% endif %};#}
+                {#settings.slideSelector = '{{ settings.slideSelector }}';#}
+                {#settings.infiniteLoop = {% if settings.infiniteLoop %}true{% else %}false{% endif %};#}
+                {#settings.hideControlOnEnd = {% if settings.hideControlOnEnd %}true{% else %}false{% endif %};#}
+                {#settings.easing = '{{ settings.easing }}';#}
+                {#settings.captions = {% if settings.captions %}true{% else %}false{% endif %};#}
+                {#settings.ticker = {% if settings.ticker %}true{% else %}false{% endif %};#}
+                {#settings.tickerHover = {% if settings.tickerHover %}true{% else %}false{% endif %};#}
+                {#settings.adaptiveHeight = {% if settings.adaptiveHeight %}true{% else %}false{% endif %};#}
+                {#settings.adaptiveHeightSpeed = {{ settings.adaptiveHeightSpeed }};#}
+                {#settings.video = {% if settings.video %}true{% else %}false{% endif %};#}
+                {#settings.responsive = {% if settings.responsive %}true{% else %}false{% endif %};#}
+                {#settings.useCSS = {% if settings.useCSS %}true{% else %}false{% endif %};#}
+                {#settings.preloadImages = '{{ settings.preloadImages }}';#}
+                {#settings.touchEnabled = {% if settings.touchEnabled %}true{% else %}false{% endif %};#}
+                {#settings.swipeThreshold = {{ settings.swipeThreshold }};#}
+                {#settings.oneToOneTouch = {% if settings.oneToOneTouch %}true{% else %}false{% endif %};#}
+                {#settings.preventDefaultSwipeX = {% if settings.preventDefaultSwipeX %}true{% else %}false{% endif %};#}
+                {#settings.preventDefaultSwipeY = {% if settings.preventDefaultSwipeY %}true{% else %}false{% endif %};#}
+                {#settings.pager = {% if settings.pager %}true{% else %}false{% endif %};#}
+                {#settings.pagerType = '{{ settings.pagerType }}';#}
+                {#settings.pagerShortSeparator = '{{ settings.pagerShortSeparator }}';#}
+                {#settings.pagerSelector = '{{ settings.pagerSelector }}';#}
+                {#settings.pagerCustom = {% if settings.pagerCustom %}{{ settings.pagerCustom }}{% else %}null{% endif %};#}
+                {#settings.buildPager = {% if settings.buildPager %}{{ settings.buildPager }}{% else %}null{% endif %};#}
+                {#settings.controls = {% if settings.controls %}true{% else %}false{% endif %};#}
+                {#settings.nextText = '{{ settings.nextText }}';#}
+                {#settings.prevText = '{{ settings.nextText }}';#}
+                {#settings.nextSelector = {% if settings.nextSelector %}{{ settings.nextSelector }}{% else %}null{% endif %};#}
+                {#settings.prevSelector = {% if settings.prevSelector %}{{ settings.prevSelector }}{% else %}null{% endif %};#}
+                {#settings.autoControls = {% if settings.autoControls %}true{% else %}false{% endif %};#}
+                {#settings.startText = '{{ settings.startText }}';#}
+                {#settings.stopText = '{{ settings.stopText }}';#}
+                {#settings.autoControlsCombine = {% if settings.autoControlsCombine %}true{% else %}false{% endif %};#}
+                {#settings.autoControlsSelector = {% if settings.autoControlsSelector %}true{% else %}false{% endif %};#}
+                {#settings.auto = {% if settings.auto %}true{% else %}false{% endif %};#}
+                {#settings.pause = {{ settings.pause }};#}
+                {#settings.autoStart = {% if settings.autoStart %}true{% else %}false{% endif %};#}
+                {#settings.autoDirection = '{{ settings.autoDirection }}';#}
+                {#settings.autoHover = {% if settings.autoHover %}true{% else %}false{% endif %};#}
+                {#settings.autoDelay = {{ settings.autoDelay }};#}
+                {#settings.minSlides = {{ settings.minSlides }};#}
+                {#settings.maxSlides = {{ settings.maxSlides }};#}
+                {#settings.moveSlides = {{ settings.moveSlides }};#}
+                {#settings.slideWidth = {{ settings.slideWidth }};#}
+
+                {#console.log(settings);#}
+                {#rzmediacarousel.settings = settings;#}
                 rzmediacarousel.init();
+
+
+                //listen to trigger events
+                jQuery('body').on('css-class-changed-remove', function(){
+                    rzmediacarousel.reload();
+                });
             });
         </script>
     {% else %}

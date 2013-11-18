@@ -1,19 +1,33 @@
 var rzmediacarousel = {
-
-    interval: 5000,
-    pause: 'hover',
-
+    settings: null,
+    instance: null,
     init:function(){
         rzmediacarousel.initCarousel();
     },
 
     initCarousel: function() {
-        if(jQuery(".rz-media-carousel").length > 0){
-            console.log('rommel');
-            jQuery(".rz-media-carousel").carousel({
-                interval: rzmediacarousel.interval,
-                pause: rzmediacarousel.interval
+        if(jQuery(".bxslider").length > 0){
+            rzmediacarousel.instance = jQuery(".bxslider").bxSlider({
+                minSlides: 0,
+                maxSlides: 1,
+                slideMargin: 0,
+                video: true,
+                adaptiveHeight: true,
+                auto: true,
+                autoHover: true
             });
         }
+    },
+
+    reload: function() {
+        rzmediacarousel.instance.reloadSlider({
+            minSlides: 0,
+            maxSlides: 1,
+            slideMargin: 0,
+            video: true,
+            adaptiveHeight: true,
+            auto: true,
+            autoHover: true
+        });
     }
 }

@@ -105,7 +105,7 @@ class MediaCarouselBlockService extends BaseBlockService
                                    'easing' => 'ease',
                                    'captions' => false,
                                    'ticker' => false,
-                                   'tickerHover' => false,
+                                   'tickerHover', false,
                                    'adaptiveHeight' => true,
                                    'adaptiveHeightSpeed' => 500,
                                    'video' => true,
@@ -144,7 +144,7 @@ class MediaCarouselBlockService extends BaseBlockService
                                    'moveSlides' => 0,
                                    'slideWidth' => 0,
                                    'template'  => 'RzMediaBundle:Block:block_media_carousel.html.twig',
-                                   'galleryId'    => false
+                                   'galleryId' => false
                                ));
     }
 
@@ -196,6 +196,72 @@ class MediaCarouselBlockService extends BaseBlockService
                                            array('mode', 'choice', array(
                                                'choices'   => array('horizontal' => 'horizontal', 'vertical' => 'vertical')
                                            )),
+                                           array('slideMargin', 'number', array('attr'=>array('class'=>'span3'))),
+                                           array('startSlide', 'number', array('attr'=>array('class'=>'span3'))),
+                                           array('randomStart', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('slideSelector', 'text', array('attr'=>array('class'=>'span8'))),
+                                           array('infiniteLoop', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('hideControlOnEnd', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('infiniteLoop', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('easing', 'choice', array(
+                                               'choices'   => array('linear' => 'linear',
+                                                                    'ease' => 'ease',
+                                                                    'ease-in' => 'ease-in',
+                                                                    'ease-out' => 'ease-out',
+                                                                    'ease-in-out' => 'ease-in-out'
+
+                                               ))),
+                                           array('infiniteLoop', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('easing', 'choice', array(
+                                               'choices'   => array('hover' => 'Hover', 'click' => 'Click')
+                                           )),
+                                           array('captions', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('ticker', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('tickerHover', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('adaptiveHeight', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('adaptiveHeightSpeed', 'number', array('attr'=>array('class'=>'span3'))),
+                                           array('video', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('responsive', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('useCSS', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('preloadImages', 'choice', array(
+                                               'choices'   => array('all' => 'all', 'visible' => 'visible')
+                                           )),
+                                           array('touchEnabled', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('swipeThreshold', 'number', array('attr'=>array('class'=>'span3'))),
+                                           array('oneToOneTouch', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('preventDefaultSwipeX', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('preventDefaultSwipeY', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('pager', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('pagerType', 'choice', array(
+                                               'choices'   => array('full' => 'full', 'short' => 'short')
+
+                                           )),
+                                           array('pagerShortSeparator', 'choice', array(
+                                               'choices'   => array('/' => '/')
+                                           )),
+                                           array('pagerSelector', 'text', array('attr'=>array('class'=>'span8'))),
+                                           //array('pagerCustom', 'text', array('attr'=>array('class'=>'span8'))),
+                                           //array('buildPager', 'text', array('attr'=>array('class'=>'span8'))),
+                                           array('controls', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('nextText', 'text', array('attr'=>array('class'=>'span8'))),
+                                           array('prevText', 'text', array('attr'=>array('class'=>'span8'))),
+                                           array('nextSelector', 'text', array('attr'=>array('class'=>'span8'))),
+                                           array('prevSelector', 'text', array('attr'=>array('class'=>'span8'))),
+                                           array('autoControls', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('startText', 'text', array('attr'=>array('class'=>'span8'))),
+                                           array('stopText', 'text', array('attr'=>array('class'=>'span8'))),
+                                           array('autoControlsCombine', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('autoControlsSelector', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('auto', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('pause', 'number', array('attr'=>array('class'=>'span3'))),
+                                           array('autoStart', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('autoDirection', 'text', array('attr'=>array('class'=>'span3'))),
+                                           array('autoHover', 'checkbox', array('attr'=>array('class'=>'span3'))),
+                                           array('autoDelay', 'number', array('attr'=>array('class'=>'span3'))),
+                                           array('minSlides', 'number', array('attr'=>array('class'=>'span3'))),
+                                           array('maxSlides', 'number', array('attr'=>array('class'=>'span3'))),
+                                           array('moveSlides', 'number', array('attr'=>array('class'=>'span3'))),
+                                           array('slideWidth', 'number', array('attr'=>array('class'=>'span3'))),
                                        )
                                    ));
     }
