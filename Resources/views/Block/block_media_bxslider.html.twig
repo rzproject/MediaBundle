@@ -8,7 +8,7 @@
         <!-- starts carousel -->
         <div class="container-fluid fullwidthbanner-container">
             <div class="row-fluid">
-                <div id="rz-media-carousel-{{ block.id }}" class="rz-media-carousel carousel slide">
+                <div id="rz-media-bxslider-{{ block.id }}" class="rz-media-bxslider">
                     <ul class="bxslider rz-media-carousel">
                         {% for element in elements %}
                             <li>
@@ -82,20 +82,42 @@
 
                 {#console.log(settings);#}
                 {#rzmediacarousel.settings = settings;#}
-                rzmediacarousel.init();
 
+                //dynamic load of js files during frontend editing add mode
+                if (typeof rzmediabxslider === 'undefined') {
+                    jQuery.getScript( "{{ asset('/bundles/rmzamorajquery/jquery-plugins/bxslider/jquery.bxslider.css') }}")
+                          .pipe(jQuery.getScript( "{{ asset('/bundles/rzmedia/css/block/rzmedia-bxslider.css') }}"))
+                          .pipe(jQuery.getScript( "{{ asset('/bundles/rmzamorajquery/jquery-plugins/bxslider/jquery.bxslider.js') }}"))
+                          .pipe(jQuery.getScript( "{{ asset('/bundles/rmzamorajquery/jquery-plugins/fitvids/jquery.fitvids.js') }}"))
+                          .pipe(jQuery.getScript( "{{ asset('/bundles/rzmedia/js/block/rzmedia-bxslider.js') }}"), {}, function()
+                            {
+                                rzmediabxslider.init();
+                                //listen to trigger events
+                                jQuery('body').on('css-class-changed-zone', function(){
+                                    rzmediabxslider.reload();
+                                });
+                                jQuery('body').on('css-class-changed-preview', function(){
+                                    rzmediabxslider.reload();
+                                });
+                            });
+                } else {
+                    rzmediabxslider.init();
+                    //listen to trigger events
+                    jQuery('body').on('css-class-changed-zone', function(){
+                        rzmediabxslider.reload();
+                    });
 
-                //listen to trigger events
-                jQuery('body').on('css-class-changed-remove', function(){
-                    rzmediacarousel.reload();
-                });
+                    jQuery('body').on('css-class-changed-preview', function(){
+                        rzmediabxslider.reload();
+                    });
+                }
             });
         </script>
     {% else %}
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span12">
-                <p>Carousel settings is not yet set.</p>
+                <p>BxSlider settings is not yet set.</p>
             </div>
         </div>
     </div>

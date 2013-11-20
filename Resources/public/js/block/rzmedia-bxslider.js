@@ -1,13 +1,13 @@
-var rzmediacarousel = {
+var rzmediabxslider = {
     settings: null,
     instance: null,
     init:function(){
-        rzmediacarousel.initCarousel();
+        rzmediabxslider.initCarousel();
     },
 
     initCarousel: function() {
         if(jQuery(".bxslider").length > 0){
-            rzmediacarousel.instance = jQuery(".bxslider").bxSlider({
+            rzmediabxslider.instance = jQuery(".bxslider").bxSlider({
                 minSlides: 0,
                 maxSlides: 1,
                 slideMargin: 0,
@@ -20,7 +20,7 @@ var rzmediacarousel = {
     },
 
     reload: function() {
-        rzmediacarousel.instance.reloadSlider({
+        rzmediabxslider.instance.reloadSlider({
             minSlides: 0,
             maxSlides: 1,
             slideMargin: 0,
@@ -29,5 +29,16 @@ var rzmediacarousel = {
             auto: true,
             autoHover: true
         });
+
+        jQuery('.bx-next').on('click', function(e) {
+            rzmediabxslider.instance.goToNextSlide();
+            e.preventDefault();
+        });
+
+        jQuery('.bx-prev').on('click', function(e) {
+            rzmediabxslider.instance.goToPrevSlide();
+            e.preventDefault();
+        });
+
     }
 }
