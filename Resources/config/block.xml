@@ -8,6 +8,7 @@
         <parameter key="rz_media.block.feature_media.class">Rz\MediaBundle\Block\FeatureMediaBlockService</parameter>
         <parameter key="rz_media.block.gallery.class">Rz\MediaBundle\Block\GalleryBlockService</parameter>
         <parameter key="rz_media.block.media_bxslider.class">Rz\MediaBundle\Block\MediaBxSliderBlockService</parameter>
+        <parameter key="rz_media.block.featured_galleries.class">Rz\MediaBundle\Block\FeaturedGalleriesBlockService</parameter>
     </parameters>
 
 
@@ -15,6 +16,14 @@
         <service id="rz_media.block.media_bxslider" class="%rz_media.block.media_bxslider.class%">
             <tag name="sonata.block" />
             <argument>rz_media.block.media_bxslider</argument>
+            <argument type="service" id="templating" />
+            <argument type="service" id="service_container" />
+            <argument type="service" id="sonata.media.manager.gallery" />
+        </service>
+
+        <service id="rz_media.block.featured_galleries" class="%rz_media.block.featured_galleries.class%">
+            <tag name="sonata.block" />
+            <argument>rz_media.block.featured_galleries</argument>
             <argument type="service" id="templating" />
             <argument type="service" id="service_container" />
             <argument type="service" id="sonata.media.manager.gallery" />

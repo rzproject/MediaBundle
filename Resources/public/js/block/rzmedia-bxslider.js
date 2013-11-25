@@ -1,34 +1,19 @@
 var rzmediabxslider = {
     settings: null,
     instance: null,
-    init:function(){
+    init:function(settings){
+        rzmediabxslider.settings = settings;
         rzmediabxslider.initCarousel();
     },
 
     initCarousel: function() {
         if(jQuery(".bxslider").length > 0){
-            rzmediabxslider.instance = jQuery(".bxslider").bxSlider({
-                minSlides: 0,
-                maxSlides: 1,
-                slideMargin: 0,
-                video: true,
-                adaptiveHeight: true,
-                auto: true,
-                autoHover: true
-            });
+            rzmediabxslider.instance = jQuery(".bxslider").bxSlider(rzmediabxslider.settings);
         }
     },
 
     reload: function() {
-        rzmediabxslider.instance.reloadSlider({
-            minSlides: 0,
-            maxSlides: 1,
-            slideMargin: 0,
-            video: true,
-            adaptiveHeight: true,
-            auto: true,
-            autoHover: true
-        });
+        rzmediabxslider.instance.reloadSlider(rzmediabxslider.settings);
 
         jQuery('.bx-next').on('click', function(e) {
             rzmediabxslider.instance.goToNextSlide();

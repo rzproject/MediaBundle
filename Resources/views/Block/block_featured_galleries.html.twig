@@ -1,0 +1,42 @@
+{% extends 'SonataBlockBundle:Block:block_base.html.twig' %}
+
+{% block block %}
+    <div class="container-fluid">
+        <div class="row-fluid rz-media-featured-gallery-container">
+            {% if galleries %}
+                {% if settings.title %}
+                <h3 class="line center">{{ settings.title }}</h3>
+                {% endif %}
+                    <div class="row-fluid">
+                        {% set galleryCount = galleries|length %}
+                        {% if galleryCount > 4 %}
+                            {% set span = 4 %}
+                        {% else %}
+                            {% set span = 12//galleryCount %}
+                        {% endif %}
+                        {% for gallery in galleries %}
+                            <div class="span{{ span }}">
+                                <div class="rz-media-featured-gallery-content"
+                                     data-imgLiquid-fill="{% if settings.fill %}true{% else %}false{% endif %}"
+                                     data-imgLiquid-horizontalAlign="{% if settings.horizontalAlign %}{{ settings.horizontalAlign }}{% else %}center{% endif %}"
+                                     data-imgLiquid-verticalAlign="{% if settings.verticalAlign %}{{ settings.verticalAlign }}{% else %}center{% endif %}"
+                                    >
+                                    <img src="{%  path gallery.image, 'reference' %}" class="rz-media-featured-gallery">
+                                </div>
+                            </div>
+                        {% else %}
+                            {# no elements #}
+                        {% endfor %}
+                    </div>
+
+            {% else %}
+                <p>Settings for featured gallery is not yet set.</p>
+            {% endif %}
+        </div>
+    </div>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery('.rz-media-featured-gallery-content').imgLiquid();
+        });
+    </script>
+{% endblock %}

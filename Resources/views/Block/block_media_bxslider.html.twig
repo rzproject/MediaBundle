@@ -28,59 +28,59 @@
 
         <script type="text/javascript">
             jQuery(document).ready(function () {
-                var settings = {};
+                var settings_{{ block.id }} = {};
 
-                {#settings.mode = '{{ settings.mode }}';#}
-                {#settings.speed = {{ settings.speed }};#}
-                {#settings.slideMargin = {{ settings.slideMargin }};#}
-                {#settings.startSlide = {{ settings.startSlide }};#}
-                {#settings.randomStart = {% if settings.randomStart %}true{% else %}false{% endif %};#}
-                {#settings.slideSelector = '{{ settings.slideSelector }}';#}
-                {#settings.infiniteLoop = {% if settings.infiniteLoop %}true{% else %}false{% endif %};#}
-                {#settings.hideControlOnEnd = {% if settings.hideControlOnEnd %}true{% else %}false{% endif %};#}
-                {#settings.easing = '{{ settings.easing }}';#}
-                {#settings.captions = {% if settings.captions %}true{% else %}false{% endif %};#}
-                {#settings.ticker = {% if settings.ticker %}true{% else %}false{% endif %};#}
-                {#settings.tickerHover = {% if settings.tickerHover %}true{% else %}false{% endif %};#}
-                {#settings.adaptiveHeight = {% if settings.adaptiveHeight %}true{% else %}false{% endif %};#}
-                {#settings.adaptiveHeightSpeed = {{ settings.adaptiveHeightSpeed }};#}
-                {#settings.video = {% if settings.video %}true{% else %}false{% endif %};#}
-                {#settings.responsive = {% if settings.responsive %}true{% else %}false{% endif %};#}
-                {#settings.useCSS = {% if settings.useCSS %}true{% else %}false{% endif %};#}
-                {#settings.preloadImages = '{{ settings.preloadImages }}';#}
-                {#settings.touchEnabled = {% if settings.touchEnabled %}true{% else %}false{% endif %};#}
-                {#settings.swipeThreshold = {{ settings.swipeThreshold }};#}
-                {#settings.oneToOneTouch = {% if settings.oneToOneTouch %}true{% else %}false{% endif %};#}
-                {#settings.preventDefaultSwipeX = {% if settings.preventDefaultSwipeX %}true{% else %}false{% endif %};#}
-                {#settings.preventDefaultSwipeY = {% if settings.preventDefaultSwipeY %}true{% else %}false{% endif %};#}
-                {#settings.pager = {% if settings.pager %}true{% else %}false{% endif %};#}
-                {#settings.pagerType = '{{ settings.pagerType }}';#}
-                {#settings.pagerShortSeparator = '{{ settings.pagerShortSeparator }}';#}
-                {#settings.pagerSelector = '{{ settings.pagerSelector }}';#}
-                {#settings.pagerCustom = {% if settings.pagerCustom %}{{ settings.pagerCustom }}{% else %}null{% endif %};#}
-                {#settings.buildPager = {% if settings.buildPager %}{{ settings.buildPager }}{% else %}null{% endif %};#}
-                {#settings.controls = {% if settings.controls %}true{% else %}false{% endif %};#}
-                {#settings.nextText = '{{ settings.nextText }}';#}
-                {#settings.prevText = '{{ settings.nextText }}';#}
-                {#settings.nextSelector = {% if settings.nextSelector %}{{ settings.nextSelector }}{% else %}null{% endif %};#}
-                {#settings.prevSelector = {% if settings.prevSelector %}{{ settings.prevSelector }}{% else %}null{% endif %};#}
-                {#settings.autoControls = {% if settings.autoControls %}true{% else %}false{% endif %};#}
-                {#settings.startText = '{{ settings.startText }}';#}
-                {#settings.stopText = '{{ settings.stopText }}';#}
-                {#settings.autoControlsCombine = {% if settings.autoControlsCombine %}true{% else %}false{% endif %};#}
-                {#settings.autoControlsSelector = {% if settings.autoControlsSelector %}true{% else %}false{% endif %};#}
-                {#settings.auto = {% if settings.auto %}true{% else %}false{% endif %};#}
-                {#settings.pause = {{ settings.pause }};#}
-                {#settings.autoStart = {% if settings.autoStart %}true{% else %}false{% endif %};#}
-                {#settings.autoDirection = '{{ settings.autoDirection }}';#}
-                {#settings.autoHover = {% if settings.autoHover %}true{% else %}false{% endif %};#}
-                {#settings.autoDelay = {{ settings.autoDelay }};#}
-                {#settings.minSlides = {{ settings.minSlides }};#}
-                {#settings.maxSlides = {{ settings.maxSlides }};#}
-                {#settings.moveSlides = {{ settings.moveSlides }};#}
-                {#settings.slideWidth = {{ settings.slideWidth }};#}
+                settings_{{ block.id }}.mode = '{{ settings.mode }}';
+                settings_{{ block.id }}.speed = {{ settings.speed }};
+                settings_{{ block.id }}.slideMargin = {{ settings.slideMargin }};
+                settings_{{ block.id }}.startSlide = {{ settings.startSlide }};
+                settings_{{ block.id }}.randomStart = {% if settings.randomStart %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.slideSelector = '{{ settings.slideSelector }}';
+                settings_{{ block.id }}.infiniteLoop = {% if settings.infiniteLoop %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.hideControlOnEnd = {% if settings.hideControlOnEnd %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.easing = '{{ settings.easing }}';
+                settings_{{ block.id }}.captions = {% if settings.captions %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.ticker = {% if settings.ticker %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.tickerHover = {% if settings.tickerHover %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.adaptiveHeight = {% if settings.adaptiveHeight %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.adaptiveHeightSpeed = {{ settings.adaptiveHeightSpeed }};
+                settings_{{ block.id }}.video = {% if settings.video %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.responsive = {% if settings.responsive %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.useCSS = {% if settings.useCSS %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.preloadImages = '{{ settings.preloadImages }}';
+                settings_{{ block.id }}.touchEnabled = {% if settings.touchEnabled %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.swipeThreshold = {{ settings.swipeThreshold }};
+                settings_{{ block.id }}.oneToOneTouch = {% if settings.oneToOneTouch %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.preventDefaultSwipeX = {% if settings.preventDefaultSwipeX %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.preventDefaultSwipeY = {% if settings.preventDefaultSwipeY %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.pager = {% if settings.pager %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.pagerType = '{{ settings.pagerType }}';
+                settings_{{ block.id }}.pagerShortSeparator = '{{ settings.pagerShortSeparator }}';
+                settings_{{ block.id }}.pagerSelector = '{{ settings.pagerSelector }}';
+                settings_{{ block.id }}.pagerCustom = {% if settings.pagerCustom %}{{ settings.pagerCustom }}{% else %}null{% endif %};
+                settings_{{ block.id }}.buildPager = {% if settings.buildPager %}{{ settings.buildPager }}{% else %}null{% endif %};
+                settings_{{ block.id }}.controls = {% if settings.controls %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.nextText = '{{ settings.nextText }}';
+                settings_{{ block.id }}.prevText = '{{ settings.nextText }}';
+                settings_{{ block.id }}.nextSelector = {% if settings.nextSelector %}{{ settings.nextSelector }}{% else %}null{% endif %};
+                settings_{{ block.id }}.prevSelector = {% if settings.prevSelector %}{{ settings.prevSelector }}{% else %}null{% endif %};
+                settings_{{ block.id }}.autoControls = {% if settings.autoControls %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.startText = '{{ settings.startText }}';
+                settings_{{ block.id }}.stopText = '{{ settings.stopText }}';
+                settings_{{ block.id }}.autoControlsCombine = {% if settings.autoControlsCombine %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.autoControlsSelector = {% if settings.autoControlsSelector %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.auto = {% if settings.auto %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.pause = {{ settings.pause }};
+                settings_{{ block.id }}.autoStart = {% if settings.autoStart %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.autoDirection = '{{ settings.autoDirection }}';
+                settings_{{ block.id }}.autoHover = {% if settings.autoHover %}true{% else %}false{% endif %};
+                settings_{{ block.id }}.autoDelay = {{ settings.autoDelay }};
+                settings_{{ block.id }}.minSlides = {{ settings.minSlides }};
+                settings_{{ block.id }}.maxSlides = {{ settings.maxSlides }};
+                settings_{{ block.id }}.moveSlides = {{ settings.moveSlides }};
+                settings_{{ block.id }}.slideWidth = {{ settings.slideWidth }};
 
-                {#console.log(settings);#}
+                console.log(settings_{{ block.id }});
                 {#rzmediacarousel.settings = settings;#}
 
                 //dynamic load of js files during frontend editing add mode
@@ -91,7 +91,7 @@
                           .pipe(jQuery.getScript( "{{ asset('/bundles/rmzamorajquery/jquery-plugins/fitvids/jquery.fitvids.js') }}"))
                           .pipe(jQuery.getScript( "{{ asset('/bundles/rzmedia/js/block/rzmedia-bxslider.js') }}"), {}, function()
                             {
-                                rzmediabxslider.init();
+                                rzmediabxslider.init(settings_{{ block.id }});
                                 //listen to trigger events
                                 jQuery('body').on('css-class-changed-zone', function(){
                                     rzmediabxslider.reload();
@@ -101,7 +101,7 @@
                                 });
                             });
                 } else {
-                    rzmediabxslider.init();
+                    rzmediabxslider.init(settings_{{ block.id }});
                     //listen to trigger events
                     jQuery('body').on('css-class-changed-zone', function(){
                         rzmediabxslider.reload();
