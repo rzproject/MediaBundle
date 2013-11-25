@@ -1,7 +1,7 @@
-/*.rz-media-featured-gallery {*/
-/*max-width: none !important;*/
-/*min-height: 100%;   *//* Scale up to fill container height */
-/*}*/
+.rz-media-featured-gallery {
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
 
 .rz-media-featured-gallery-container h3 {
     margin-bottom: 20px !important;

@@ -1,7 +1,7 @@
 {% extends 'SonataBlockBundle:Block:block_base.html.twig' %}
 
 {% block block %}
-    <div class="container-fluid">
+    <div class="container-fluid rz-media-featured-gallery">
         <div class="row-fluid rz-media-featured-gallery-container">
             {% if galleries %}
                 {% if settings.title %}
@@ -21,7 +21,7 @@
                                      data-imgLiquid-horizontalAlign="{% if settings.horizontalAlign %}{{ settings.horizontalAlign }}{% else %}center{% endif %}"
                                      data-imgLiquid-verticalAlign="{% if settings.verticalAlign %}{{ settings.verticalAlign }}{% else %}center{% endif %}"
                                     >
-                                    <img src="{%  path gallery.image, 'reference' %}" class="rz-media-featured-gallery">
+                                    <img src="{%  path gallery.image, 'reference' %}" class="rz-media-featured-gallery-image">
                                 </div>
                             </div>
                         {% else %}
