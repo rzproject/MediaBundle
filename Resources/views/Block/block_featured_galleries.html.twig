@@ -1,0 +1,52 @@
+{% extends 'SonataBlockBundle:Block:block_base.html.twig' %}
+
+{% block block %}
+    <div class="container-fluid rz-media-featured-gallery">
+        <div class="row-fluid rz-media-featured-gallery-container">
+            {% if galleries %}
+                {% if settings.title %}
+                <h3 class="line center">{{ settings.title }}</h3>
+                {% endif %}
+                    <div class="row-fluid">
+                        {% set galleryCount = galleries|length %}
+                        {% if galleryCount > 4 %}
+                            {% set span = 4 %}
+                        {% else %}
+                            {% set span = 12//galleryCount %}
+                        {% endif %}
+                        {% for gallery in galleries %}
+                            <div class="span{{ span }}">
+                                <div class="rz-media-featured-gallery-content"
+                                     data-imgLiquid-fill="{% if settings.fill %}true{% else %}false{% endif %}"
+                                     data-imgLiquid-horizontalAlign="{% if settings.horizontalAlign %}{{ settings.horizontalAlign }}{% else %}center{% endif %}"
+                                     data-imgLiquid-verticalAlign="{% if settings.verticalAlign %}{{ settings.verticalAlign }}{% else %}center{% endif %}"
+                                    >
+                                    <img src="{%  path gallery.image, 'reference' %}" class="rz-media-featured-gallery-image">
+                                </div>
+                            </div>
+                        {% else %}
+                            {# no elements #}
+                        {% endfor %}
+                    </div>
+                    <script type="text/javascript">
+                        jQuery(document).ready(function(){
+                            //dynamic load of js files during frontend editing add mode
+                            if (typeof rzmediafeaturedgallery === 'undefined') {
+                                jQuery.getScript( "{{ asset('/bundles/rzmedia/css/block/rzmedia-featured-gallery.css') }}")
+                                        .pipe(jQuery.getScript( "{{ asset('/bundles/rmzamorajquery/jquery-plugins/imgLiquid/js/imgLiquid.js') }}"))
+                                        .pipe(jQuery.getScript( "{{ asset('/bundles/rzmedia/js/block/rzmedia-featured-gallery.js') }}"), {}, function()
+                                        {
+                                            console.log('undefined----');
+                                            rzmediafeaturedgallery.init('.rz-media-featured-gallery-content');
+                                        });
+                            } else {
+                                rzmediafeaturedgallery.init('.rz-media-featured-gallery-content');
+                            }
+                        });
+                    </script>
+            {% else %}
+                <p>Settings for featured gallery is not yet set.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

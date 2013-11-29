@@ -31,16 +31,24 @@
 </div>
 {% endblock masonry_media_batch %}
 
-{% block masonry_details_row %}
-    <div class="row-fluid">
-        <div class="span12 sonata-ba-list-field"  objectId="{{ admin.id(object) }}">
-            <a href="{{ admin.generateUrl('edit', {'id' : object|sonata_urlsafeid }) }}">{% thumbnail object, 'admin' with {'width': '100%', 'height': 'auto'} %}</a>
-        </div>
-    </div>
 
-    <div class="row-fluid rz_grid_title rz_grid_items">
-        <div class="span12 sonata-ba-list-field" objectId="{{ admin.id(object) }}">
-            <a href="{{ admin.generateUrl('edit', {'id' : object|sonata_urlsafeid }) }}">{{ object.name }}</a>
+{% block masonry_container %}
+    <div class="rz-gallery-item sonata-ba-list-field" objectId="{{ admin.id(object) }}">
+        {{ block('masonry_details_row') }}
+    </div>
+{% endblock masonry_container %}
+
+{% block masonry_details_row %}
+    <a href="{{ admin.generateUrl('edit', {'id' : object|sonata_urlsafeid }) }}">
+        {% thumbnail object, 'reference' with {'style':'max-width:200px;', 'height': 'auto'} %}
+    </a>
+    <div class="extras">
+        <div class="extras-inner">
+            <span class="batch">{{ object|render_list_element(admin.list['batch']) }}</span>
+            <a href="{{ admin.generateUrl('edit', {'id' : object|sonata_urlsafeid }) }}">{% if not app.request.isxmlhttprequest %}<i class="icon-pencil"></i>{% else %}<i class="icon-ok"></i>{% endif %}</a>
+            {% if not app.request.isxmlhttprequest %}
+            <a href="{{ admin.generateUrl('delete', {'id' : object|sonata_urlsafeid }) }}" class='del-gallery-pic'><i class="icon-trash"></i></a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

@@ -3,7 +3,6 @@
 namespace Rz\MediaBundle\Entity;
 
 use Sonata\MediaBundle\Entity\BaseGallery;
-use Rz\MediaBundle\Model\CategoryInterface;
 
 /**
  * Bundle\MediaBundle\Entity\BaseGallery
@@ -13,7 +12,6 @@ abstract class Gallery extends BaseGallery
     protected $image;
     protected $abstract;
     protected $content;
-    protected $category;
 
     /**
      * @param mixed $image
@@ -61,21 +59,5 @@ abstract class Gallery extends BaseGallery
     public function getContent ()
     {
         return $this->content;
-    }
-
-    /**
-     * @param mixed $category
-     */
-    public function setCategory (CategoryInterface $category)
-    {
-        $this->category = $category;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCategory ()
-    {
-        return $this->category;
     }
 }

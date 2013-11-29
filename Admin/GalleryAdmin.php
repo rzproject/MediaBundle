@@ -14,6 +14,7 @@ namespace Rz\MediaBundle\Admin;
 use Sonata\MediaBundle\Admin\GalleryAdmin as BaseGalleryAdmin;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\MediaBundle\Provider\Pool;
 
 class GalleryAdmin extends BaseGalleryAdmin
@@ -51,7 +52,6 @@ class GalleryAdmin extends BaseGalleryAdmin
                 ->add('name')
             ->end()
             ->with('Details')
-                ->add('category', 'sonata_type_model_list',array('required' => false, 'attr'=>array('class'=>'span8')))
                 ->add('image', 'sonata_type_model_list',array('required' => false, 'attr'=>array('class'=>'span8')))
                 ->add('abstract')
                 ->add('content', 'rz_ckeditor', array('required' => false))
@@ -82,6 +82,19 @@ class GalleryAdmin extends BaseGalleryAdmin
             ->add('name')
             ->add('enabled')
             ->add('context', null ,array('operator_options'=>array('selectpicker_dropup' => true)))
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureListFields(ListMapper $listMapper)
+    {
+        $listMapper
+            ->addIdentifier('name', null, array('footable'=>array('attr'=>array('data_toggle'=>true))))
+            ->add('enabled', 'boolean', array('editable' => true, 'footable'=>array('attr'=>array('data_hide'=>'phone'))))
+            ->add('context', 'trans', array('catalogue' => 'SonataMediaBundle', 'footable'=>array('attr'=>array('data_hide'=>'phone,tablet'))))
+            ->add('defaultFormat', 'trans', array('catalogue' => 'SonataMediaBundle', 'footable'=>array('attr'=>array('data_hide'=>'phone,tablet'))))
         ;
     }
 }

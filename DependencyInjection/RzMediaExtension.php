@@ -76,8 +76,6 @@ class RzMediaExtension extends Extension
         $container->setParameter('sonata.media.admin.media.class', $config['admin']['media']['class']);
         $container->setParameter('sonata.media.admin.gallery.class', $config['admin']['gallery']['class']);
         $container->setParameter('sonata.media.admin.gallery_has_media.class', $config['admin']['gallery_has_media']['class']);
-
-        $container->setParameter('rz_media.admin.category.class', $config['admin']['category']['class']);
     }
 
     /**
@@ -91,8 +89,6 @@ class RzMediaExtension extends Extension
         $container->setParameter('sonata.media.admin.media.translation_domain', $config['admin']['media']['translation']);
         $container->setParameter('sonata.media.admin.gallery.translation_domain', $config['admin']['gallery']['translation']);
         $container->setParameter('sonata.media.admin.gallery_has_media.translation_domain', $config['admin']['gallery_has_media']['translation']);
-
-        $container->setParameter('rz_media.admin.category.translation_domain', $config['admin']['category']['translation']);
     }
 
     /**
@@ -106,8 +102,6 @@ class RzMediaExtension extends Extension
         $container->setParameter('sonata.media.admin.media.controller', $config['admin']['media']['controller']);
         $container->setParameter('sonata.media.admin.gallery.controller', $config['admin']['gallery']['controller']);
         $container->setParameter('sonata.media.admin.gallery_has_media.controller', $config['admin']['gallery_has_media']['controller']);
-
-        $container->setParameter('rz_media.admin.category.controller', $config['admin']['category']['controller']);
     }
 
     /**
@@ -121,8 +115,6 @@ class RzMediaExtension extends Extension
         $container->setParameter('rz_media.configuration.media.templates', $config['admin']['media']['templates']);
         $container->setParameter('rz_media.configuration.gallery.templates', $config['admin']['gallery']['templates']);
         $container->setParameter('rz_media.configuration.gallery_has_media.templates', $config['admin']['gallery_has_media']['templates']);
-
-        $container->setParameter('rz_media.configuration.category.templates', $config['admin']['category']['templates']);
     }
 
     /**
@@ -135,13 +127,11 @@ class RzMediaExtension extends Extension
         $container->setParameter('sonata.media.admin.gallery.entity', $config['class']['gallery']);
         $container->setParameter('sonata.media.admin.gallery_has_media.entity', $config['class']['gallery_has_media']);
 
-        $container->setParameter('rz_media.admin.category.entity', $config['class']['category']);
-
         $container->setParameter('sonata.media.media.class', $config['class']['media']);
         $container->setParameter('sonata.media.gallery.class', $config['class']['gallery']);
-//        $container->getDefinition('sonata.media.form.type.media')->replaceArgument(1, $config['class']['media']);
 
-        $container->setParameter('rz_media.category.class', $config['class']['category']);
+        //$container->getDefinition('sonata.media.form.type.media')->replaceArgument(1, $config['class']['media']);
+        $container->getDefinition('rz_media.form.type.media')->replaceArgument(1, $config['class']['media']);
     }
 
     /**
@@ -170,52 +160,6 @@ class RzMediaExtension extends Extension
             array(
                 array(
                     'name' => 'image_id',
-                    'referencedColumnName' => 'id',
-                ),
-            ),
-            'orphanRemoval' => false,
-        ));
-
-        $collector->addAssociation($config['class']['gallery'], 'mapManyToOne', array(
-            'fieldName' => 'category',
-            'targetEntity' => $config['class']['category'],
-            'cascade' =>
-            array(
-                0 => 'remove',
-                1 => 'persist',
-                2 => 'refresh',
-                3 => 'merge',
-                4 => 'detach',
-            ),
-            'mappedBy' => NULL,
-            'inversedBy' => NULL,
-            'joinColumns' =>
-            array(
-                array(
-                    'name' => 'category_id',
-                    'referencedColumnName' => 'id',
-                ),
-            ),
-            'orphanRemoval' => false,
-        ));
-
-        $collector->addAssociation($config['class']['media'], 'mapManyToOne', array(
-            'fieldName' => 'category',
-            'targetEntity' => $config['class']['category'],
-            'cascade' =>
-            array(
-                0 => 'remove',
-                1 => 'persist',
-                2 => 'refresh',
-                3 => 'merge',
-                4 => 'detach',
-            ),
-            'mappedBy' => NULL,
-            'inversedBy' => NULL,
-            'joinColumns' =>
-            array(
-                array(
-                    'name' => 'category_id',
                     'referencedColumnName' => 'id',
                 ),
             ),
