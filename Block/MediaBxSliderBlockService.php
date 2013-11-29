@@ -329,7 +329,6 @@ class MediaBxSliderBlockService extends BaseBlockService
     {
         return array(
             '/bundles/rmzamorajquery/jquery-plugins/bxslider/jquery.bxslider.js',
-            '/bundles/rmzamorajquery/jquery-plugins/fitvids/jquery.fitvids.js',
             '/bundles/rzmedia/js/block/rzmedia-bxslider.js'
 
         );

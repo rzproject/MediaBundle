@@ -28,15 +28,25 @@
                             {# no elements #}
                         {% endfor %}
                     </div>
-
+                    <script type="text/javascript">
+                        jQuery(document).ready(function(){
+                            //dynamic load of js files during frontend editing add mode
+                            if (typeof rzmediafeaturedgallery === 'undefined') {
+                                jQuery.getScript( "{{ asset('/bundles/rzmedia/css/block/rzmedia-featured-gallery.css') }}")
+                                        .pipe(jQuery.getScript( "{{ asset('/bundles/rmzamorajquery/jquery-plugins/imgLiquid/js/imgLiquid.js') }}"))
+                                        .pipe(jQuery.getScript( "{{ asset('/bundles/rzmedia/js/block/rzmedia-featured-gallery.js') }}"), {}, function()
+                                        {
+                                            console.log('undefined----');
+                                            rzmediafeaturedgallery.init('.rz-media-featured-gallery-content');
+                                        });
+                            } else {
+                                rzmediafeaturedgallery.init('.rz-media-featured-gallery-content');
+                            }
+                        });
+                    </script>
             {% else %}
                 <p>Settings for featured gallery is not yet set.</p>
             {% endif %}
         </div>
     </div>
-    <script type="text/javascript">
-        jQuery(document).ready(function(){
-            jQuery('.rz-media-featured-gallery-content').imgLiquid();
-        });
-    </script>
 {% endblock %}
