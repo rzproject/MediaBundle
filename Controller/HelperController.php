@@ -38,7 +38,7 @@ class HelperController extends BaseHelperController
      */
     public function getShortObjectDescriptionAction(Request $request)
     {
-        $code     = $request->get('code');
+         $code     = $request->get('code');
         $objectId = $request->get('objectId');
         $uniqid   = $request->get('uniqid');
 
@@ -67,10 +67,10 @@ class HelperController extends BaseHelperController
             )));
         } elseif ('html' == $request->get('_format')) {
             return new Response($this->twig->render('RzMediaBundle:Helper:short-object-description.html.twig', array(
-                                                                                                                 'admin'       => $admin,
-                                                                                                                 'description' => $admin->toString($object),
-                                                                                                                 'object'      => $object,
-                                                                                                             )));
+                'admin'       => $admin,
+                'description' => $admin->toString($object),
+                'object'      => $object,
+            )));
         } else {
             throw new \RuntimeException('Invalid format');
         }
