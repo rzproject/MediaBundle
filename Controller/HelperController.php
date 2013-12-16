@@ -30,16 +30,15 @@ class HelperController extends BaseHelperController
     protected $pool;
 
     /**
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
-     * @throws \RuntimeException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getShortObjectDescriptionAction(Request $request)
     {
-         $code     = $request->get('code');
+        $code     = $request->get('code');
         $objectId = $request->get('objectId');
         $uniqid   = $request->get('uniqid');
 
@@ -68,17 +67,10 @@ class HelperController extends BaseHelperController
             )));
         } elseif ('html' == $request->get('_format')) {
             return new Response($this->twig->render('RzMediaBundle:Helper:short-object-description.html.twig', array(
-<<<<<<< HEAD
-                                                                                                       'admin'       => $admin,
-                                                                                                       'description' => $admin->toString($object),
-                                                                                                       'object'      => $object,
-                                                                                                   )));
-=======
-                'admin'       => $admin,
-                'description' => $admin->toString($object),
-                'object'      => $object,
-            )));
->>>>>>> refs/remotes/origin/2.3.2
+                                                                                                                 'admin'       => $admin,
+                                                                                                                 'description' => $admin->toString($object),
+                                                                                                                 'object'      => $object,
+                                                                                                             )));
         } else {
             throw new \RuntimeException('Invalid format');
         }
