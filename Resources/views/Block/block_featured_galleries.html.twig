@@ -21,7 +21,7 @@
                                      data-imgLiquid-horizontalAlign="{% if settings.horizontalAlign %}{{ settings.horizontalAlign }}{% else %}center{% endif %}"
                                      data-imgLiquid-verticalAlign="{% if settings.verticalAlign %}{{ settings.verticalAlign }}{% else %}center{% endif %}"
                                     >
-                                    <img src="{%  path gallery.image, 'reference' %}" class="rz-media-featured-gallery-image">
+                                    <a href="{{ url('sonata_media_gallery_view', {'id' : gallery|sonata_urlsafeid }) }}"><img src="{%  path gallery.image, 'reference' %}" class="rz-media-featured-gallery-image"></a>
                                 </div>
                             </div>
                         {% else %}
