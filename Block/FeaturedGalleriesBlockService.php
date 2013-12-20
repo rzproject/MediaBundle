@@ -21,6 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Sonata\CoreBundle\Entity\ManagerInterface;
+
 class FeaturedGalleriesBlockService extends BaseBlockService
 {
     protected $galleryAdmin;
@@ -33,7 +35,7 @@ class FeaturedGalleriesBlockService extends BaseBlockService
      * @param ContainerInterface      $container
      * @param GalleryManagerInterface $galleryManager
      */
-    public function __construct($name, EngineInterface $templating, ContainerInterface $container, GalleryManagerInterface $galleryManager)
+    public function __construct($name, EngineInterface $templating, ContainerInterface $container, ManagerInterface $galleryManager)
     {
         parent::__construct($name, $templating);
 

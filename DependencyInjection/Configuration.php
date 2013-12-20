@@ -31,6 +31,7 @@ class Configuration implements ConfigurationInterface
         $node = $treeBuilder->root('rz_media');
         $this->addBundleSettings($node);
         $this->addModelSection($node);
+        $this->addManagerSection($node);
         return $treeBuilder;
     }
 
@@ -113,4 +114,22 @@ class Configuration implements ConfigurationInterface
             ->end()
         ;
     }
+            /**
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addManagerSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('class_manager')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('media')->defaultValue('Rz\\MediaBundle\\Entity\\MediaManager')->end()
+                        ->scalarNode('gallery')->defaultValue('Rz\\MediaBundle\\Entity\\GalleryManager')->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
 }

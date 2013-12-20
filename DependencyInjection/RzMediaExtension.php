@@ -54,6 +54,7 @@ class RzMediaExtension extends Extension
         $this->configureTranslationDomain($config, $container);
         $this->configureController($config, $container);
         $this->configureRzTemplates($config, $container);
+        $this->configureManagers($config, $container);
 
         // merge RzFieldTypeBundle to RzAdminBundle
         $container->setParameter('twig.form.resources',
@@ -102,6 +103,19 @@ class RzMediaExtension extends Extension
         $container->setParameter('sonata.media.admin.media.controller', $config['admin']['media']['controller']);
         $container->setParameter('sonata.media.admin.gallery.controller', $config['admin']['gallery']['controller']);
         $container->setParameter('sonata.media.admin.gallery_has_media.controller', $config['admin']['gallery_has_media']['controller']);
+    }
+
+    /**
+     * @param array                                                   $config
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     *
+     * @return void
+     */
+    public function configureManagers($config, ContainerBuilder $container)
+    {
+        // manager configuration
+        $container->setParameter('sonata.media.manager.media.class',    $config['class_manager']['media']);
+        $container->setParameter('sonata.media.manager.gallery.class',  $config['class_manager']['gallery']);
     }
 
     /**

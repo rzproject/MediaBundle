@@ -14,11 +14,12 @@ use Sonata\MediaBundle\Controller\MediaController as BaseMediaController;
 class MediaController extends BaseMediaController
 {
     /**
-     * @throws NotFoundHttpException
      *
+     * @param $galleryId
      * @param string $id
      * @param string $format
      *
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @return Response
      */
     public function mediaViewAction($galleryId, $id, $format = 'reference')
