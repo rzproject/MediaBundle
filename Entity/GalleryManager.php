@@ -13,7 +13,57 @@ namespace Rz\MediaBundle\Entity;
 
 use Sonata\MediaBundle\Entity\GalleryManager as BaseGalleryManager;
 
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Expr;
+
+use Sonata\ClassificationBundle\Model\CollectionInterface;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
+use Sonata\DoctrineORMAdminBundle\Datagrid\Pager;
+use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
+
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+
+
 class GalleryManager extends BaseGalleryManager
 {
+    public function getGalleries(array $criteria, $page = 0, $maxPerPage=10)
+    {
+        if (!isset($criteria['enabled'])) {
+            $criteria['enabled'] = true;
+        }
 
+        $parameters = array();
+        $query = $this->getRepository()
+                      ->createQueryBuilder('g')
+                      ->select('g')
+                      ->orderby('g.updatedAt', 'DESC');
+
+
+
+        if ($criteria['enabled'] == true) {
+            // enabled
+            $criteria['enabled'] = isset($criteria['enabled']) ? $criteria['enabled'] : true;
+            $query->andWhere('g.enabled = :enabled');
+            $parameters['enabled'] = $criteria['enabled'];
+        }
+
+        $query->setParameters($parameters);
+
+        try {
+            return new Pagerfanta(new DoctrineORMAdapter($query));
+        } catch (NoResultException $e) {
+            return null;
+        }
+
+//        $pager = new Pager();
+//        $pager->setMaxPerPage($maxPerPage);
+//        $pager->setQuery(new ProxyQuery($query));
+//        $pager->setPage($page);
+//        $pager->init();
+//
+//        return $pager;
+    }
 }

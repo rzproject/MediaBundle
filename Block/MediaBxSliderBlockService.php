@@ -24,6 +24,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Templating\EngineInterface;
+use Sonata\CoreBundle\Entity\ManagerInterface;
 
 
 
@@ -35,12 +36,12 @@ class MediaBxSliderBlockService extends BaseBlockService
     protected $galleryManager;
 
     /**
-     * @param string                  $name
-     * @param EngineInterface         $templating
-     * @param ContainerInterface      $container
-     * @param GalleryManagerInterface $galleryManager
+     * @param string $name
+     * @param EngineInterface $templating
+     * @param ContainerInterface $container
+     * @param \Sonata\CoreBundle\Entity\ManagerInterface|\Sonata\MediaBundle\Model\GalleryManagerInterface $galleryManager
      */
-    public function __construct($name, EngineInterface $templating, ContainerInterface $container, GalleryManagerInterface $galleryManager)
+    public function __construct($name, EngineInterface $templating, ContainerInterface $container, ManagerInterface $galleryManager)
     {
         parent::__construct($name, $templating);
 
