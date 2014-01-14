@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Sonata\CoreBundle\Entity\ManagerInterface;
+use Sonata\CoreBundle\Model\ManagerInterface;
 
 class FeaturedGalleriesBlockService extends BaseBlockService
 {
