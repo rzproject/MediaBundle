@@ -118,6 +118,9 @@
                         </form>
                         {% endif %}
                     </div>
+                    {% block table_footer %}
+                        {% include admin.getTemplate('rz_list_table_footer') %}
+                    {% endblock %}
                 </div>
                 <div class="tab-pane" id="filter">
                     {{ block('media_filters')}}
