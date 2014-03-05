@@ -6,8 +6,6 @@ use Sonata\AdminBundle\Controller\HelperController as BaseHelperController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\HttpFoundation\Request;
 use Sonata\AdminBundle\Admin\Pool;
 use Sonata\AdminBundle\Admin\AdminHelper;
@@ -30,7 +28,7 @@ class HelperController extends BaseHelperController
     protected $pool;
 
     /**
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException|\RuntimeException
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *

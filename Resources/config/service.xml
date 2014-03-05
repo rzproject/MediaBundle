@@ -9,6 +9,7 @@
             <argument type="service" id="twig" />
             <argument type="service" id="sonata.admin.pool" />
             <argument type="service" id="sonata.admin.helper" />
+            <argument type="service" id="validator" />
         </service>
     </services>
 </container>
