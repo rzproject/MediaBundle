@@ -10,8 +10,8 @@
 
     <services>
         <service id="rz_media.manager.media" class="%rz_media.manager.media.class%">
-            <argument type="service" id="sonata.media.pool" />
             <argument>%sonata.media.media.class%</argument>
+            <argument type="service" id="doctrine" />
         </service>
     </services>
 
