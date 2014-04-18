@@ -9,7 +9,7 @@
 
         {% for galleryHasMedia in gallery.GalleryHasMedias %}
             <div class="gallery-item">
-                <a class="sonata-media-gallery-media-item-link" href="{{ url('sonata_media_view', {'id': galleryHasMedia.media|sonata_urlsafeid }) }}">
+                <a class="sonata-media-gallery-media-item-link" href="{{ url('rz_media_view', {'galleryId':gallery.id,'id': galleryHasMedia.media|sonata_urlsafeid }) }}">
                     {% thumbnail galleryHasMedia.media, gallery.defaultFormat with {'style':'width:380px;', 'height': 'auto'} %}
                 </a>
             </div>

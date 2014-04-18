@@ -9,6 +9,7 @@
         <parameter key="rz_media.block.gallery.class">Rz\MediaBundle\Block\GalleryBlockService</parameter>
         <parameter key="rz_media.block.media_bxslider.class">Rz\MediaBundle\Block\MediaBxSliderBlockService</parameter>
         <parameter key="rz_media.block.featured_galleries.class">Rz\MediaBundle\Block\FeaturedGalleriesBlockService</parameter>
+        <parameter key="rz_media.block.breadcrumb_media.class">Rz\MediaBundle\Block\Breadcrumb\MediaViewBreadcrumbBlockService</parameter>
     </parameters>
 
 
