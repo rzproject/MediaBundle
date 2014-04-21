@@ -58,5 +58,9 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         //override Gallery Block Class
         $definition = $container->getDefinition('sonata.media.block.gallery');
         $definition->setClass($container->getParameter('rz_media.block.gallery.class'));
+
+        //override Media Admin
+        $definition = $container->getDefinition('sonata.media.block.breadcrumb_view_media');
+        $definition->setClass($container->getParameter('rz_media.block.breadcrumb_media.class'));
     }
 }
