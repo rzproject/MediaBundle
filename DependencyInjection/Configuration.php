@@ -32,6 +32,14 @@ class Configuration implements ConfigurationInterface
         $this->addBundleSettings($node);
         $this->addModelSection($node);
         $this->addManagerSection($node);
+
+        $node
+            ->children()
+                ->scalarNode('db_driver')->defaultValue('doctrine_orm')->end()
+                ->scalarNode('default_context')->defaultValue('default')->end()
+            ->end()
+        ;
+
         return $treeBuilder;
     }
 

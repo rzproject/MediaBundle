@@ -9,7 +9,7 @@ abstract class Media extends BaseMedia
      protected $category;
 
     /**
-     * @param mixed $category
+     * {@inheritdoc}
      */
     public function setCategory ($category)
     {
@@ -17,7 +17,7 @@ abstract class Media extends BaseMedia
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getCategory ()
     {
