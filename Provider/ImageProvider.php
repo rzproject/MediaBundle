@@ -20,6 +20,10 @@ use Sonata\AdminBundle\Form\FormMapper;
 
 use Imagine\Image\ImagineInterface;
 use Gaufrette\Filesystem;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+
+use Sonata\AdminBundle\Validator\ErrorElement;
 
 class ImageProvider extends FileProvider
 {
@@ -46,6 +50,14 @@ class ImageProvider extends FileProvider
     /**
      * {@inheritdoc}
      */
+    public function getProviderMetadata()
+    {
+        return new Metadata($this->getName(), $this->getName().".description", null, "SonataMediaBundle", array('class' => 'fa fa-picture-o'));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getHelperProperties(MediaInterface $media, $format, $options = array())
     {
         if ($format == 'reference') {
@@ -54,13 +66,14 @@ class ImageProvider extends FileProvider
             $resizerFormat = $this->getFormat($format);
             if ($resizerFormat === false) {
                 throw new \RuntimeException(sprintf('The image format "%s" is not defined.
-                        Is the format registered in your sonata-media configuration?', $format));
+                        Is the format registered in your ``sonata_media`` configuration?', $format));
             }
 
             $box = $this->resizer->getBox($media, $resizerFormat);
         }
 
         return array_merge(array(
+            'alt'      => $media->getName(),
             'title'    => $media->getName(),
             'src'      => $this->generatePublicUrl($media, $format),
             'width'    => $box->getWidth(),
@@ -86,16 +99,24 @@ class ImageProvider extends FileProvider
     {
         parent::doTransform($media);
 
-        if ($media->getBinaryContent()) {
-            $image = $this->imagineAdapter->open($media->getBinaryContent()->getPathname());
-            $size  = $image->getSize();
-
-            $media->setWidth($size->getWidth());
-            $media->setHeight($size->getHeight());
-
-            $media->setProviderStatus(MediaInterface::STATUS_OK);
+        if (!is_object($media->getBinaryContent()) && !$media->getBinaryContent()) {
+            return;
         }
+        try {
+            $image = $this->imagineAdapter->open($media->getBinaryContent()->getPathname());
+        } catch (\Exception $e) {
+            $media->setProviderStatus(MediaInterface::STATUS_ERROR);
+            return;
+        }
+
+        $size  = $image->getSize();
+
+        $media->setWidth($size->getWidth());
+        $media->setHeight($size->getHeight());
+
+        $media->setProviderStatus(MediaInterface::STATUS_OK);
     }
+
 
     /**
      * {@inheritdoc}
@@ -182,6 +203,13 @@ class ImageProvider extends FileProvider
     public function buildCreateForm(FormMapper $formMapper)
     {
         $formMapper->add('binaryContent', 'file', array('required' => false, 'thumbnail_enabled'=>true));
-    }
 
+        $formMapper->add('binaryContent', 'file', array(
+            'thumbnail_enabled'=>true,
+            'constraints' => array(
+                new NotBlank(),
+                new NotNull()
+            )
+        ));
+    }
 }
