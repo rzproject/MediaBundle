@@ -228,10 +228,10 @@ class FeaturedGalleriesBlockService extends BaseBlockService
     /**
      * {@inheritdoc}
      */
-    public function getJavascripts($media)
-    {
-        return array(
-            '/bundles/rmzamorajquery/jquery-plugins/imgLiquid/js/imgLiquid.js',
-            '/bundles/rzmedia/js/block/rzmedia-featured-gallery.js');
-    }
+//    public function getJavascripts($media)
+//    {
+//        return array(
+//            '/bundles/rmzamorajquery/jquery-plugins/imgLiquid/js/imgLiquid.js',
+//            '/bundles/rzmedia/js/block/rzmedia-featured-gallery.js');
+//    }
 }

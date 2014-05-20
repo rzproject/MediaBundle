@@ -312,28 +312,28 @@ class MediaBxSliderBlockService extends BaseBlockService
         $block->setSetting('galleryId', is_object($block->getSetting('galleryId')) ? $block->getSetting('galleryId')->getId() : null);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getStylesheets($media)
-    {
-        return array(
-            '/bundles/rmzamorajquery/jquery-plugins/bxslider/jquery.bxslider.css',
-            '/bundles/rzmedia/css/block/rzmedia-bxslider.css'
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getJavascripts($media)
-    {
-        return array(
-            '/bundles/rmzamorajquery/jquery-plugins/bxslider/jquery.bxslider.js',
-            '/bundles/rzmedia/js/block/rzmedia-bxslider.js'
-
-        );
-    }
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function getStylesheets($media)
+//    {
+//        return array(
+//            '/bundles/rmzamorajquery/jquery-plugins/bxslider/jquery.bxslider.css',
+//            '/bundles/rzmedia/css/block/rzmedia-bxslider.css'
+//        );
+//    }
+//
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function getJavascripts($media)
+//    {
+//        return array(
+//            '/bundles/rmzamorajquery/jquery-plugins/bxslider/jquery.bxslider.js',
+//            '/bundles/rzmedia/js/block/rzmedia-bxslider.js'
+//
+//        );
+//    }
 
     /**
      * @param \Sonata\MediaBundle\Model\GalleryInterface $gallery
