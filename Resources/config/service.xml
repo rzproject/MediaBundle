@@ -3,6 +3,11 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="rz_media.ck_editor_sonata_media.media.extension.class">Rz\MediaBundle\Admin\MediaAdminExtension</parameter>
+    </parameters>
+
     <services>
         <!-- controller as services -->
         <service id="rz_media.controller.admin_helper" class="Rz\MediaBundle\Controller\HelperController">
@@ -10,6 +15,10 @@
             <argument type="service" id="sonata.admin.pool" />
             <argument type="service" id="sonata.admin.helper" />
             <argument type="service" id="validator" />
+        </service>
+
+        <service id="rz_media.ck_editor_sonata_media.media.extension" class="%rz_media.ck_editor_sonata_media.media.extension.class%">
+            <tag name="sonata.admin.extension" target="sonata.media.admin.media" />
         </service>
     </services>
 </container>

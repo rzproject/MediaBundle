@@ -50,6 +50,15 @@ class Configuration implements ConfigurationInterface
     {
         $node
             ->children()
+                ->arrayNode('templates')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('layout')->defaultValue('RzMediaBundle:MediaBrowser:layout.html.twig')->cannotBeEmpty()->end()
+                        ->scalarNode('browser')->defaultValue('RzMediaBundle:MediaAdmin:browser.html.twig')->cannotBeEmpty()->end()
+                        ->scalarNode('browser_inner_list_row')->defaultValue('RzMediaBundle:MediaAdmin:browser_masonry_item.html.twig')->cannotBeEmpty()->end()
+                        ->scalarNode('upload')->defaultValue('RzMediaBundle:MediaAdmin:upload.html.twig')->cannotBeEmpty()->end()
+                    ->end()
+                ->end()
                 ->arrayNode('admin')
                     ->addDefaultsIfNotSet()
                     ->children()

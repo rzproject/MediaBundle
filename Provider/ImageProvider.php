@@ -190,7 +190,8 @@ class ImageProvider extends FileProvider
         $formMapper->add('enabled', null, array('required' => false));
         $formMapper->add('authorName');
         $formMapper->add('cdnIsFlushable');
-        $formMapper->add('description', 'rz_ckeditor', array('config_name'=>'simple_editor'));
+//        $formMapper->add('description', 'rz_ckeditor', array('config_name'=>'simple_editor'));
+        $formMapper->add('description', 'ckeditor', array('config_name'=>'simple_editor'));
         $formMapper->add('copyright');
         $formMapper->add('binaryContent', 'file', array('required' => false,
                                                         'thumbnail_enabled'=>true,

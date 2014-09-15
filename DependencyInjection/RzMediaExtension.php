@@ -62,6 +62,8 @@ class RzMediaExtension extends Extension
         $this->configureRzTemplates($config, $container);
         $this->configureManagers($config, $container);
 
+        $container->setParameter('rz_media.configuration.templates', $config['templates']);
+
         // merge RzFieldTypeBundle to RzAdminBundle
         $container->setParameter('twig.form.resources',
                                  array_merge(

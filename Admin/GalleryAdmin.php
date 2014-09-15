@@ -54,7 +54,8 @@ class GalleryAdmin extends BaseGalleryAdmin
             ->with('Details')
                 ->add('image', 'sonata_type_model_list',array('required' => false, 'attr'=>array('class'=>'span8')))
                 ->add('abstract')
-                ->add('content', 'rz_ckeditor', array('required' => false))
+                //->add('content', 'rz_ckeditor', array('required' => false))
+                ->add('content', 'ckeditor', array('required' => false))
             ->end()
             ->with('Assets')
                 ->add('galleryHasMedias', 'sonata_type_collection', array(
