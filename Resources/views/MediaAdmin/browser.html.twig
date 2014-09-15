@@ -16,8 +16,10 @@
     </script>
 {% endblock %}
 
+{% block navbar %}{% endblock navbar %}
 {% block preview %}{% endblock %}
 {% block list_filters_standard %}{% endblock list_filters_standard %}
+{% block actions %}{% endblock %}
 
 {% block list_table_standard %}
     <div class="rz-gallery-container{% if app.request.isxmlhttprequest %} rz-gallery-container-modal{% endif %}">
