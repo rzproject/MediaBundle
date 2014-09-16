@@ -336,6 +336,55 @@
                 <source>sonata_media</source>
                 <target>Media Library</target>
             </trans-unit>
+            <trans-unit id="form.label_image">
+                <source>form.label_image</source>
+                <target>Image</target>
+            </trans-unit>
+            <trans-unit id="form.label_abstract">
+                <source>form.label_abstract</source>
+                <target>Abstract</target>
+            </trans-unit>
+            <trans-unit id="form.label_content">
+                <source>form.label_content</source>
+                <target>Content</target>
+            </trans-unit>
+
+            <trans-unit id="show.label_context">
+                <source>show.label_context</source>
+                <target>Context</target>
+            </trans-unit>
+            <trans-unit id="show.label_enabled">
+                <source>show.label_enabled</source>
+                <target>Enabled</target>
+            </trans-unit>
+            <trans-unit id="show.label_default_format">
+                <source>show.label_default_format</source>
+                <target>Default Format</target>
+            </trans-unit>
+            <trans-unit id="show.label_name">
+                <source>show.label_name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="show.label_image">
+                <source>show.label_image</source>
+                <target>Image</target>
+            </trans-unit>
+            <trans-unit id="show.label_abstract">
+                <source>show.label_abstract</source>
+                <target>Abstract</target>
+            </trans-unit>
+            <trans-unit id="show.label_content_formatter">
+                <source>show.label_content_formatter</source>
+                <target>Content Formter</target>
+            </trans-unit>
+            <trans-unit id="show.label_content">
+                <source>show.label_content</source>
+                <target>Content</target>
+            </trans-unit>
+            <trans-unit id="show.label_gallery_has_medias">
+               <source>show.label_gallery_has_medias</source>
+               <target>Medias</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
