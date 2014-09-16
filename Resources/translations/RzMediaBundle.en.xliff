@@ -385,6 +385,10 @@
                <source>show.label_gallery_has_medias</source>
                <target>Medias</target>
             </trans-unit>
+            <trans-unit id="breadcrumb.link_gallery_history">
+               <source>breadcrumb.link_gallery_history</source>
+               <target>History</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
