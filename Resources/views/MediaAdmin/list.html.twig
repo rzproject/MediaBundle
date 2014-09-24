@@ -90,9 +90,9 @@
                                     {% endif %}
 
                                     {% if name == persistent_parameters.context %}
-                                        <li class="active{% if loop.first %} rz-media-first-context{% endif %}"><a href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, 'SonataMediaBundle') }}</a></li>
+                                        <li class="active{% if loop.first %} rz-media-first-context{% endif %}"><a href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, admin.translationdomain) }}</a></li>
                                     {% else %}
-                                        <li><a {% if loop.first %}class="rz-media-first-context" {% endif %}href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, 'SonataMediaBundle') }}</a></li>
+                                        <li><a {% if loop.first %}class="rz-media-first-context" {% endif %}href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, admin.translationdomain) }}</a></li>
                                     {% endif %}
                                 {% endfor %}
                             </ul>
@@ -137,16 +137,16 @@
     {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
     {% if providers|length > 1 %}
         {% if not persistent_parameters.provider %}
-            <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null}) }}">{{ "link.all_providers"|trans({}, 'SonataMediaBundle') }}</a></li>
+            <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null}) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
         {% else %}
-            <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null}) }}">{{ "link.all_providers"|trans({}, 'SonataMediaBundle') }}</a></li>
+            <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null}) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
         {% endif %}
 
         {% for provider_name in providers %}
             {% if persistent_parameters.provider == provider_name%}
-                <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name}) }}">{{ provider_name|trans({}, 'SonataMediaBundle') }}</a></li>
+                <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name}) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
             {% else %}
-                <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name}) }}">{{ provider_name|trans({}, 'SonataMediaBundle') }}</a></li>
+                <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name}) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
             {% endif %}
         {% endfor %}
     {% endif %}

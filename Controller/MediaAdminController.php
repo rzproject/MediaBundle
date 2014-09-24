@@ -58,9 +58,9 @@ class MediaAdminController extends Controller
             $datagrid->setValue('category', null, $this->getRequest()->get('category'));
         }
 
-//        if (!$this->getRequest()->get('filter') && $this->admin->getPersistentParameter('provider')) {
-//            $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
-//        }
+        if (!$this->getRequest()->get('filter') && $this->admin->getPersistentParameter('provider')) {
+            $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
+        }
 
         $formView = $datagrid->getForm()->createView();
 
@@ -74,21 +74,6 @@ class MediaAdminController extends Controller
             'root_category' => $category,
             'csrf_token'    => $this->getCsrfToken('sonata.batch'),
         ));
-
-//        $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
-//        $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
-//
-//        $formView = $datagrid->getForm()->createView();
-//
-//        // set the theme for the current Admin Form
-//        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
-//
-//        return $this->render($this->admin->getTemplate('list'), array(
-//            'action'     => 'list',
-//            'form'       => $formView,
-//            'datagrid'   => $datagrid,
-//            'csrf_token' => $this->getCsrfToken('sonata.batch'),
-//        ));
     }
 
     /**

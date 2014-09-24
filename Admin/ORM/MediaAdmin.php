@@ -29,6 +29,7 @@ class MediaAdmin extends BaseMediaAdmin
             $contexts[$name] = $name;
         }
 
+
         $datagridMapper
             ->add('name')
             ->add('providerReference')
@@ -36,9 +37,7 @@ class MediaAdmin extends BaseMediaAdmin
             ->add('context', null, array(), 'choice', array(
                 'choices' => $contexts
             ))
-            ->add('category', null, array(
-                'show_filter' => false,
-            ))
+            ->add('category', null, array('show_filter' => false))
         ;
 
         $providers = array();
@@ -68,7 +67,17 @@ class MediaAdmin extends BaseMediaAdmin
     public function getPersistentParameters()
     {
 
-        $parameters = parent::getPersistentParameters();
+        $parameters = array();
+
+        foreach ($this->getExtensions() as $extension) {
+            $params = $extension->getPersistentParameters($this);
+
+            if (!is_array($params)) {
+                throw new \RuntimeException(sprintf('The %s::getPersistentParameters must return an array', get_class($extension)));
+            }
+
+            $parameters = array_merge($parameters, $params);
+        }
 
         if (!$this->hasRequest()) {
             return $parameters;
