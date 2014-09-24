@@ -22,11 +22,23 @@ class MediaAdmin extends BaseMediaAdmin
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
+
+        $contexts = array();
+
+        foreach ($this->pool->getContexts() as $name => $context) {
+            $contexts[$name] = $name;
+        }
+
         $datagridMapper
             ->add('name')
             ->add('providerReference')
             ->add('enabled')
-            ->add('context')
+            ->add('context', null, array(), 'choice', array(
+                'choices' => $contexts
+            ))
+            ->add('category', null, array(
+                'show_filter' => false,
+            ))
         ;
 
         $providers = array();
@@ -42,7 +54,6 @@ class MediaAdmin extends BaseMediaAdmin
                 'required' => false,
                 'multiple' => false,
                 'expanded' => false,
-                'expanded' => false,
                 'selectpicker_dropup' => true,
             ),
             'field_type'=> 'choice',
@@ -56,16 +67,19 @@ class MediaAdmin extends BaseMediaAdmin
      */
     public function getPersistentParameters()
     {
+
+        $parameters = parent::getPersistentParameters();
+
         if (!$this->hasRequest()) {
-            return array();
+            return $parameters;
         }
 
-        $filters = $this->getRequest()->query->get('filter');
-//        $context   = $filters? $filters['context']['value'] :$this->getRequest()->get('context', $this->pool->getDefaultContext());
-//        $providers = $this->pool->getProvidersByContext($context);
-//        $provider  = $filters ? $filters['providerName']['value'] : $this->getRequest()->get('provider');
+        if ($filter = $this->getRequest()->get('filter')) {
+            $context = $filter['context']['value'];
+        } else {
+            $context   = $this->getRequest()->get('context', $this->pool->getDefaultContext());
+        }
 
-        $context   = $this->getRequest()->get('context', $this->pool->getDefaultContext());
         $providers = $this->pool->getProvidersByContext($context);
         $provider  = $this->getRequest()->get('provider');
 
@@ -76,9 +90,10 @@ class MediaAdmin extends BaseMediaAdmin
             $this->getRequest()->query->set('provider', $provider);
         }
 
-        return array(
+        return array_merge($parameters,array(
             'provider' => $provider,
             'context'  => $context,
-        );
+            'category' => $this->getRequest()->get('category'),
+        ));
     }
 }

@@ -30,9 +30,37 @@ class MediaAdminController extends Controller
             throw new AccessDeniedException();
         }
 
+        if ($listMode = $this->getRequest()->get('_list_mode')) {
+            $this->admin->setListMode($listMode);
+        }
+
         $datagrid = $this->admin->getDatagrid();
-        $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
-        $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
+
+        $filters = $this->getRequest()->get('filter');
+
+        // set the default context
+        if (!$filters) {
+            $context = $this->admin->getPersistentParameter('context',  $this->get('sonata.media.pool')->getDefaultContext());
+        } else {
+            $context = $filters['context']['value'];
+        }
+
+        $datagrid->setValue('context', null, $context);
+
+        // retrieve the main category for the tree view
+        $category = $this->container->get('sonata.classification.manager.category')->getRootCategory($context);
+
+        if (!$filters) {
+            $datagrid->setValue('category', null, $category->getId());
+        }
+
+        if ($this->getRequest()->get('category')) {
+            $datagrid->setValue('category', null, $this->getRequest()->get('category'));
+        }
+
+//        if (!$this->getRequest()->get('filter') && $this->admin->getPersistentParameter('provider')) {
+//            $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
+//        }
 
         $formView = $datagrid->getForm()->createView();
 
@@ -40,11 +68,27 @@ class MediaAdminController extends Controller
         $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
 
         return $this->render($this->admin->getTemplate('list'), array(
-            'action'     => 'list',
-            'form'       => $formView,
-            'datagrid'   => $datagrid,
-            'csrf_token' => $this->getCsrfToken('sonata.batch'),
+            'action'        => 'list',
+            'form'          => $formView,
+            'datagrid'      => $datagrid,
+            'root_category' => $category,
+            'csrf_token'    => $this->getCsrfToken('sonata.batch'),
         ));
+
+//        $datagrid->setValue('context', null, $this->admin->getPersistentParameter('context'));
+//        $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
+//
+//        $formView = $datagrid->getForm()->createView();
+//
+//        // set the theme for the current Admin Form
+//        $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
+//
+//        return $this->render($this->admin->getTemplate('list'), array(
+//            'action'     => 'list',
+//            'form'       => $formView,
+//            'datagrid'   => $datagrid,
+//            'csrf_token' => $this->getCsrfToken('sonata.batch'),
+//        ));
     }
 
     /**
