@@ -14,6 +14,14 @@ namespace Rz\MediaBundle\Admin\ORM;
 use Sonata\MediaBundle\Admin\ORM\MediaAdmin as BaseMediaAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 
+use Sonata\AdminBundle\Admin\Admin;
+use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\MediaBundle\Provider\Pool;
+use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
+
 class MediaAdmin extends BaseMediaAdmin
 {
     /**
@@ -103,6 +111,42 @@ class MediaAdmin extends BaseMediaAdmin
             'provider' => $provider,
             'context'  => $context,
             'category' => $this->getRequest()->get('category'),
+        ));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureFormFields(FormMapper $formMapper)
+    {
+        $media = $this->getSubject();
+
+        if (!$media) {
+            $media = $this->getNewInstance();
+        }
+
+        if (!$media || !$media->getProviderName()) {
+            return;
+        }
+
+        $formMapper->add('providerName', 'hidden');
+
+        $formMapper->getFormBuilder()->addModelTransformer(new ProviderDataTransformer($this->pool, $this->getClass()), true);
+
+        $provider = $this->pool->getProvider($media->getProviderName());
+
+        if ($media->getId()) {
+            $provider->buildEditForm($formMapper);
+        } else {
+            $provider->buildCreateForm($formMapper);
+        }
+
+            $formMapper->add('category', 'sonata_type_model_list', array(), array(
+            'link_parameters' => array(
+                'context'      => $media->getContext() ?: 'default',
+                'hide_context' => false,
+                'mode'         => 'tree',
+            )
         ));
     }
 }
