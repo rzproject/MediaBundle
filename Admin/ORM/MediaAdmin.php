@@ -140,13 +140,5 @@ class MediaAdmin extends BaseMediaAdmin
         } else {
             $provider->buildCreateForm($formMapper);
         }
-
-            $formMapper->add('category', 'sonata_type_model_list', array(), array(
-            'link_parameters' => array(
-                'context'      => $media->getContext() ?: 'default',
-                'hide_context' => false,
-                'mode'         => 'tree',
-            )
-        ));
     }
 }
