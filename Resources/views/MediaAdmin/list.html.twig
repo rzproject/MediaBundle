@@ -75,6 +75,7 @@
                                     </a>
                                 </div>
                             {% endif %}
+                            {% if not app.request.get('hide_context') %}
                             <ul class="nav nav-tabs tabdrop rz-tablinks rz-media-context-selector{% if app.request.isxmlhttprequest %} rz-media-context-selector-modal{% endif %}">
                                 {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
 
@@ -96,6 +97,7 @@
                                     {% endif %}
                                 {% endfor %}
                             </ul>
+                            {% endif %}
                             {% if admin.datagrid.results|length > 0 %}
                                 <div class="rz-masonry-container">
                                     <div class="rz-masonry-gallery" data-masonry-options="{ 'isFitWidth': true }">
