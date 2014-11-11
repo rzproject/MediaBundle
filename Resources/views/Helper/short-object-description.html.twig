@@ -1,16 +1,20 @@
 {% if admin.hasRoute('edit') and admin.isGranted('EDIT') %}
     <div class="row-fluid">
-        <div class="span12">
-            {% media object, 'reference' %}
+        <div class="span3">
+            {% media object, 'admin' %}
         </div>
-        <div class="span12">
-            <a href="{{ admin.generateObjectUrl('edit', object) }}" target="new">{{ description }}</a>
+        <div class="span9">
+            <div class="row-fluid">
+                <div class="span12">
+                    <strong>Name:</strong><a href="{{ admin.generateObjectUrl('edit', object) }}" target="new">{{ description }}</a>
+                </div>
+            </div>
         </div>
     </div>
 {% else %}
     <div class="row-fluid">
         <div class="span12">
-            {% media object, 'reference' %}
+            {% media object, 'admin' %}
         </div>
     </div>
 {% endif %}

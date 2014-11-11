@@ -48,6 +48,12 @@ class RzMediaExtension extends Extension
         $loader->load('form.xml');
         $loader->load('service.xml');
 
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if ('doctrine_orm' == $config['db_driver'] && isset($bundles['FOSRestBundle']) && isset($bundles['NelmioApiDocBundle'])) {
+            $loader->load('api_controllers.xml');
+        }
+
 
         $this->configureParameterClass($container, $config);
         $this->configureAdminClass($config, $container);
@@ -55,6 +61,8 @@ class RzMediaExtension extends Extension
         $this->configureController($config, $container);
         $this->configureRzTemplates($config, $container);
         $this->configureManagers($config, $container);
+
+        $container->setParameter('rz_media.configuration.templates', $config['templates']);
 
         // merge RzFieldTypeBundle to RzAdminBundle
         $container->setParameter('twig.form.resources',
@@ -160,13 +168,8 @@ class RzMediaExtension extends Extension
         $collector->addAssociation($config['class']['gallery'], 'mapManyToOne', array(
             'fieldName' => 'image',
             'targetEntity' => $config['class']['media'],
-            'cascade' =>
-            array(
-                0 => 'remove',
-                1 => 'persist',
-                2 => 'refresh',
-                3 => 'merge',
-                4 => 'detach',
+            'cascade'       => array(
+                'persist',
             ),
             'mappedBy' => NULL,
             'inversedBy' => NULL,

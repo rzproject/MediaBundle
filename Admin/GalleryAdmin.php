@@ -16,6 +16,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\MediaBundle\Provider\Pool;
+use Sonata\AdminBundle\Show\ShowMapper;
 
 class GalleryAdmin extends BaseGalleryAdmin
 {
@@ -54,7 +55,18 @@ class GalleryAdmin extends BaseGalleryAdmin
             ->with('Details')
                 ->add('image', 'sonata_type_model_list',array('required' => false, 'attr'=>array('class'=>'span8')))
                 ->add('abstract')
-                ->add('content', 'rz_ckeditor', array('required' => false))
+
+                ->add('content', 'sonata_formatter_type', array(
+                    'event_dispatcher' => $formMapper->getFormBuilder()->getEventDispatcher(),
+                    'format_field'   => 'contentFormatter',
+                    'source_field'   => 'rawContent',
+                    'ckeditor_context' => 'news',
+                    'source_field_options'      => array(
+                        'attr' => array('class' => 'span12', 'rows' => 20)
+                    ),
+                    'target_field'   => 'content',
+                    'listener'       => true,
+                ))
             ->end()
             ->with('Assets')
                 ->add('galleryHasMedias', 'sonata_type_collection', array(
@@ -91,10 +103,41 @@ class GalleryAdmin extends BaseGalleryAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->addIdentifier('name', null, array('footable'=>array('attr'=>array('data_toggle'=>true))))
+            ->add('name', null, array('footable'=>array('attr'=>array('data_toggle'=>true))))
             ->add('enabled', 'boolean', array('editable' => true, 'footable'=>array('attr'=>array('data_hide'=>'phone'))))
             ->add('context', 'trans', array('catalogue' => 'SonataMediaBundle', 'footable'=>array('attr'=>array('data_hide'=>'phone,tablet'))))
             ->add('defaultFormat', 'trans', array('catalogue' => 'SonataMediaBundle', 'footable'=>array('attr'=>array('data_hide'=>'phone,tablet'))))
+            ->add('_action', 'actions', array(
+                'actions' => array(
+                    'Show' => array('template' => 'SonataAdminBundle:CRUD:list__action_show.html.twig'),
+                    'Edit' => array('template' => 'SonataAdminBundle:CRUD:list__action_edit.html.twig'),
+                    'Delete' => array('template' => 'SonataAdminBundle:CRUD:list__action_delete.html.twig')),
+                'footable'=>array('attr'=>array('data_hide'=>'phone,tablet')),
+            ))
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureShowFields(ShowMapper $showMapper)
+    {
+        $showMapper
+            ->with('Settings')
+                ->add('context')
+                ->add('enabled')
+                ->add('defaultFormat')
+                ->add('name')
+            ->end()
+            ->with('Details')
+                ->add('image')
+                ->add('abstract')
+                ->add('contentFormatter')
+                ->add('content')
+            ->end()
+            ->with('Assets')
+                ->add('galleryHasMedias')
+            ->end()
         ;
     }
 }

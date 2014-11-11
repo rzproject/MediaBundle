@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xsi="http://www.w3.org/2001/XMLSchema-instance" schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <mapped-superclass name="Rz\MediaBundle\Entity\Gallery">
+    <mapped-superclass name="Rz\MediaBundle\Entity\Media">
         <field name="abstract"                type="string" length="255"  column="abstract"  nullable="true"/>
         <field name="content"                 type="text"   column="content"   nullable="true"/>
         <field name="rawContent"              type="text"   column="raw_content"  nullable="true"/>

@@ -32,6 +32,14 @@ class Configuration implements ConfigurationInterface
         $this->addBundleSettings($node);
         $this->addModelSection($node);
         $this->addManagerSection($node);
+
+        $node
+            ->children()
+                ->scalarNode('db_driver')->defaultValue('doctrine_orm')->end()
+                ->scalarNode('default_context')->defaultValue('default')->end()
+            ->end()
+        ;
+
         return $treeBuilder;
     }
 
@@ -42,6 +50,15 @@ class Configuration implements ConfigurationInterface
     {
         $node
             ->children()
+                ->arrayNode('templates')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('layout')->defaultValue('RzMediaBundle:MediaBrowser:layout.html.twig')->cannotBeEmpty()->end()
+                        ->scalarNode('browser')->defaultValue('RzMediaBundle:MediaAdmin:browser.html.twig')->cannotBeEmpty()->end()
+                        ->scalarNode('browser_inner_list_row')->defaultValue('RzMediaBundle:MediaAdmin:browser_masonry_item.html.twig')->cannotBeEmpty()->end()
+                        ->scalarNode('upload')->defaultValue('RzMediaBundle:MediaAdmin:upload.html.twig')->cannotBeEmpty()->end()
+                    ->end()
+                ->end()
                 ->arrayNode('admin')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -50,7 +67,7 @@ class Configuration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('class')->cannotBeEmpty()->defaultValue('Rz\\MediaBundle\\Admin\\ORM\\MediaAdmin')->end()
                                 ->scalarNode('controller')->cannotBeEmpty()->defaultValue('RzMediaBundle:MediaAdmin')->end()
-                                ->scalarNode('translation')->cannotBeEmpty()->defaultValue('SonataMediaBundle')->end()
+                                ->scalarNode('translation')->cannotBeEmpty()->defaultValue('RzMediaBundle')->end()
                                 ->arrayNode('templates')
                                     ->addDefaultsIfNotSet()
                                     ->children()
@@ -67,7 +84,7 @@ class Configuration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('class')->cannotBeEmpty()->defaultValue('Rz\\MediaBundle\\Admin\\GalleryAdmin')->end()
                                 ->scalarNode('controller')->cannotBeEmpty()->defaultValue('SonataAdminBundle:CRUD')->end()
-                                ->scalarNode('translation')->cannotBeEmpty()->defaultValue('SonataMediaBundle')->end()
+                                ->scalarNode('translation')->cannotBeEmpty()->defaultValue('RzMediaBundle')->end()
                                 ->arrayNode('templates')
                                     ->addDefaultsIfNotSet()
                                     ->children()
@@ -82,7 +99,7 @@ class Configuration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('class')->cannotBeEmpty()->defaultValue('Rz\\MediaBundle\\Admin\\GalleryHasMediaAdmin')->end()
                                 ->scalarNode('controller')->cannotBeEmpty()->defaultValue('SonataAdminBundle:CRUD')->end()
-                                ->scalarNode('translation')->cannotBeEmpty()->defaultValue('SonataMediaBundle')->end()
+                                ->scalarNode('translation')->cannotBeEmpty()->defaultValue('RzMediaBundle')->end()
                                 ->arrayNode('templates')
                                     ->addDefaultsIfNotSet()
                                     ->children()

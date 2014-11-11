@@ -26,7 +26,18 @@ class FileProvider extends BaseProvider
         $formMapper->add('enabled', null, array('required' => false));
         $formMapper->add('authorName');
         $formMapper->add('cdnIsFlushable');
-        $formMapper->add('description', 'rz_ckeditor', array('config_name'=>'simple_editor'));
+        $formMapper->add('description');
+        $formMapper->add('content', 'sonata_formatter_type', array(
+            'event_dispatcher' => $formMapper->getFormBuilder()->getEventDispatcher(),
+            'format_field'   => 'contentFormatter',
+            'source_field'   => 'rawContent',
+            'ckeditor_context' => 'news',
+            'source_field_options'      => array(
+                'attr' => array('class' => 'span12', 'rows' => 20)
+            ),
+            'target_field'   => 'content',
+            'listener'       => true,
+        ));
         $formMapper->add('copyright');
         $formMapper->add('binaryContent', 'file', array('required' => false));
     }

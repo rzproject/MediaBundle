@@ -3,61 +3,93 @@
 namespace Rz\MediaBundle\Entity;
 
 use Sonata\MediaBundle\Entity\BaseGallery;
+use Sonata\MediaBundle\Model\MediaInterface;
 
-/**
- * Bundle\MediaBundle\Entity\BaseGallery
- */
-abstract class Gallery extends BaseGallery
+class Gallery extends BaseGallery
 {
-    protected $image;
     protected $abstract;
     protected $content;
+    protected $image;
+    protected $rawContent;
+    protected $contentFormatter;
 
     /**
-     * @param mixed $image
+     * {@inheritdoc}
      */
-    public function setImage ($image)
+    public function setImage(MediaInterface $image = null)
     {
         $this->image = $image;
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getImage ()
+    public function getImage()
     {
         return $this->image;
     }
 
     /**
-     * @param mixed $abstract
+     * {@inheritdoc}
      */
-    public function setAbstract ($abstract)
+    public function setAbstract($abstract)
     {
         $this->abstract = $abstract;
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getAbstract ()
+    public function getAbstract()
     {
         return $this->abstract;
     }
 
     /**
-     * @param mixed $content
+     * {@inheritdoc}
      */
-    public function setContent ($content)
+    public function setContent($content)
     {
         $this->content = $content;
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getContent ()
+    public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * @param mixed $contentFormatter
+     */
+    public function setContentFormatter($contentFormatter)
+    {
+        $this->contentFormatter = $contentFormatter;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContentFormatter()
+    {
+        return $this->contentFormatter;
+    }
+
+    /**
+     * @param mixed $rawContent
+     */
+    public function setRawContent($rawContent)
+    {
+        $this->rawContent = $rawContent;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRawContent()
+    {
+        return $this->rawContent;
     }
 }

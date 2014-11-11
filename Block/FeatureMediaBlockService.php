@@ -92,10 +92,10 @@ class FeatureMediaBlockService extends BaseFeatureMediaBlockService
     /**
      * {@inheritdoc}
      */
-    public function getStylesheets($media)
-    {
-        return array(
-            '/bundles/sonatamedia/blocks/feature_media/theme.css'
-        );
-    }
+//    public function getStylesheets($media)
+//    {
+//        return array(
+//            '/bundles/sonatamedia/blocks/feature_media/theme.css'
+//        );
+//    }
 }

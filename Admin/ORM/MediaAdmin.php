@@ -14,6 +14,14 @@ namespace Rz\MediaBundle\Admin\ORM;
 use Sonata\MediaBundle\Admin\ORM\MediaAdmin as BaseMediaAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 
+use Sonata\AdminBundle\Admin\Admin;
+use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\MediaBundle\Provider\Pool;
+use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
+
 class MediaAdmin extends BaseMediaAdmin
 {
     /**
@@ -22,11 +30,22 @@ class MediaAdmin extends BaseMediaAdmin
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
+
+        $contexts = array();
+
+        foreach ($this->pool->getContexts() as $name => $context) {
+            $contexts[$name] = $name;
+        }
+
+
         $datagridMapper
             ->add('name')
             ->add('providerReference')
             ->add('enabled')
-            ->add('context')
+            ->add('context', null, array(), 'choice', array(
+                'choices' => $contexts
+            ))
+            ->add('category', null, array('show_filter' => false))
         ;
 
         $providers = array();
@@ -42,7 +61,6 @@ class MediaAdmin extends BaseMediaAdmin
                 'required' => false,
                 'multiple' => false,
                 'expanded' => false,
-                'expanded' => false,
                 'selectpicker_dropup' => true,
             ),
             'field_type'=> 'choice',
@@ -56,16 +74,29 @@ class MediaAdmin extends BaseMediaAdmin
      */
     public function getPersistentParameters()
     {
-        if (!$this->hasRequest()) {
-            return array();
+
+        $parameters = array();
+
+        foreach ($this->getExtensions() as $extension) {
+            $params = $extension->getPersistentParameters($this);
+
+            if (!is_array($params)) {
+                throw new \RuntimeException(sprintf('The %s::getPersistentParameters must return an array', get_class($extension)));
+            }
+
+            $parameters = array_merge($parameters, $params);
         }
 
-        $filters = $this->getRequest()->query->get('filter');
-//        $context   = $filters? $filters['context']['value'] :$this->getRequest()->get('context', $this->pool->getDefaultContext());
-//        $providers = $this->pool->getProvidersByContext($context);
-//        $provider  = $filters ? $filters['providerName']['value'] : $this->getRequest()->get('provider');
+        if (!$this->hasRequest()) {
+            return $parameters;
+        }
 
-        $context   = $this->getRequest()->get('context', $this->pool->getDefaultContext());
+        if ($filter = $this->getRequest()->get('filter')) {
+            $context = $filter['context']['value'];
+        } else {
+            $context   = $this->getRequest()->get('context', $this->pool->getDefaultContext());
+        }
+
         $providers = $this->pool->getProvidersByContext($context);
         $provider  = $this->getRequest()->get('provider');
 
@@ -76,9 +107,38 @@ class MediaAdmin extends BaseMediaAdmin
             $this->getRequest()->query->set('provider', $provider);
         }
 
-        return array(
+        return array_merge($parameters,array(
             'provider' => $provider,
             'context'  => $context,
-        );
+            'category' => $this->getRequest()->get('category'),
+        ));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureFormFields(FormMapper $formMapper)
+    {
+        $media = $this->getSubject();
+
+        if (!$media) {
+            $media = $this->getNewInstance();
+        }
+
+        if (!$media || !$media->getProviderName()) {
+            return;
+        }
+
+        $formMapper->add('providerName', 'hidden');
+
+        $formMapper->getFormBuilder()->addModelTransformer(new ProviderDataTransformer($this->pool, $this->getClass()), true);
+
+        $provider = $this->pool->getProvider($media->getProviderName());
+
+        if ($media->getId()) {
+            $provider->buildEditForm($formMapper);
+        } else {
+            $provider->buildCreateForm($formMapper);
+        }
     }
 }

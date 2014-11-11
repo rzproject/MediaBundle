@@ -75,6 +75,7 @@
                                     </a>
                                 </div>
                             {% endif %}
+                            {% if not app.request.get('hide_context') %}
                             <ul class="nav nav-tabs tabdrop rz-tablinks rz-media-context-selector{% if app.request.isxmlhttprequest %} rz-media-context-selector-modal{% endif %}">
                                 {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
 
@@ -90,12 +91,13 @@
                                     {% endif %}
 
                                     {% if name == persistent_parameters.context %}
-                                        <li class="active{% if loop.first %} rz-media-first-context{% endif %}"><a href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, 'SonataMediaBundle') }}</a></li>
+                                        <li class="active{% if loop.first %} rz-media-first-context{% endif %}"><a href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, admin.translationdomain) }}</a></li>
                                     {% else %}
-                                        <li><a {% if loop.first %}class="rz-media-first-context" {% endif %}href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, 'SonataMediaBundle') }}</a></li>
+                                        <li><a {% if loop.first %}class="rz-media-first-context" {% endif %}href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, admin.translationdomain) }}</a></li>
                                     {% endif %}
                                 {% endfor %}
                             </ul>
+                            {% endif %}
                             {% if admin.datagrid.results|length > 0 %}
                                 <div class="rz-masonry-container">
                                     <div class="rz-masonry-gallery" data-masonry-options="{ 'isFitWidth': true }">
@@ -137,16 +139,16 @@
     {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
     {% if providers|length > 1 %}
         {% if not persistent_parameters.provider %}
-            <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null}) }}">{{ "link.all_providers"|trans({}, 'SonataMediaBundle') }}</a></li>
+            <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null}) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
         {% else %}
-            <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null}) }}">{{ "link.all_providers"|trans({}, 'SonataMediaBundle') }}</a></li>
+            <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null}) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
         {% endif %}
 
         {% for provider_name in providers %}
             {% if persistent_parameters.provider == provider_name%}
-                <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name}) }}">{{ provider_name|trans({}, 'SonataMediaBundle') }}</a></li>
+                <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name}) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
             {% else %}
-                <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name}) }}">{{ provider_name|trans({}, 'SonataMediaBundle') }}</a></li>
+                <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name}) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
             {% endif %}
         {% endfor %}
     {% endif %}
