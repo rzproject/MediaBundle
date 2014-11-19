@@ -137,18 +137,23 @@
 <div class="rz-media-provider-selector{% if app.request.isxmlhttprequest %} rz-media-provider-selector-modal{% endif %}">
     <ul class="nav nav-tabs rz-tablinks tabdrop">
     {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
+    {% if app.request.get('hide_context') %}
+        {% set hide_context = {'hide_context': app.request.get('hide_context')} %}
+    {% else %}
+        {% set hide_context = {} %}
+    {% endif %}
     {% if providers|length > 1 %}
         {% if not persistent_parameters.provider %}
-            <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null}) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
+            <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null } | merge(hide_context)) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
         {% else %}
-            <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null}) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
+            <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null} | merge(hide_context)) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
         {% endif %}
 
         {% for provider_name in providers %}
             {% if persistent_parameters.provider == provider_name%}
-                <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name}) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
+                <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name} | merge(hide_context)) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
             {% else %}
-                <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name}) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
+                <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name} | merge(hide_context)) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
             {% endif %}
         {% endfor %}
     {% endif %}
