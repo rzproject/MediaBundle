@@ -206,6 +206,13 @@
          {% endfor %}
 
          <input type="hidden" name="filter[_page]" id="filter__page" value="1" />
+
+         {% if app.request.get('hide_context') %}
+             <input type="hidden" name="hide_context" id="hide_context" value="{{ app.request.get('hide_context') }}" />
+         {% endif %}
+
+         {{ block('list_filter_persistent_parameters') }}
+
          {% set foo = form.children['_page'].setRendered() %}
          {{ form_rest(form) }}
          <div class="form-actions">
