@@ -5,6 +5,12 @@
 {% block preview %}{% endblock %}
 {% block list_filters_standard %}{% endblock list_filters_standard %}
 
+{% if app.request.get('hide_context') %}
+    {% set hide_context = {'hide_context': app.request.get('hide_context')} %}
+{% else %}
+    {% set hide_context = {} %}
+{% endif %}
+
 {% block list_table_standard %}
 <div class="rz-gallery-container{% if app.request.isxmlhttprequest %} rz-gallery-container-modal{% endif %}">
     {{ block('media_provider_selector') }}
@@ -137,11 +143,6 @@
 <div class="rz-media-provider-selector{% if app.request.isxmlhttprequest %} rz-media-provider-selector-modal{% endif %}">
     <ul class="nav nav-tabs rz-tablinks tabdrop">
     {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
-    {% if app.request.get('hide_context') %}
-        {% set hide_context = {'hide_context': app.request.get('hide_context')} %}
-    {% else %}
-        {% set hide_context = {} %}
-    {% endif %}
     {% if providers|length > 1 %}
         {% if not persistent_parameters.provider %}
             <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null } | merge(hide_context)) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
