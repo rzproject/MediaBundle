@@ -20,6 +20,7 @@ use Sonata\AdminBundle\Show\ShowMapper;
 
 class GalleryAdmin extends BaseGalleryAdmin
 {
+    protected $formOptions = array('validation_groups'=>array('admin'), 'cascade_validation'=>true);
 
     /**
      * {@inheritdoc}
@@ -71,6 +72,7 @@ class GalleryAdmin extends BaseGalleryAdmin
             ->with('Assets')
                 ->add('galleryHasMedias', 'sonata_type_collection', array(
                         'cascade_validation' => true,
+                        'error_bubbling' => false,
                         //'attr' => array('class'=>'span6'),
                     ), array(
                         'edit' => 'inline',

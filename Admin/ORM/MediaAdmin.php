@@ -24,6 +24,8 @@ use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
 
 class MediaAdmin extends BaseMediaAdmin
 {
+    protected $formOptions = array('validation_groups'=>array('admin'), 'cascade_validation'=>true);
+
     /**
      * @param  \Sonata\AdminBundle\Datagrid\DatagridMapper $datagridMapper
      * @return void

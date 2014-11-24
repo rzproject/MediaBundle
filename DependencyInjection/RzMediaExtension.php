@@ -47,6 +47,7 @@ class RzMediaExtension extends Extension
         $loader->load('block.xml');
         $loader->load('form.xml');
         $loader->load('service.xml');
+        $loader->load('validators.xml');
 
         $bundles = $container->getParameter('kernel.bundles');
 
