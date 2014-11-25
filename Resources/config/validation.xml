@@ -121,7 +121,7 @@
         </constraint>
     </class>
 
-    <class name="Sonata\MediaBundle\Entity\BaseGalleryHasMedia">
+    <class name="Rz\MediaBundle\Entity\GalleryHasMedia">
         <property name="media">
             <constraint name="NotBlank">
                 <option name="groups">

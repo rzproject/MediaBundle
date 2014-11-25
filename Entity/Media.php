@@ -12,6 +12,10 @@ abstract class Media extends BaseMedia
     protected $rawContent;
     protected $contentFormatter;
 
+    public function __construct() {
+        $this->enabled = true;
+    }
+
     /**
      * @return mixed
      */

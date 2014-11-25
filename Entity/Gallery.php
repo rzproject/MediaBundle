@@ -16,6 +16,16 @@ class Gallery extends BaseGallery
     /**
      * {@inheritdoc}
      */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->enabled = true;
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setImage(MediaInterface $image = null)
     {
         $this->image = $image;
