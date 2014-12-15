@@ -191,8 +191,8 @@ class MediaBxSliderBlockService extends BaseBlockService
         $formMapper->add('settings', 'sonata_type_immutable_array', array(
                                        'keys' => array(
                                            array('title', 'text', array('required' => false, 'attr'=>array('class'=>'span8'))),
-                                           array('context', 'choice', array('required' => true, 'choices' => $contextChoices, 'attr'=>array('class'=>'span8'))),
-                                           array('format', 'choice', array('required' => count($formatChoices) > 0, 'choices' => $formatChoices, 'attr'=>array('class'=>'span8'))),
+                                           array('context', 'choice', array('required' => true, 'choices' => $contextChoices)),
+                                           array('format', 'choice', array('required' => count($formatChoices) > 0, 'choices' => $formatChoices)),
                                            array($builder, null, array('attr'=>array('class'=>'span8'))),
                                            array('mode', 'choice', array(
                                                'choices'   => array('horizontal' => 'horizontal', 'vertical' => 'vertical')

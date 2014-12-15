@@ -32,8 +32,8 @@
 
                 settings_{{ block.id }}.mode = '{{ settings.mode }}';
                 settings_{{ block.id }}.speed = {{ settings.speed }};
-                settings_{{ block.id }}.slideMargin = {{ settings.slideMargin }};
-                settings_{{ block.id }}.startSlide = {{ settings.startSlide }};
+                settings_{{ block.id }}.slideMargin = {% if settings.slideMargin %}{{ settings.slideMargin }}{% else %}0{% endif %};
+                settings_{{ block.id }}.startSlide = {% if settings.startSlide %}{{ settings.startSlide }}{% else %}0{% endif %};
                 settings_{{ block.id }}.randomStart = {% if settings.randomStart %}true{% else %}false{% endif %};
                 settings_{{ block.id }}.slideSelector = '{{ settings.slideSelector }}';
                 settings_{{ block.id }}.infiniteLoop = {% if settings.infiniteLoop %}true{% else %}false{% endif %};
@@ -43,13 +43,13 @@
                 settings_{{ block.id }}.ticker = {% if settings.ticker %}true{% else %}false{% endif %};
                 settings_{{ block.id }}.tickerHover = {% if settings.tickerHover %}true{% else %}false{% endif %};
                 settings_{{ block.id }}.adaptiveHeight = {% if settings.adaptiveHeight %}true{% else %}false{% endif %};
-                settings_{{ block.id }}.adaptiveHeightSpeed = {{ settings.adaptiveHeightSpeed }};
+                settings_{{ block.id }}.adaptiveHeightSpeed = {% if settings.adaptiveHeightSpeed %}{{ settings.adaptiveHeightSpeed }}{% else %}500{% endif %};
                 settings_{{ block.id }}.video = {% if settings.video %}true{% else %}false{% endif %};
                 settings_{{ block.id }}.responsive = {% if settings.responsive %}true{% else %}false{% endif %};
                 settings_{{ block.id }}.useCSS = {% if settings.useCSS %}true{% else %}false{% endif %};
                 settings_{{ block.id }}.preloadImages = '{{ settings.preloadImages }}';
                 settings_{{ block.id }}.touchEnabled = {% if settings.touchEnabled %}true{% else %}false{% endif %};
-                settings_{{ block.id }}.swipeThreshold = {{ settings.swipeThreshold }};
+                settings_{{ block.id }}.swipeThreshold = {% if settings.swipeThreshold %}{{ settings.swipeThreshold }}{% else %}50{% endif %};
                 settings_{{ block.id }}.oneToOneTouch = {% if settings.oneToOneTouch %}true{% else %}false{% endif %};
                 settings_{{ block.id }}.preventDefaultSwipeX = {% if settings.preventDefaultSwipeX %}true{% else %}false{% endif %};
                 settings_{{ block.id }}.preventDefaultSwipeY = {% if settings.preventDefaultSwipeY %}true{% else %}false{% endif %};
@@ -70,15 +70,15 @@
                 settings_{{ block.id }}.autoControlsCombine = {% if settings.autoControlsCombine %}true{% else %}false{% endif %};
                 settings_{{ block.id }}.autoControlsSelector = {% if settings.autoControlsSelector %}true{% else %}false{% endif %};
                 settings_{{ block.id }}.auto = {% if settings.auto %}true{% else %}false{% endif %};
-                settings_{{ block.id }}.pause = {{ settings.pause }};
+                settings_{{ block.id }}.pause = {% if settings.pause %}{{ settings.pause }}{% else %}4000{% endif %};
                 settings_{{ block.id }}.autoStart = {% if settings.autoStart %}true{% else %}false{% endif %};
                 settings_{{ block.id }}.autoDirection = '{{ settings.autoDirection }}';
                 settings_{{ block.id }}.autoHover = {% if settings.autoHover %}true{% else %}false{% endif %};
-                settings_{{ block.id }}.autoDelay = {{ settings.autoDelay }};
-                settings_{{ block.id }}.minSlides = {{ settings.minSlides }};
-                settings_{{ block.id }}.maxSlides = {{ settings.maxSlides }};
-                settings_{{ block.id }}.moveSlides = {{ settings.moveSlides }};
-                settings_{{ block.id }}.slideWidth = {{ settings.slideWidth }};
+                settings_{{ block.id }}.autoDelay = {% if settings.autoDelay %}{{ settings.autoDelay }}{% else %}0{% endif %};
+                settings_{{ block.id }}.minSlides = {% if settings.minSlides %}{{ settings.minSlides }}{% else %}1{% endif %};
+                settings_{{ block.id }}.maxSlides = {% if settings.maxSlides %}{{ settings.maxSlides }}{% else %}1{% endif %};
+                settings_{{ block.id }}.moveSlides = {% if settings.moveSlides %}{{ settings.moveSlides }}{% else %}0{% endif %};
+                settings_{{ block.id }}.slideWidth = {% if settings.slideWidth %}{{ settings.slideWidth }}{% else %}0{% endif %};
 
                 console.log(settings_{{ block.id }});
                 {#rzmediacarousel.settings = settings;#}
