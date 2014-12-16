@@ -50,17 +50,29 @@ class MediaAdminController extends Controller
         // retrieve the main category for the tree view
         $category = $this->container->get('sonata.classification.manager.category')->getRootCategory($context);
 
-        if (!$filters) {
-            $datagrid->setValue('category', null, $category->getId());
-        }
-
         if ($this->getRequest()->get('category')) {
-            $datagrid->setValue('category', null, $this->getRequest()->get('category'));
+            $contextInCategory = $this->container->get('sonata.classification.manager.category')->findBy(array(
+                'id'      => (int) $this->getRequest()->get('category'),
+                'context' => $context
+            ));
+            if (!empty($contextInCategory)) {
+                $datagrid->setValue('category', null, $this->getRequest()->get('category'));
+            } else {
+                $datagrid->setValue('category', null, $category->getId());
+            }
         }
 
-        if (!$this->getRequest()->get('filter') && $this->admin->getPersistentParameter('provider')) {
-            $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
-        }
+//        if (!$filters) {
+//            $datagrid->setValue('category', null, $category->getId());
+//        }
+//
+//        if ($this->getRequest()->get('category')) {
+//            $datagrid->setValue('category', null, $this->getRequest()->get('category'));
+//        }
+//
+//        if (!$this->getRequest()->get('filter') && $this->admin->getPersistentParameter('provider')) {
+//            $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
+//        }
 
         $formView = $datagrid->getForm()->createView();
 
