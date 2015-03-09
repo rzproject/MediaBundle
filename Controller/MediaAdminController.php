@@ -12,6 +12,7 @@
 namespace Rz\MediaBundle\Controller;
 
 use Sonata\MediaBundle\Controller\MediaAdminController as Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class MediaAdminController extends Controller
 {
@@ -20,23 +21,24 @@ class MediaAdminController extends Controller
     /**
      * return the Response object associated to the list action
      *
-     * @throws AccessDeniedException
+     * @param Request $request
      * @return Response
+     * @throws AccessDeniedException
      */
-    public function listAction()
+    public function listAction(Request $request = null)
     {
 
         if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
         }
 
-        if ($listMode = $this->getRequest()->get('_list_mode')) {
+        if ($listMode = $request->get('_list_mode')) {
             $this->admin->setListMode($listMode);
         }
 
         $datagrid = $this->admin->getDatagrid();
 
-        $filters = $this->getRequest()->get('filter');
+        $filters = $request->get('filter');
 
         // set the default context
         if (!$filters) {
@@ -50,29 +52,17 @@ class MediaAdminController extends Controller
         // retrieve the main category for the tree view
         $category = $this->container->get('sonata.classification.manager.category')->getRootCategory($context);
 
-        if ($this->getRequest()->get('category')) {
+        if ($request->get('category')) {
             $contextInCategory = $this->container->get('sonata.classification.manager.category')->findBy(array(
-                'id'      => (int) $this->getRequest()->get('category'),
+                'id'      => (int) $request->get('category'),
                 'context' => $context
             ));
             if (!empty($contextInCategory)) {
-                $datagrid->setValue('category', null, $this->getRequest()->get('category'));
+                $datagrid->setValue('category', null, $request->get('category'));
             } else {
                 $datagrid->setValue('category', null, $category->getId());
             }
         }
-
-//        if (!$filters) {
-//            $datagrid->setValue('category', null, $category->getId());
-//        }
-//
-//        if ($this->getRequest()->get('category')) {
-//            $datagrid->setValue('category', null, $this->getRequest()->get('category'));
-//        }
-//
-//        if (!$this->getRequest()->get('filter') && $this->admin->getPersistentParameter('provider')) {
-//            $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
-//        }
 
         $formView = $datagrid->getForm()->createView();
 
@@ -108,10 +98,11 @@ class MediaAdminController extends Controller
     /**
      * Returns the response object associated with the browser action
      *
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws AccessDeniedException
      */
-    public function browserAction()
+    public function browserAction(Request $request = null)
     {
         if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
@@ -145,11 +136,11 @@ class MediaAdminController extends Controller
     /**
      * Returns the response object associated with the upload action
      *
-     * @throws AccessDeniedException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws AccessDeniedException
      */
-    public function uploadAction()
+    public function uploadAction(Request $request = null)
     {
         if (false === $this->admin->isGranted('CREATE')) {
             throw new AccessDeniedException();
@@ -157,7 +148,6 @@ class MediaAdminController extends Controller
 
         $mediaManager = $this->get('sonata.media.manager.media');
 
-        $request = $this->getRequest();
         $provider = $request->get('provider');
         $file = $request->files->get('upload');
 
