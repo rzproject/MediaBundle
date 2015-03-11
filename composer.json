@@ -1,33 +1,33 @@
 {
-    "name": "rz/media-bundle",
-    "type": "symfony-bundle",
-    "description": "Symfony2 Bundle SonataMediaBundle Extension",
-    "keywords": ["symfony2", "Sonata Project", "RZProject"],
-    "homepage": "https://github.com/rzproject/MediaBundle",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "mell zamora",
-            "email": "mell@rzproject.org",
-            "homepage": "http://www.rzproject.org"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "rmzamora/media-bundle": "~2.3",
-        "rz/admin-bundle": "~1.0",
-        "rz/doctrine-orm-admin-bundle": "~1.0",
-        "stof/doctrine-extensions-bundle": "~1.2"
-    },
-    "require-dev": {
-        "rz/formatter-bundle": "~1.0"
-    },
-    "autoload": {
-        "psr-4": { "Rz\\MediaBundle\\": "" }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-1.1": "1.1-dev"
-        }
+  "name": "rz/media-bundle",
+  "type": "symfony-bundle",
+  "description": "Symfony2 Bundle SonataMediaBundle Extension",
+  "keywords": ["symfony2", "Sonata Project", "RZProject"],
+  "homepage": "https://github.com/rzproject/MediaBundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "mell zamora",
+      "email": "mell@rzproject.org",
+      "homepage": "http://www.rzproject.org"
     }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "rmzamora/media-bundle": "2.3.*",
+    "rz/admin-bundle": "1.0.*",
+    "rz/doctrine-orm-admin-bundle": "1.0.*",
+    "stof/doctrine-extensions-bundle": "~1.2"
+  },
+  "require-dev": {
+    "rz/formatter-bundle": "1.0.*"
+  },
+  "autoload": {
+    "psr-4": { "Rz\\MediaBundle\\": "" }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-1.1": "1.1.x-dev"
+    }
+  }
 }
