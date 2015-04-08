@@ -70,9 +70,9 @@ class MediaAdminController extends Controller
 //            $datagrid->setValue('category', null, $this->getRequest()->get('category'));
 //        }
 //
-//        if (!$this->getRequest()->get('filter') && $this->admin->getPersistentParameter('provider')) {
-//            $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
-//        }
+        if (!$this->getRequest()->get('filter') && $this->admin->getPersistentParameter('provider')) {
+            $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
+        }
 
         $formView = $datagrid->getForm()->createView();
 
