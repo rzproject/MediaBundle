@@ -64,6 +64,10 @@ class MediaAdminController extends Controller
             }
         }
 
+        if (!$this->getRequest()->get('filter') && $this->admin->getPersistentParameter('provider')) {
+            $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
+        }
+
         $formView = $datagrid->getForm()->createView();
 
         // set the theme for the current Admin Form
