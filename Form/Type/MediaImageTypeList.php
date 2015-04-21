@@ -6,6 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Sonata\AdminBundle\Form\DataTransformer\ModelToIdTransformer;
@@ -14,6 +15,12 @@ class MediaImageTypeList extends AbstractType
 {
     protected $modelManager;
     protected $class;
+
+
+    public function __construct($modelManager, $class) {
+        $this->modelManager = $modelManager;
+        $this->class = $class;
+    }
 
 
     /**
@@ -37,6 +44,27 @@ class MediaImageTypeList extends AbstractType
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @todo Remove it when bumping requirements to SF 2.7+
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $this->configureOptions($resolver);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'model_manager'     => $this->modelManager,
+            'class'             => $this->class,
+            'parent'            => 'text',
+        ));
+    }
 
     /**
      * {@inheritDoc}
@@ -44,23 +72,6 @@ class MediaImageTypeList extends AbstractType
     public function getParent()
     {
         return 'text';
-    }
-
-    public function __construct($modelManager, $class) {
-        $this->modelManager = $modelManager;
-        $this->class = $class;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array(
-                           'model_manager'     => $this->modelManager,
-                           'class'             => $this->class,
-                           'parent'            => 'text',
-        ));
     }
 
     /**
