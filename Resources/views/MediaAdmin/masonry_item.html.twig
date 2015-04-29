@@ -40,7 +40,11 @@
 
 {% block masonry_details_row %}
     <a href="{{ admin.generateUrl('edit', {'id' : object|sonata_urlsafeid }) }}">
-        {% thumbnail object, 'reference' with {'style':'max-width:200px;', 'height': 'auto'} %}
+        {% if object %}
+            {% thumbnail object, 'reference' with {'style':'max-width:200px;', 'height': 'auto'} %}
+        {% else %}
+            <img src="{{  asset('bundles/rzmedia/images/image-placeholder.png')}}" alt="" style="max-width: 300px"/>
+        {% endif %}
     </a>
     <div class="extras">
         <div class="extras-inner">
