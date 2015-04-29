@@ -43,8 +43,10 @@ class MediaAdminController extends Controller
         // set the default context
         if (!$filters) {
             $context = $this->admin->getPersistentParameter('context',  $this->get('sonata.media.pool')->getDefaultContext());
+        } elseif ( $request->get('context')) {
+            $context = $request->get('context');
         } else {
-            $context = $filters['context']['value'];
+            $context = $this->get('sonata.media.pool')->getDefaultContext();
         }
 
         $datagrid->setValue('context', null, $context);
