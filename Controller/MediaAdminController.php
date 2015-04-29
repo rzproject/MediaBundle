@@ -41,8 +41,8 @@ class MediaAdminController extends Controller
         // set the default context
         if (!$filters) {
             $context = $this->admin->getPersistentParameter('context',  $this->get('sonata.media.pool')->getDefaultContext());
-        } elseif ( $request->get('context')) {
-            $context = $request->get('context');
+        } elseif ( $this->getRequest()->get('context')) {
+            $context = $this->getRequest()->get('context');
         } else {
             $context = $this->get('sonata.media.pool')->getDefaultContext();
         }
@@ -64,14 +64,14 @@ class MediaAdminController extends Controller
             }
         }
 
-//        if (!$filters) {
-//            $datagrid->setValue('category', null, $category->getId());
-//        }
-//
-//        if ($this->getRequest()->get('category')) {
-//            $datagrid->setValue('category', null, $this->getRequest()->get('category'));
-//        }
-//
+        if (!$filters) {
+            $datagrid->setValue('category', null, $category->getId());
+        }
+
+        if ($this->getRequest()->get('category')) {
+            $datagrid->setValue('category', null, $this->getRequest()->get('category'));
+        }
+
         if (!$this->getRequest()->get('filter') && $this->admin->getPersistentParameter('provider')) {
             $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
         }
