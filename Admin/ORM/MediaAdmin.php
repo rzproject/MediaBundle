@@ -84,8 +84,12 @@ class MediaAdmin extends BaseMediaAdmin
         }
 
         if ($filter = $this->getRequest()->get('filter')) {
-            $context = $filter['context']['value'];
-        } else {
+            if(isset($filter['context']['value'])){
+                $context = $filter['context']['value'];
+            }
+        } 
+        
+        if(empty($context)){
             $context   = $this->getRequest()->get('context', $this->pool->getDefaultContext());
         }
 
