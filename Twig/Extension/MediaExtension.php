@@ -8,6 +8,7 @@ use Sonata\MediaBundle\Twig\TokenParser\PathTokenParser;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Sonata\CoreBundle\Model\ManagerInterface;
 use Sonata\MediaBundle\Provider\Pool;
+use Gaufrette\Adapter;
 
 
 class MediaExtension extends \Twig_Extension
@@ -45,7 +46,11 @@ class MediaExtension extends \Twig_Extension
         if (!$media) {
             return '';
         }
+
         $provider = $this->getMediaService()->getProvider($media->getProviderName());
+        if (!$provider->getFilesystem()->getAdapter() instanceof Adapter) {
+            return false;
+        }
         //will only check reference image
         $path = $provider->getReferenceImage($media);
         $baseDir = $provider->getFilesystem()->getAdapter()->getDirectory();
