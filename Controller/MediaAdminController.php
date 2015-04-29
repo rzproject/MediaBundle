@@ -66,7 +66,7 @@ class MediaAdminController extends Controller
             }
         }
 
-        if (!$this->getRequest()->get('filter') && $this->admin->getPersistentParameter('provider')) {
+        if (!$request->get('filter') && $this->admin->getPersistentParameter('provider')) {
             $datagrid->setValue('providerName', null, $this->admin->getPersistentParameter('provider'));
         }
 
