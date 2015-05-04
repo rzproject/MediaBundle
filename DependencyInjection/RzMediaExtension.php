@@ -73,7 +73,9 @@ class RzMediaExtension extends Extension
                                      array('RzMediaBundle:Form:rz_media_form_type.html.twig')
                                  ));
 
+        $this->configureBlocks($config['blocks'], $container);
         $this->registerDoctrineMapping($config);
+        $this->configureClassesToCompile();
     }
 
     /**
@@ -159,6 +161,81 @@ class RzMediaExtension extends Extension
     }
 
     /**
+     * @param array                                                   $config
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     *
+     * @return void
+     */
+    public function configureBlocks($config, ContainerBuilder $container)
+    {
+        ####################################
+        # sonata.media.block.media
+        ####################################
+
+        # class
+        $container->setParameter('rz_media.block.media.class', $config['media']['class']);
+
+        # template
+        if($temp = $config['media']['templates']) {
+            $templates = array();
+            foreach ($temp as $template) {
+                $templates[$template['path']] = $template['name'];
+            }
+            $container->setParameter('rz_media.block.media.templates', $templates);
+        }
+
+
+        ####################################
+        # sonata.media.block.feature_media
+        ####################################
+
+        # class
+        $container->setParameter('rz_block.block.feature_media.class', $config['feature_media']['class']);
+
+        # template
+        if($temp = $config['feature_media']['templates']) {
+            $templates = array();
+            foreach ($temp as $template) {
+                $templates[$template['path']] = $template['name'];
+            }
+            $container->setParameter('rz_block.block.feature_media.templates', $templates);
+        }
+
+
+        ####################################
+        # sonata.media.block.gallery
+        ####################################
+
+        # class
+        $container->setParameter('rz_media.block.gallery.class', $config['gallery']['class']);
+
+        # template
+        if($temp = $config['gallery']['templates']) {
+            $templates = array();
+            foreach ($temp as $template) {
+                $templates[$template['path']] = $template['name'];
+            }
+            $container->setParameter('rz_media.block.gallery.templates', $templates);
+        }
+
+        ####################################
+        # rz_media.block.breadcrumb_media
+        ####################################
+
+        # class
+        $container->setParameter('rz_media.block.breadcrumb_media.class', $config['breadcrumb_media']['class']);
+
+        # template
+        if($temp = $config['breadcrumb_media']['templates']) {
+            $templates = array();
+            foreach ($temp as $template) {
+                $templates[$template['path']] = $template['name'];
+            }
+            $container->setParameter('rz_media.block.breadcrumb_media.templates', $templates);
+        }
+    }
+
+    /**
      * @param array $config
      *
      * @return void
@@ -183,6 +260,28 @@ class RzMediaExtension extends Extension
                 ),
             ),
             'orphanRemoval' => false,
+        ));
+    }
+
+    /**
+     * Add class to compile
+     */
+    public function configureClassesToCompile()
+    {
+        $this->addClassesToCompile(array(
+            "Rz\\MediaBundle\\Provider\\FileProvider",
+            "Rz\\MediaBundle\\Provider\\ImageProvider",
+            "Rz\\MediaBundle\\Twig\\Extension\\MediaExtension",
+            "Rz\\MediaBundle\\Form\\Type\\MediaImageTypeList",
+            "Rz\\MediaBundle\\Form\\Type\\MediaType",
+            "Rz\\MediaBundle\\Block\\Breadcrumb\\MediaViewBreadcrumbBlockService",
+            "Rz\\MediaBundle\\Block\\FeatureMediaBlockService",
+            "Rz\\MediaBundle\\Block\\GalleryBlockService",
+            "Rz\\MediaBundle\\Block\\MediaBlockService",
+            "Rz\\MediaBundle\\Admin\\MediaAdminExtension",
+            "Rz\\MediaBundle\\Admin\\GalleryHasMediaAdmin",
+            "Rz\\MediaBundle\\Admin\\GalleryAdmin",
+            "Rz\\MediaBundle\\Admin\\ORM\\MediaAdmin",
         ));
     }
 }

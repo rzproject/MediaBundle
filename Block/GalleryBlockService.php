@@ -38,12 +38,30 @@ use Sonata\MediaBundle\Block\GalleryBlockService as BaseGalleryBlockService;
 class GalleryBlockService extends BaseGalleryBlockService
 {
 
+    protected $templates;
+
+    /**
+     * @return mixed
+     */
+    public function getTemplates()
+    {
+        return $this->templates;
+    }
+
+    /**
+     * @param mixed $templates
+     */
+    public function setTemplates($templates = array())
+    {
+        $this->templates = $templates;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return 'Gallery';
+        return 'Media - (Gallery Core)';
     }
 
     /**
@@ -82,14 +100,13 @@ class GalleryBlockService extends BaseGalleryBlockService
         $resolver->setDefaults(array(
             'gallery'   => false,
             'title'     => false,
-            'context'   => false,
             'format'    => false,
             'pauseTime' => 3000,
             'animSpeed' => 300,
             'startPaused'  => false,
             'directionNav' => true,
             'progressBar'  => true,
-            'template'     => 'SonataMediaBundle:Block:block_gallery.html.twig',
+            'template'     => 'RzMediaBundle:Block:block_gallery.html.twig',
             'galleryId'    => false
         ));
     }
@@ -133,19 +150,22 @@ class GalleryBlockService extends BaseGalleryBlockService
             'label'             => 'Gallery'
         ));
 
-        $formMapper->add('settings', 'sonata_type_immutable_array', array(
-            'keys' => array(
-                array('title', 'text', array('required' => false, 'attr'=>array('class'=>'span8'))),
-                array('context', 'choice', array('required' => true, 'choices' => $contextChoices, 'attr'=>array('class'=>'span8'))),
-                array('format', 'choice', array('required' => count($formatChoices) > 0, 'choices' => $formatChoices, 'attr'=>array('class'=>'span8'))),
-                array($builder, null, array('attr'=>array('class'=>'span8'))),
-                array('pauseTime', 'number', array('attr'=>array('class'=>'span8'))),
-                array('animSpeed', 'number', array('attr'=>array('class'=>'span8'))),
-                array('startPaused', 'sonata_type_boolean', array()),
-                array('directionNav', 'sonata_type_boolean', array()),
-                array('progressBar', 'sonata_type_boolean', array()),
-            )
-        ));
+        $keys[] = array('title', 'text', array('required' => false));
+        if($formatChoices) {
+            $keys[] = array('format', 'choice', array('required' => count($formatChoices) > 0, 'choices' => $formatChoices));
+        }
+        $keys[] = array($builder, null, array('attr'=>array('class'=>'span8')));
+        if($this->getTemplates()) {
+            $keys[] = array('template', 'choice', array('choices'=>$this->getTemplates()));
+        }
+        $keys[] = array('pauseTime', 'number', array());
+        $keys[] = array('animSpeed', 'number', array());
+        $keys[] = array('startPaused', 'sonata_type_boolean', array());
+        $keys[] = array('directionNav', 'sonata_type_boolean', array());
+        $keys[] = array('progressBar', 'sonata_type_boolean', array());
+
+        $formMapper->add('settings', 'sonata_type_immutable_array', array('keys' => $keys));
+
     }
 
     /**
@@ -155,7 +175,7 @@ class GalleryBlockService extends BaseGalleryBlockService
     {
         $gallery = $blockContext->getBlock()->getSetting('galleryId');
 
-        return $this->renderResponse($blockContext->getTemplate(), array(
+        return $this->renderResponse($this->getTemplating()->exists($blockContext->getTemplate()) ? $blockContext->getTemplate() : 'RzMediaBundle:Block:block_gallery.html.twig', array(
             'gallery'   => $gallery,
             'block'     => $blockContext->getBlock(),
             'settings'  => $blockContext->getSettings(),

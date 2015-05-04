@@ -32,6 +32,7 @@ class Configuration implements ConfigurationInterface
         $this->addBundleSettings($node);
         $this->addModelSection($node);
         $this->addManagerSection($node);
+        $this->addBlockSettings($node);
 
         $node
             ->children()
@@ -149,4 +150,77 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
+    /**
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addBlockSettings(ArrayNodeDefinition $node) {
+        $node
+            ->children()
+                ->arrayNode('blocks')
+                ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('media')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('class')->cannotBeEmpty()->defaultValue('Rz\\MediaBundle\\Block\\MediaBlockService')->end()
+                                ->arrayNode('templates')
+                                    ->useAttributeAsKey('id')
+                                    ->prototype('array')
+                                        ->children()
+                                            ->scalarNode('name')->defaultValue('default')->end()
+                                            ->scalarNode('path')->defaultValue('RzMediaBundle:Block:block_media.html.twig')->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('feature_media')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('class')->cannotBeEmpty()->defaultValue('Rz\\MediaBundle\\Block\\FeatureMediaBlockService')->end()
+                                ->arrayNode('templates')
+                                    ->useAttributeAsKey('id')
+                                    ->prototype('array')
+                                        ->children()
+                                            ->scalarNode('name')->defaultValue('default')->end()
+                                            ->scalarNode('path')->defaultValue('RzMediaBundle:Block:block_feature_media.html.twig')->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('gallery')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('class')->cannotBeEmpty()->defaultValue('Rz\\MediaBundle\\Block\\GalleryBlockService')->end()
+                                ->arrayNode('templates')
+                                    ->useAttributeAsKey('id')
+                                    ->prototype('array')
+                                        ->children()
+                                            ->scalarNode('name')->defaultValue('default')->end()
+                                            ->scalarNode('path')->defaultValue('RzMediaBundle:Block:block_gallery.html.twig')->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('breadcrumb_media')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('class')->cannotBeEmpty()->defaultValue('Rz\\MediaBundle\\Block\\Breadcrumb\\MediaViewBreadcrumbBlockService')->end()
+                                ->arrayNode('templates')
+                                    ->useAttributeAsKey('id')
+                                    ->prototype('array')
+                                        ->children()
+                                            ->scalarNode('name')->defaultValue('default')->end()
+                                            ->scalarNode('path')->defaultValue('RzMediaBundle:Block:block_breadcrumb_media.html.twig')->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
 }

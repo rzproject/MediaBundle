@@ -38,12 +38,31 @@ use Sonata\MediaBundle\Block\MediaBlockService as BaseMediaBlockService;
  */
 class MediaBlockService extends BaseMediaBlockService
 {
+
+    protected $templates;
+
+    /**
+     * @return mixed
+     */
+    public function getTemplates()
+    {
+        return $this->templates;
+    }
+
+    /**
+     * @param mixed $templates
+     */
+    public function setTemplates($templates = array())
+    {
+        $this->templates = $templates;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return 'Media';
+        return 'Media - (Core Media)';
     }
 
     /**
@@ -74,10 +93,9 @@ class MediaBlockService extends BaseMediaBlockService
         $resolver->setDefaults(array(
             'media'    => false,
             'title'    => false,
-            'context'  => false,
             'mediaId'  => null,
             'format'   => false,
-            'template' => 'SonataMediaBundle:Block:block_media.html.twig'
+            'template' => 'RzMediaBundle:Block:block_media.html.twig'
         ));
     }
 
@@ -86,22 +104,19 @@ class MediaBlockService extends BaseMediaBlockService
      */
     public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
     {
-        $contextChoices = $this->getContextChoices();
-
         if (!$block->getSetting('mediaId') instanceof MediaInterface) {
             $this->load($block);
         }
 
         $formatChoices = $this->getFormatChoices($block->getSetting('mediaId'));
+        $keys[] = array('title', 'text', array('required' => false));
+        $keys[] = array($this->getMediaBuilder($formMapper), null, array());
+        $keys[] = array('format', 'choice', array('required' => count($formatChoices) > 0, 'choices' => $formatChoices));
+        if($this->getTemplates()) {
+            $keys[] = array('template', 'choice', array('choices'=>$this->getTemplates()));
+        }
 
-        $formMapper->add('settings', 'sonata_type_immutable_array', array(
-            'keys' => array(
-                array('title', 'text', array('required' => false)),
-                array('context', 'choice', array('required' => true, 'choices' => $contextChoices)),
-                array('format', 'choice', array('required' => count($formatChoices) > 0, 'choices' => $formatChoices)),
-                array($this->getMediaBuilder($formMapper), null, array()),
-            )
-        ));
+        $formMapper->add('settings', 'sonata_type_immutable_array', array('keys' => $keys));
     }
 
     /**
@@ -175,7 +190,7 @@ class MediaBlockService extends BaseMediaBlockService
      */
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
-        return $this->renderResponse($blockContext->getTemplate(), array(
+        return $this->renderResponse($this->getTemplating()->exists($blockContext->getTemplate()) ? $blockContext->getTemplate() : 'RzMediaBundle:Block:block_media.html.twig', array(
             'media'     => $blockContext->getSetting('mediaId'),
             'block'     => $blockContext->getBlock(),
             'settings'  => $blockContext->getSettings()

@@ -26,12 +26,30 @@ use Sonata\MediaBundle\Model\MediaInterface;
  */
 class FeatureMediaBlockService extends BaseFeatureMediaBlockService
 {
+    protected $templates;
+
+    /**
+     * @return mixed
+     */
+    public function getTemplates()
+    {
+        return $this->templates;
+    }
+
+    /**
+     * @param mixed $templates
+     */
+    public function setTemplates($templates = array())
+    {
+        $this->templates = $templates;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return 'Feature Media';
+        return 'Media - (Feature Media)';
     }
 
     /**
@@ -40,21 +58,15 @@ class FeatureMediaBlockService extends BaseFeatureMediaBlockService
     public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
     {
         $formatChoices = $this->getFormatChoices($block->getSetting('mediaId'));
+        $keys[] = array('title', 'text', array('required' => false));
+        $keys[] = array($this->getMediaBuilder($formMapper), null, array());
+        $keys[] = array('content', 'ckeditor', array('config_name'=>'minimal_editor', 'attr'=>array('class'=>'span8')));
+        $keys[] = array('format', 'choice', array('required' => count($formatChoices) > 0, 'choices' => $formatChoices));
+        if($this->getTemplates()) {
+            $keys[] = array('template', 'choice', array('choices'=>$this->getTemplates()));
+        }
 
-        $translator = $this->container->get('translator');
-
-        $formMapper->add('settings', 'sonata_type_immutable_array', array(
-            'keys' => array(
-                array('title', 'text', array('required' => false)),
-                array('content', 'ckeditor', array('config_name'=>'minimal_editor', 'attr'=>array('class'=>'span8'))),
-                array('orientation', 'choice', array('choices' => array(
-                    'left'  => $translator->trans('feature_left_choice', array(), 'SonataMediaBundle'),
-                    'right' => $translator->trans('feature_right_choice', array(), 'SonataMediaBundle')
-                ))),
-                array($this->getMediaBuilder($formMapper), null, array()),
-                array('format', 'choice', array('required' => count($formatChoices) > 0, 'choices' => $formatChoices)),
-            )
-        ));
+        $formMapper->add('settings', 'sonata_type_immutable_array', array('keys' => $keys));
     }
 
     /**

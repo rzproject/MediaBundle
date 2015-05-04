@@ -7,7 +7,7 @@ use Knp\Menu\ItemInterface;
 use Knp\Menu\Provider\MenuProviderInterface;
 use Sonata\BlockBundle\Block\Service\MenuBlockService;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Knp\Menu\FactoryInterface;
 use Sonata\MediaBundle\Block\Breadcrumb\MediaViewBreadcrumbBlockService as BaseMediaViewBreadcrumbBlockService;
 
@@ -27,6 +27,24 @@ class MediaViewBreadcrumbBlockService extends BaseMediaViewBreadcrumbBlockServic
      * @var FactoryInterface
      */
     private $factory;
+
+    protected $templates;
+
+    /**
+     * @return mixed
+     */
+    public function getTemplates()
+    {
+        return $this->templates;
+    }
+
+    /**
+     * @param mixed $templates
+     */
+    public function setTemplates($templates = array())
+    {
+        $this->templates = $templates;
+    }
 
     /**
      * @param string                $context
@@ -94,5 +112,26 @@ class MediaViewBreadcrumbBlockService extends BaseMediaViewBreadcrumbBlockServic
         }
 
         return $menu;
+    }
+
+        /**
+     * {@inheritdoc}
+     */
+    public function execute(BlockContextInterface $blockContext, Response $response = null)
+    {
+        $responseSettings = array(
+            'menu'         => $this->getMenu($blockContext),
+            'menu_options' => $this->getMenuOptions($blockContext->getSettings()),
+            'block'        => $blockContext->getBlock(),
+            'context'      => $blockContext
+        );
+
+        $template =$this->getTemplating()->exists($blockContext->getTemplate()) ? $blockContext->getTemplate() : 'RzMediaBundle:Block:block_breadcrumb_media.html.twig';
+
+        if ('private' === $blockContext->getSettings('cache_policy')) {
+            return $this->renderPrivateResponse($template, $responseSettings, $response);
+        }
+
+        return $this->renderResponse($template, $responseSettings, $response);
     }
 }
