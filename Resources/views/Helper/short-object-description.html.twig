@@ -1,12 +1,17 @@
 {% if admin.hasRoute('edit') and admin.isGranted('EDIT') %}
     <div class="row-fluid">
-        <div class="span3">
+        <div class="span3" style="text-align: center">
             {% media object, 'admin' %}
         </div>
-        <div class="span9">
+        <div class="span9 hidden-phone hidden-tablet">
             <div class="row-fluid">
                 <div class="span12">
-                    <strong>Name:</strong><a href="{{ admin.generateObjectUrl('edit', object) }}" target="new">{{ description }}</a>
+                    <br>
+                    <p><span class="label label-info">NAME</span>&nbsp;<strong><a href="{{ admin.generateObjectUrl('edit', object) }}" target="new">{{ object.name }}</a></strong></p>
+                    <p><span class="label label-info">WIDTH</span>&nbsp; {{ object.width }} X <span class="label label-info">HEIGHT</span>&nbsp; {{ object.height }}</p>
+                    <p><span class="label label-success">CONTENT TYPE</span>&nbsp; {{ object.contentType }}</p>
+                    <p><span class="label label-success">LAST UPDATED</span>&nbsp; {{ object.updatedAt|date("m/d/Y") }}</p>
+                    <p><span class="label label-important">DESCRIPTION</span>&nbsp; <em>{{ object.description }}</em></p>
                 </div>
             </div>
         </div>
