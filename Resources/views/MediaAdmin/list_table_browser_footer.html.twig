@@ -1,0 +1,68 @@
+<div class="row-fluid table-pagination-container">
+	{% if admin.datagrid.pager.haveToPaginate() %}
+		{% if admin.datagrid.pager.lastpage < 6 %}
+			<div class="table-pagination-info span6">
+				<p>Page {{ admin.datagrid.pager.page }} / {{ admin.datagrid.pager.lastpage }} of {% transchoice admin.datagrid.pager.nbresults with {'%count%': admin.datagrid.pager.nbresults} from 'SonataAdminBundle' %}list_results_count{% endtranschoice %}</p>
+			</div>
+			<div class="table-pagination-nav span6">
+				<div class="table-pagination">
+					{% if admin.datagrid.pager.page != 1  %}
+						{{ admin.generateUrl('browser', queryParams|merge({'context': persistent_parameters.context, 'provider': null } | merge(hide_context))) }}
+						<a href="{{ admin.generateUrl('browser', admin.modelmanager.paginationparameters(admin.datagrid, 1) |merge({'context': persistent_parameters.context, 'provider': null } | merge(hide_context))) }}" title="{{ 'link_first_pager'|trans({}, 'SonataAdminBundle') }}">
+							<i class="icon-double-angle-left"></i>
+						</a>
+					{% endif %}
+
+					{% if admin.datagrid.pager.page != admin.datagrid.pager.previouspage %}
+						<a href="{{ admin.generateUrl('browser', admin.modelmanager.paginationparameters(admin.datagrid, admin.datagrid.pager.previouspage)|merge({'context': persistent_parameters.context, 'provider': null } | merge(hide_context))) }}" title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}">
+							<i class="icon-angle-left"></i>
+						</a>
+					{% endif %}
+
+					{# Set the number of pages to display in the pager #}
+					<span>
+                    {% for page in admin.datagrid.pager.getLinks() %}
+	                    {% if page == admin.datagrid.pager.page %}
+		                    <a class="active" href="{{ admin.generateUrl('browser', admin.modelmanager.paginationparameters(admin.datagrid, page)|merge({'context': persistent_parameters.context, 'provider': null } | merge(hide_context))) }}">{{ page }}</a>
+                        {% else %}
+		                    <a href="{{ admin.generateUrl('browser', admin.modelmanager.paginationparameters(admin.datagrid, page)|merge({'context': persistent_parameters.context, 'provider': null } | merge(hide_context))) }}">{{ page }}</a>
+	                    {% endif %}
+                    {% endfor %}
+                    </span>
+
+					{% if admin.datagrid.pager.page != admin.datagrid.pager.nextpage %}
+						<a href="{{ admin.generateUrl('browser', admin.modelmanager.paginationparameters(admin.datagrid, admin.datagrid.pager.nextpage)|merge({'context': persistent_parameters.context, 'provider': null } | merge(hide_context))) }}" title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}">
+							<i class="icon-angle-right"></i>
+						</a>
+					{% endif %}
+
+					{% if admin.datagrid.pager.page != admin.datagrid.pager.lastpage  %}
+						<a href="{{ admin.generateUrl('browser', admin.modelmanager.paginationparameters(admin.datagrid, admin.datagrid.pager.lastpage)|merge({'context': persistent_parameters.context, 'provider': null } | merge(hide_context))) }}" title="{{ 'link_last_pager'|trans({}, 'SonataAdminBundle') }}">
+							<i class="icon-double-angle-right"></i>
+						</a>
+					{% endif %}
+				</div>
+			</div>
+		{% else %}
+			<div class="table-pagination-info-alt span6">
+				<p>Page {{ admin.datagrid.pager.page }} / {{ admin.datagrid.pager.lastpage }} of {% transchoice admin.datagrid.pager.nbresults with {'%count%': admin.datagrid.pager.nbresults} from 'SonataAdminBundle' %}list_results_count{% endtranschoice %}</p>
+			</div>
+			<div class="table-pagination-nav span6">
+				<div class="btn-group pull-right table-pagination-alt-pager">
+					<div class="btn-group dropup pull-right">
+						<div class="btn btn-primary admin-actions admin-actions-group">Page</div>
+						<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle admin-actions"><i class=" icon-chevron-up"></i></button>
+						<ul class="dropdown-menu">
+							{% for page in admin.datagrid.pager.getLinks() %}
+								<li {% if page == admin.datagrid.pager.page %}class="active"{% endif %} >
+									<a class="sonata-action-element" href="{{ admin.generateUrl('browser', admin.modelmanager.paginationparameters(admin.datagrid, page)|merge({'context': persistent_parameters.context, 'provider': null } | merge(hide_context))) }}">
+										{{ page }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	{% endif %}
+</div>
