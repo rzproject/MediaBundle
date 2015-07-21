@@ -177,6 +177,8 @@
             {% endfor %}
 
             <input type="hidden" name="filter[_page]" id="filter__page" value="1" />
+            <input type="hidden" name="CKEditor" id="CKEditor" value="{{ app.request.get('CKEditor') }}" />
+            <input type="hidden" name="CKEditorFuncNum" id="CKEditorFuncNum" value="{{ app.request.get('CKEditorFuncNum') }}" />
             {% if app.request.get('hide_context') %}
             <input type="hidden" name="hide_context" id="hide_context" value="{{ app.request.get('hide_context') }}" />
             {% endif %}
@@ -186,7 +188,7 @@
             {% set foo = form.children['_page'].setRendered() %}
             {{ form_rest(form) }}
             <div class="form-actions">
-                <a class="btn btn-primary pull-right rz-admin-filter-reset-button" href="{{ admin.generateUrl('browser', {'context': persistent_parameters.context, 'provider': null } | merge(hide_context)) }}"><i class="icon-undo"></i> {{ 'link_reset_filter'|trans({}, 'SonataAdminBundle') }}</a>
+                <a class="btn btn-primary pull-right rz-admin-filter-reset-button" href="{{ admin.generateUrl('browser', queryParams|merge({'context': persistent_parameters.context, 'provider': null } | merge(hide_context))) }}"><i class="icon-undo"></i> {{ 'link_reset_filter'|trans({}, 'SonataAdminBundle') }}</a>
                 <button type="submit" class="btn btn-primary pull-right" value="{{ 'btn_filter'|trans({}, 'SonataAdminBundle') }}"><i class="icon-search"></i> {{ 'btn_filter'|trans({}, 'SonataAdminBundle') }}</button>
             </div>
         </form>
