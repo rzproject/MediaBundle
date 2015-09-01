@@ -5,6 +5,12 @@
 {% block preview %}{% endblock %}
 {% block list_filters_standard %}{% endblock list_filters_standard %}
 
+{% if app.request.get('hide_context') %}
+    {% set hide_context = {'hide_context': app.request.get('hide_context')} %}
+{% else %}
+    {% set hide_context = {} %}
+{% endif %}
+
 {% block list_table_standard %}
 <div class="rz-gallery-container{% if app.request.isxmlhttprequest %} rz-gallery-container-modal{% endif %}">
     {{ block('media_provider_selector') }}
@@ -139,16 +145,16 @@
     {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
     {% if providers|length > 1 %}
         {% if not persistent_parameters.provider %}
-            <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null}) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
+            <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null } | merge(hide_context)) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
         {% else %}
-            <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null}) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
+            <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': null} | merge(hide_context)) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
         {% endif %}
 
         {% for provider_name in providers %}
             {% if persistent_parameters.provider == provider_name%}
-                <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name}) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
+                <li class="active"><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name} | merge(hide_context)) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
             {% else %}
-                <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name}) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
+                <li><a href="{{ admin.generateUrl('list', {'context': persistent_parameters.context, 'provider': provider_name} | merge(hide_context)) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
             {% endif %}
         {% endfor %}
     {% endif %}
@@ -200,6 +206,13 @@
          {% endfor %}
 
          <input type="hidden" name="filter[_page]" id="filter__page" value="1" />
+
+         {% if app.request.get('hide_context') %}
+             <input type="hidden" name="hide_context" id="hide_context" value="{{ app.request.get('hide_context') }}" />
+         {% endif %}
+
+         {{ block('list_filter_persistent_parameters') }}
+
          {% set foo = form.children['_page'].setRendered() %}
          {{ form_rest(form) }}
          <div class="form-actions">

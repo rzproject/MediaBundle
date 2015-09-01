@@ -12,14 +12,12 @@
 namespace Rz\MediaBundle\Block;
 
 use Sonata\AdminBundle\Form\FormMapper;
-
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Sonata\BlockBundle\Model\BlockInterface;
-
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-
 use Sonata\MediaBundle\Block\FeatureMediaBlockService as BaseFeatureMediaBlockService;
+use Sonata\MediaBundle\Model\MediaInterface;
 
 /**
  * PageExtension
@@ -28,28 +26,30 @@ use Sonata\MediaBundle\Block\FeatureMediaBlockService as BaseFeatureMediaBlockSe
  */
 class FeatureMediaBlockService extends BaseFeatureMediaBlockService
 {
+    protected $templates;
+
     /**
-     * {@inheritdoc}
+     * @return mixed
      */
-    public function getName()
+    public function getTemplates()
     {
-        return 'Feature Media';
+        return $this->templates;
+    }
+
+    /**
+     * @param mixed $templates
+     */
+    public function setTemplates($templates = array())
+    {
+        $this->templates = $templates;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setDefaultSettings(OptionsResolverInterface $resolver)
+    public function getName()
     {
-        $resolver->setDefaults(array(
-            'media'   => false,
-            'orientation' => 'left',
-            'title'   => false,
-            'content' => false,
-            'context' => false,
-            'format'  => false,
-            'template' => 'SonataMediaBundle:Block:block_feature_media.html.twig'
-        ));
+        return 'Media - (Feature Media)';
     }
 
     /**
@@ -57,45 +57,33 @@ class FeatureMediaBlockService extends BaseFeatureMediaBlockService
      */
     public function buildEditForm(FormMapper $formMapper, BlockInterface $block)
     {
-        $contextChoices = $this->getContextChoices();
         $formatChoices = $this->getFormatChoices($block->getSetting('mediaId'));
+        $keys[] = array('title', 'text', array('required' => false));
+        $keys[] = array($this->getMediaBuilder($formMapper), null, array());
+        $keys[] = array('content', 'ckeditor', array('config_name'=>'minimal_editor', 'attr'=>array('class'=>'span8')));
+        $keys[] = array('format', 'choice', array('required' => count($formatChoices) > 0, 'choices' => $formatChoices));
+        if($this->getTemplates()) {
+            $keys[] = array('template', 'choice', array('choices'=>$this->getTemplates()));
+        }
 
-        $translator = $this->container->get('translator');
-
-        $formMapper->add('settings', 'sonata_type_immutable_array', array(
-            'keys' => array(
-                array('title', 'text', array('required' => false)),
-                array('content', 'textarea', array('required' => false)),
-                array('orientation', 'choice', array('choices' => array(
-                    'left'  => $translator->trans('feature_left_choice', array(), 'SonataMediaBundle'),
-                    'right' => $translator->trans('feature_right_choice', array(), 'SonataMediaBundle')
-                ))),
-                array('context', 'choice', array('required' => true, 'choices' => $contextChoices)),
-                array('format', 'choice', array('required' => count($formatChoices) > 0, 'choices' => $formatChoices)),
-                array($this->getMediaBuilder($formMapper), null, array()),
-            )
-        ));
+        $formMapper->add('settings', 'sonata_type_immutable_array', array('keys' => $keys));
     }
 
     /**
-     * {@inheritdoc}
+     * @param null|\Sonata\MediaBundle\Model\MediaInterface $media
+     *
+     * @return array
      */
-    public function execute(BlockContextInterface $blockContext, Response $response = null)
+    protected function getFormatChoices(MediaInterface $media = null)
     {
-        return $this->renderResponse($blockContext->getTemplate(), array(
-            'media'     => $blockContext->getSetting('mediaId'),
-            'block'     => $blockContext->getBlock(),
-            'settings'  => $blockContext->getSettings()
-        ), $response);
+        $formatChoices = array('reference'=>'Original Size');
+        if (!$media instanceof MediaInterface) {
+            return $formatChoices;
+        }
+        $formats = $this->getMediaPool()->getFormatNamesByContext($media->getContext());
+        foreach ($formats as $code => $format) {
+            $formatChoices[$code] = $code;
+        }
+        return $formatChoices;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-//    public function getStylesheets($media)
-//    {
-//        return array(
-//            '/bundles/sonatamedia/blocks/feature_media/theme.css'
-//        );
-//    }
 }

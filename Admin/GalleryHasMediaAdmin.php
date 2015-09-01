@@ -18,6 +18,8 @@ use Sonata\AdminBundle\Form\FormMapper;
 
 class GalleryHasMediaAdmin extends BaseGalleryHasMediaAdmin
 {
+    protected $formOptions = array('validation_groups'=>array('admin'), 'cascade_validation'=>true);
+
     /**
      * @param \Sonata\AdminBundle\Form\FormMapper $formMapper
      *
@@ -32,7 +34,7 @@ class GalleryHasMediaAdmin extends BaseGalleryHasMediaAdmin
         }
 
         $formMapper
-            ->add('media', 'sonata_type_model_list', array('required' => false, 'attr'=>array('class'=>'span12')), array(
+            ->add('media', 'sonata_type_model_list', array('required' => false, 'attr'=>array('class'=>'span12'), 'btn_delete' => false), array(
                 'link_parameters' => $link_parameters
             ))
             ->add('enabled', null, array('required' => false))

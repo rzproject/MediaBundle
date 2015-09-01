@@ -1,12 +1,23 @@
 {% if admin.hasRoute('edit') and admin.isGranted('EDIT') %}
     <div class="row-fluid">
         <div class="span3">
-            {% media object, 'admin' %}
+            <div style="text-align: center;">
+                {% if rzmedia_file_exist(object) %}
+                    {% media object, 'admin' %}
+                {% else %}
+                    <img src="{{  asset('bundles/rzmedia/images/image-placeholder.png')}}"/>
+                {% endif %}
+            </div>
         </div>
-        <div class="span9">
+        <div class="span9 hidden-phone">
             <div class="row-fluid">
-                <div class="span12">
-                    <strong>Name:</strong><a href="{{ admin.generateObjectUrl('edit', object) }}" target="new">{{ description }}</a>
+                <div class="span12" style="white-space: normal;">
+                    <br>
+                    <p><span class="label label-info">NAME</span>&nbsp;<strong><a href="{{ admin.generateObjectUrl('edit', object) }}" target="new">{{ object.name }}</a></strong></p>
+                    <p><span class="label label-info">WIDTH</span>&nbsp; {{ object.width }} X <span class="label label-info">HEIGHT</span>&nbsp; {{ object.height }}</p>
+                    <p><span class="label label-success">CONTENT TYPE</span>&nbsp; {{ object.contentType }}</p>
+                    <p><span class="label label-success">LAST UPDATED</span>&nbsp; {{ object.updatedAt|date("m/d/Y") }}</p>
+                    <p><div style="text-overflow:ellipsis;"><span class="label label-important">DESCRIPTION</span>&nbsp; <em>{{ object.description|raw }}</em></div></p>
                 </div>
             </div>
         </div>

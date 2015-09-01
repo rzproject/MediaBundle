@@ -18,49 +18,80 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        //override Media Admin
+        #######################
+        # Override Media Admin
+        #######################
         $definition = $container->getDefinition('sonata.media.admin.media');
         $definition->setClass($container->getParameter('rz_media.admin.media.class'));
         $definedTemplates = array_merge($container->getParameter('sonata.admin.configuration.templates'),
                                         $container->getParameter('rz_media.configuration.media.templates'));
         $definition->addMethodCall('setTemplates', array($definedTemplates));
 
-        //override Gallery Admin
+        #######################
+        # Override Gallery Admin
+        #######################
         $definition = $container->getDefinition('sonata.media.admin.gallery');
         $definition->setClass($container->getParameter('rz_media.admin.gallery.class'));
         $definedTemplates = array_merge($container->getParameter('sonata.admin.configuration.templates'),
                                         $container->getParameter('rz_media.configuration.gallery.templates'));
         $definition->addMethodCall('setTemplates', array($definedTemplates));
 
-        //override GalleryHasMedia Admin
+        #######################
+        # Override GalleryHasMedia Admin
+        #######################
         $definition = $container->getDefinition('sonata.media.admin.gallery_has_media');
         $definition->setClass($container->getParameter('rz_media.admin.gallery_has_media.class'));
         $definedTemplates = array_merge($container->getParameter('sonata.admin.configuration.templates'),
                                         $container->getParameter('rz_media.configuration.gallery_has_media.templates'));
         $definition->addMethodCall('setTemplates', array($definedTemplates));
 
-        //override File Provider
+        ##############################
+        # Override File Provider Class
+        ##############################
         $definition = $container->getDefinition('sonata.media.provider.file');
         $definition->setClass($container->getParameter('rz_media.provider.file.class'));
 
-        //override Image Provider
+        ##############################
+        # Override Image Provider Class
+        ##############################
         $definition = $container->getDefinition('sonata.media.provider.image');
         $definition->setClass($container->getParameter('rz_media.provider.image.class'));
 
-        //override Media Block Class
+
+        #################################
+        # Override Media Block
+        #################################
         $definition = $container->getDefinition('sonata.media.block.media');
         $definition->setClass($container->getParameter('rz_media.block.media.class'));
+        if($container->hasParameter('rz_media.block.media.templates')) {
+            $definition->addMethodCall('setTemplates', array($container->getParameter('rz_media.block.media.templates')));
+        }
 
-        //override Feature Media Block Class
+        #################################
+        # Override Feature Media Block
+        #################################
         $definition = $container->getDefinition('sonata.media.block.feature_media');
-        $definition->setClass($container->getParameter('rz_media.block.feature_media.class'));
+        $definition->setClass($container->getParameter('rz_block.block.feature_media.class'));
+        if($container->hasParameter('rz_block.block.feature_media.templates')) {
+            $definition->addMethodCall('setTemplates', array($container->getParameter('rz_block.block.feature_media.templates')));
+        }
 
-        //override Gallery Block Class
+        #################################
+        # Override Gallery Block
+        #################################
         $definition = $container->getDefinition('sonata.media.block.gallery');
         $definition->setClass($container->getParameter('rz_media.block.gallery.class'));
+        if($container->hasParameter('rz_media.block.gallery.templates')) {
+            $definition->addMethodCall('setTemplates', array($container->getParameter('rz_media.block.gallery.templates')));
+        }
 
-        //override Media Admin
+        #################################
+        # Override Breadcrumb Media Block
+        #################################
         $definition = $container->getDefinition('sonata.media.block.breadcrumb_view_media');
         $definition->setClass($container->getParameter('rz_media.block.breadcrumb_media.class'));
+        if($container->hasParameter('rz_media.block.breadcrumb_media.templates')) {
+            $definition->addMethodCall('setTemplates', array($container->getParameter('rz_media.block.breadcrumb_media.templates')));
+        }
     }
 }

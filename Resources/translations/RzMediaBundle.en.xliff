@@ -413,6 +413,11 @@
                 <source>sonata_category</source>
                 <target>System Category</target>
             </trans-unit>
+            <trans-unit id="breadcrumb.link_media_browser">
+                <source>breadcrumb.link_media_browser</source>
+                <target>Media Browser</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

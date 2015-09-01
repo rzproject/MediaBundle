@@ -1,6 +1,12 @@
 {% extends 'RzAdminBundle:CRUD:base_list_masonry.html.twig' %}
 
 {% set ckParameters = {'CKEditor': app.request.get('CKEditor'), 'CKEditorFuncNum': app.request.get('CKEditorFuncNum')} %}
+{% set queryParams = app.request.query.all %}
+{% if app.request.get('hide_context') %}
+    {% set hide_context = {'hide_context': app.request.get('hide_context')} %}
+{% else %}
+    {% set hide_context = {} %}
+{% endif %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -48,40 +54,29 @@
                             <form action="{{ admin.generateUrl('batch', {'filter': admin.filterParameters}) }}" method="POST" class="rz-datagird-form rz-masonry">
                                 <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}" />
                                 {% endif %}
-                                {% if not app.request.isxmlhttprequest %}
-                                    <div class="rz-admin-list-main-data-toolbar">
-                                        <a href="#"
-                                           class="btn"
-                                           id="rz-admin-list-settings-per-page-action-trigger"
-                                           title="Per Page"
-                                           data-toggle="popover"
-                                           data-trigger="click"
-                                                {% if admin.hasRoute('export') and admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
-                                            {% block  table_per_page %}
-                                                data-content="{% include admin.getTemplate('rz_list_table_per_page') %}"
-                                            {% endblock  table_per_page %}
-                                                {% endif %}>
-                                            <i class="icon-list-ol"></i><span class="hidden-phone hidden-tablet visible-desktop">Pager</span>
-                                        </a>
-                                    </div>
+                                {% if not app.request.get('hide_context') %}
+                                    <ul class="nav nav-tabs tabdrop rz-tablinks rz-media-context-selector{% if app.request.isxmlhttprequest %} rz-media-context-selector-modal{% endif %}">
+                                        {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
+
+                                        {% for name, context in media_pool.contexts %}
+                                            {% if context.providers|length == 0 %}
+                                                {% set urlParams = {'context' : name } %}
+                                            {% else %}
+                                                {% if providers|length > 1 and persistent_parameters.provider is not null %}
+                                                    {% set urlParams = {'context' : name, 'provider' : persistent_parameters.provider } %}
+                                                {% else %}
+                                                    {% set urlParams = {'context' : name } %}
+                                                {% endif %}
+                                            {% endif %}
+
+                                            {% if name == persistent_parameters.context %}
+                                                <li class="active{% if loop.first %} rz-media-first-context{% endif %}"><a href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, admin.translationdomain) }}</a></li>
+                                            {% else %}
+                                                <li><a {% if loop.first %}class="rz-media-first-context" {% endif %}href="{{ admin.generateUrl('list', urlParams) }}">{{ name|trans({}, admin.translationdomain) }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
                                 {% endif %}
-                                <ul class="nav nav-tabs tabdrop rz-tablinks rz-media-context-selector{% if app.request.isxmlhttprequest %} rz-media-context-selector-modal{% endif %}">
-                                    {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
-
-                                    {% for name, context in media_pool.contexts %}
-                                        {% if context.providers|length == 0 %}
-                                            {% set urlParams = {'context' : name}|merge(ckParameters) %}
-                                        {% else %}
-                                            {% set urlParams = {'context' : name, 'provider' : context.providers[0]}|merge(ckParameters) %}
-                                        {% endif %}
-
-                                        {% if name == persistent_parameters.context %}
-                                            <li class="active"><a href="{{ admin.generateUrl('browser', urlParams) }}">{{ name|trans({}, 'SonataMediaBundle') }}</a></li>
-                                        {% else %}
-                                            <li><a href="{{ admin.generateUrl('browser', urlParams) }}">{{ name|trans({}, 'SonataMediaBundle') }}</a></li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
                                 {% if admin.datagrid.results|length > 0 %}
                                     <div class="rz-masonry-container">
                                         <div class="rz-masonry-gallery" data-masonry-options="{ 'isFitWidth': true }">
@@ -105,7 +100,7 @@
                             {% endif %}
                         </div>
                         {% block table_footer %}
-                            {% include admin.getTemplate('rz_list_table_footer') %}
+                            {% include admin.getTemplate('rz_media_browser_list_table_footer') %}
                         {% endblock %}
                     </div>
                     <div class="tab-pane" id="filter">
@@ -123,16 +118,16 @@
             {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
             {% if providers|length > 1 %}
                 {% if not persistent_parameters.provider %}
-                    <li class="active"><a href="{{ admin.generateUrl('browser', {'context': persistent_parameters.context, 'provider': null}|merge(ckParameters)) }}">{{ "link.all_providers"|trans({}, 'SonataMediaBundle') }}</a></li>
+                    <li class="active"><a href="{{ admin.generateUrl('browser', queryParams|merge({'context': persistent_parameters.context, 'provider': null } | merge(hide_context))) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
                 {% else %}
-                    <li><a href="{{ admin.generateUrl('browser', {'context': persistent_parameters.context, 'provider': null}|merge(ckParameters)) }}">{{ "link.all_providers"|trans({}, 'SonataMediaBundle') }}</a></li>
+                    <li><a href="{{ admin.generateUrl('browser', queryParams|merge({'context': persistent_parameters.context, 'provider': null} | merge(hide_context))) }}">{{ "link.all_providers"|trans({}, admin.translationdomain) }}</a></li>
                 {% endif %}
 
                 {% for provider_name in providers %}
                     {% if persistent_parameters.provider == provider_name%}
-                        <li class="active"><a href="{{ admin.generateUrl('browser', {'context': persistent_parameters.context, 'provider': provider_name}|merge(ckParameters)) }}">{{ provider_name|trans({}, 'SonataMediaBundle') }}</a></li>
+                        <li class="active"><a href="{{ admin.generateUrl('browser', queryParams|merge({'context': persistent_parameters.context, 'provider': provider_name} | merge(hide_context))) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
                     {% else %}
-                        <li><a href="{{ admin.generateUrl('browser', {'context': persistent_parameters.context, 'provider': provider_name}|merge(ckParameters)) }}">{{ provider_name|trans({}, 'SonataMediaBundle') }}</a></li>
+                        <li><a href="{{ admin.generateUrl('browser', queryParams|merge({'context': persistent_parameters.context, 'provider': provider_name} | merge(hide_context))) }}">{{ provider_name|trans({}, admin.translationdomain) }}</a></li>
                     {% endif %}
                 {% endfor %}
             {% endif %}
@@ -145,14 +140,12 @@
         <div class="span12">
             <div class="sonata-actions btn-group hidden-phone hidden-tablet visible-desktop pull-right">
                 {% include 'SonataAdminBundle:Button:filter_button.html.twig' %}
-                {% include 'SonataAdminBundle:Button:create_button.html.twig' %}
             </div>
             <div class="btn-group visible-phone visible-tablet hidden-desktop  pull-right">
                 <button class="btn btn-primary admin-actions admin-actions-group">Select an action to perform</button>
                 <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle admin-actions"><i class=" icon-chevron-down"></i></button>
                 <ul class="dropdown-menu">
                     {% include 'SonataAdminBundle:Button:filter_button_mobile.html.twig' %}
-                    {% include 'SonataAdminBundle:Button:create_button_mobile.html.twig' %}
                 </ul>
             </div>
         </div>
@@ -184,10 +177,18 @@
             {% endfor %}
 
             <input type="hidden" name="filter[_page]" id="filter__page" value="1" />
+            <input type="hidden" name="CKEditor" id="CKEditor" value="{{ app.request.get('CKEditor') }}" />
+            <input type="hidden" name="CKEditorFuncNum" id="CKEditorFuncNum" value="{{ app.request.get('CKEditorFuncNum') }}" />
+            {% if app.request.get('hide_context') %}
+            <input type="hidden" name="hide_context" id="hide_context" value="{{ app.request.get('hide_context') }}" />
+            {% endif %}
+
+            {{ block('list_filter_persistent_parameters') }}
+
             {% set foo = form.children['_page'].setRendered() %}
             {{ form_rest(form) }}
             <div class="form-actions">
-                <a class="btn btn-primary pull-right rz-admin-filter-reset-button" href="{{ admin.generateUrl('browser') }}"><i class="icon-undo"></i> {{ 'link_reset_filter'|trans({}, 'SonataAdminBundle') }}</a>
+                <a class="btn btn-primary pull-right rz-admin-filter-reset-button" href="{{ admin.generateUrl('browser', queryParams|merge({'context': persistent_parameters.context, 'provider': null } | merge(hide_context))) }}"><i class="icon-undo"></i> {{ 'link_reset_filter'|trans({}, 'SonataAdminBundle') }}</a>
                 <button type="submit" class="btn btn-primary pull-right" value="{{ 'btn_filter'|trans({}, 'SonataAdminBundle') }}"><i class="icon-search"></i> {{ 'btn_filter'|trans({}, 'SonataAdminBundle') }}</button>
             </div>
         </form>

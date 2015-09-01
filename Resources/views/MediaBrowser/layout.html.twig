@@ -87,7 +87,6 @@ file that was distributed with this source code.
         '@RmzamoraJqueryBundle/Resources/public/jquery/jquery.min.js'
         '@RmzamoraJqueryBundle/Resources/public/jqueryui/jquery-ui.min.js'
         '@RmzamoraJqueryBundle/Resources/public/jquery-plugins/browser-detect/jquery.browser.detect.js'
-        '@FOSJsRoutingBundle/Resources/public/js/router.js'
         '@RmzamoraBootstrapBundle/Resources/public/js/bootstrap.min.js'
         '@RmzamoraBootstrapBundle/Resources/public/plugins/select/js/select.js'
         '@RmzamoraBootstrapBundle/Resources/public/plugins/tabdrop/js/tabdrop.js'
@@ -120,7 +119,6 @@ file that was distributed with this source code.
         %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
-        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 
         {% block sonata_javascript_block %}
             {% block javascripts_files %}{% endblock javascripts_files %}
@@ -195,7 +193,7 @@ file that was distributed with this source code.
                     </li>
                     {% block top_bar_before_nav %} {% endblock %}
                     {% block sonata_top_bar_nav %}
-                        {% if app.security.token and is_granted('ROLE_SONATA_ADMIN') %}
+                        {% if app.user.token and is_granted('ROLE_SONATA_ADMIN') %}
                             {% for group in admin_pool.dashboardgroups %}
                                 <li>
                                     <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
@@ -221,7 +219,7 @@ file that was distributed with this source code.
                         <ul class="dropdown-menu pull-right">
                             <li>
                                 {% block sonata_top_bar_search %}
-                                    {% if app.security.token and is_granted('ROLE_SONATA_ADMIN') %}
+                                    {% if app.user.token and is_granted('ROLE_SONATA_ADMIN') %}
                                         <form action="{{ url('sonata_admin_search') }}" method="GET"  class="navbar-search rz-admin-search">
                                             <div class="input-append">
                                                 <input type="text" name="q" value="{{ app.request.get('q') }}" class="input-large search-query" placeholder="{{ 'search_placeholder'|trans({}, 'SonataAdminBundle') }}"/>
