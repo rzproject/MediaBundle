@@ -16,7 +16,7 @@
     "require": {
         "rmzamora/media-bundle": "2.6.0.*",
         "rz/admin-bundle": "2.1.0.*",
-        "rz/doctrine-orm-admin-bundle": "2.1.0*",
+        "rz/doctrine-orm-admin-bundle": "2.1.0.*",
         "stof/doctrine-extensions-bundle": "~1.1"
     },
     "require-dev": {
