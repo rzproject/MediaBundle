@@ -1,29 +1,17 @@
 <?php
 
-/*
- * This file is part of the RzMediaBundle package.
- *
- * (c) mell m. zamora <mell@rzproject.org>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Rz\MediaBundle\Provider;
 
-use Sonata\MediaBundle\Model\MediaInterface;
+use Gaufrette\Filesystem;
+use Imagine\Image\ImagineInterface;
+use Sonata\CoreBundle\Model\Metadata;
 use Sonata\MediaBundle\CDN\CDNInterface;
 use Sonata\MediaBundle\Generator\GeneratorInterface;
-use Sonata\MediaBundle\Thumbnail\ThumbnailInterface;
 use Sonata\MediaBundle\Metadata\MetadataBuilderInterface;
-use Sonata\AdminBundle\Form\FormMapper;
-
-use Imagine\Image\ImagineInterface;
-use Gaufrette\Filesystem;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
-
-use Sonata\CoreBundle\Validator\ErrorElement;
+use Sonata\MediaBundle\Model\MediaInterface;
+use Sonata\MediaBundle\Thumbnail\ThumbnailInterface;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ImageProvider extends FileProvider
 {
@@ -52,7 +40,7 @@ class ImageProvider extends FileProvider
      */
     public function getProviderMetadata()
     {
-        return new Metadata($this->getName(), $this->getName().".description", null, "SonataMediaBundle", array('class' => 'fa fa-picture-o'));
+        return new Metadata($this->getName(), $this->getName().'.description', false, 'SonataMediaBundle', array('class' => 'fa fa-picture-o'));
     }
 
     /**
@@ -77,7 +65,7 @@ class ImageProvider extends FileProvider
             'title'    => $media->getName(),
             'src'      => $this->generatePublicUrl($media, $format),
             'width'    => $box->getWidth(),
-            'height'   => $box->getHeight()
+            'height'   => $box->getHeight(),
         ), $options);
     }
 
@@ -99,13 +87,25 @@ class ImageProvider extends FileProvider
     {
         parent::doTransform($media);
 
-        if (!is_object($media->getBinaryContent()) && !$media->getBinaryContent()) {
+        if ($media->getBinaryContent() instanceof UploadedFile) {
+            $fileName = $media->getBinaryContent()->getClientOriginalName();
+        } elseif ($media->getBinaryContent() instanceof File) {
+            $fileName = $media->getBinaryContent()->getFilename();
+        } else {
+            // Should not happen, FileProvider should throw an exception in that case
             return;
         }
+
+        if (!in_array(strtolower(pathinfo($fileName, PATHINFO_EXTENSION)), $this->allowedExtensions)
+            || !in_array($media->getBinaryContent()->getMimeType(), $this->allowedMimeTypes)) {
+            return;
+        }
+
         try {
             $image = $this->imagineAdapter->open($media->getBinaryContent()->getPathname());
-        } catch (\Exception $e) {
+        } catch (\RuntimeException $e) {
             $media->setProviderStatus(MediaInterface::STATUS_ERROR);
+
             return;
         }
 
@@ -117,17 +117,20 @@ class ImageProvider extends FileProvider
         $media->setProviderStatus(MediaInterface::STATUS_OK);
     }
 
-
     /**
      * {@inheritdoc}
      */
     public function updateMetadata(MediaInterface $media, $force = true)
     {
         try {
-            // this is now optimized at all!!!
-            $path       = tempnam(sys_get_temp_dir(), 'sonata_update_metadata');
-            $fileObject = new \SplFileObject($path, 'w');
-            $fileObject->fwrite($this->getReferenceFile($media)->getContent());
+            if (!$media->getBinaryContent() instanceof \SplFileInfo) {
+                // this is now optimized at all!!!
+                $path       = tempnam(sys_get_temp_dir(), 'sonata_update_metadata');
+                $fileObject = new \SplFileObject($path, 'w');
+                $fileObject->fwrite($this->getReferenceFile($media)->getContent());
+            } else {
+                $fileObject = $media->getBinaryContent();
+            }
 
             $image = $this->imagineAdapter->open($fileObject->getPathname());
             $size  = $image->getSize();
@@ -164,63 +167,5 @@ class ImageProvider extends FileProvider
     public function generatePrivateUrl(MediaInterface $media, $format)
     {
         return $this->thumbnail->generatePrivateUrl($this, $media, $format);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function preRemove(MediaInterface $media)
-    {
-        $path = $this->getReferenceImage($media);
-
-        if ($this->getFilesystem()->has($path)) {
-            $this->getFilesystem()->delete($path);
-        }
-
-        $this->thumbnail->delete($this, $media);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildEditForm(FormMapper $formMapper)
-    {
-        $subject = $formMapper->getAdmin()->getSubject();
-        $formMapper->add('name');
-        $formMapper->add('enabled', null, array('required' => false));
-        $formMapper->add('authorName');
-        $formMapper->add('cdnIsFlushable');
-        $formMapper->add('description');
-        $formMapper->add('content', 'sonata_formatter_type', array(
-            'event_dispatcher' => $formMapper->getFormBuilder()->getEventDispatcher(),
-            'format_field'   => 'contentFormatter',
-            'source_field'   => 'rawContent',
-            'ckeditor_context' => 'news',
-            'source_field_options'      => array(
-                'attr' => array('class' => 'span12', 'rows' => 20)
-            ),
-            'target_field'   => 'content',
-            'listener'       => true,
-        ));
-        $formMapper->add('copyright');
-        $formMapper->add('binaryContent', 'file', array('required' => false,
-                                                        'thumbnail_enabled'=>true,
-                                                        'current_subject'=>$subject));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildCreateForm(FormMapper $formMapper)
-    {
-        $formMapper->add('binaryContent', 'file', array('required' => false, 'thumbnail_enabled'=>true));
-
-        $formMapper->add('binaryContent', 'file', array(
-            'thumbnail_enabled'=>true,
-            'constraints' => array(
-                new NotBlank(),
-                new NotNull()
-            )
-        ));
     }
 }

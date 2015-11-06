@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the RzMediaBundle package.
+ * This file is part of the Sonata project.
  *
- * (c) mell m. zamora <mell@rzproject.org>
+ * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,15 +11,8 @@
 
 namespace Rz\MediaBundle\Entity;
 
-use Sonata\MediaBundle\Entity\MediaManager as BaseMediaManager;
+use Sonata\MediaBundle\Entity\MediaManager as BaseManager;
 
-class MediaManager extends BaseMediaManager
+class MediaManager extends BaseManager
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function fetchMedia()
-    {
-        return $this->getRepository()->findAll();
-    }
 }

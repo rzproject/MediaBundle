@@ -1,3 +1,0 @@
-rz_media:
-    message:
-      unique: Duplicate {{ entity_name }} {{ value }}.
