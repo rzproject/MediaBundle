@@ -87,4 +87,6 @@ class GalleryAdmin extends Admin
             ->add('context')
         ;
     }
+
+    public function preUpdate($gallery){}
 }
