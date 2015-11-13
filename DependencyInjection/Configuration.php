@@ -22,6 +22,7 @@ class Configuration implements ConfigurationInterface
         $node = $treeBuilder->root('rz_media');
         $this->addManagerSection($node);
         $this->addAdminSection($node);
+        $this->addBlockSettings($node);
         return $treeBuilder;
     }
 
@@ -83,5 +84,34 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ;
+    }
+
+    /**
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addBlockSettings(ArrayNodeDefinition $node) {
+        $node
+            ->children()
+                ->arrayNode('blocks')
+                ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('media')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('class')->cannotBeEmpty()->defaultValue('Rz\\MediaBundle\\Block\\MediaBlockService')->end()
+                                ->arrayNode('templates')
+                                    ->useAttributeAsKey('id')
+                                    ->prototype('array')
+                                        ->children()
+                                            ->scalarNode('name')->defaultValue('default')->end()
+                                            ->scalarNode('path')->defaultValue('RzMediaBundle:Block:block_media.html.twig')->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
     }
 }

@@ -7,8 +7,6 @@ use Sonata\MediaBundle\Provider\FileProvider as BaseFileProvider;
 
 class FileProvider extends BaseFileProvider
 {
-
-
     /**
      * {@inheritdoc}
      */

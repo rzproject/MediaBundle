@@ -24,9 +24,11 @@ class RzMediaExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('provider.xml');
+        $loader->load('block.xml');
 
         $this->configureManagerClass($config, $container);
         $this->configureAdminClass($config, $container);
+        $this->configureBlocks($config['blocks'], $container);
     }
 
     /**
@@ -56,5 +58,29 @@ class RzMediaExtension extends Extension
         $container->setParameter('rz.media.admin.gallery_has_media.class',              $config['admin']['gallery_has_media']['class']);
         $container->setParameter('rz.media.admin.gallery_has_media.controller',         $config['admin']['gallery_has_media']['controller']);
         $container->setParameter('rz.media.admin.gallery_has_media.translation_domain', $config['admin']['gallery_has_media']['translation']);
+    }
+
+    /**
+     * @param array                                                   $config
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     *
+     * @return void
+     */
+    public function configureBlocks($config, ContainerBuilder $container)
+    {
+        ####################################
+        # rz.media.block.media
+        ####################################
+
+        # class
+        $container->setParameter('rz.media.block.media.class', $config['media']['class']);
+        # template
+        if($temp = $config['media']['templates']) {
+            $templates = array();
+            foreach ($temp as $template) {
+                $templates[$template['path']] = $template['name'];
+            }
+            $container->setParameter('rz.media.block.media.templates', $templates);
+        }
     }
 }

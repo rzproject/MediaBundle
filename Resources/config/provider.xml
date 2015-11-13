@@ -4,7 +4,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="rz_media.provider.image.class">Rz\MediaBundle\Provider\ImageProvider</parameter>
-        <parameter key="rz_media.provider.file.class">Rz\MediaBundle\Provider\FileProvider</parameter>
+        <parameter key="rz.media.provider.image.class">Rz\MediaBundle\Provider\ImageProvider</parameter>
+        <parameter key="rz.media.provider.file.class">Rz\MediaBundle\Provider\FileProvider</parameter>
     </parameters>
+
 </container>

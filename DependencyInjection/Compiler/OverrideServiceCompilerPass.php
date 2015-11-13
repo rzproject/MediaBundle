@@ -49,12 +49,20 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         # Override File Provider Class
         ##############################
         $definition = $container->getDefinition('sonata.media.provider.file');
-        $definition->setClass($container->getParameter('rz_media.provider.file.class'));
+        $definition->setClass($container->getParameter('rz.media.provider.file.class'));
 
         ##############################
         # Override Image Provider Class
         ##############################
         $definition = $container->getDefinition('sonata.media.provider.image');
-        $definition->setClass($container->getParameter('rz_media.provider.image.class'));
+        $definition->setClass($container->getParameter('rz.media.provider.image.class'));
+
+        #########################################
+        # BLOCK add rz.media.block.media template
+        #########################################
+        $definition = $container->getDefinition('rz.media.block.media');
+        if($container->hasParameter('rz.media.block.media.templates')) {
+            $definition->addMethodCall('setTemplates', array($container->getParameter('rz.media.block.media.templates')));
+        }
     }
 }
