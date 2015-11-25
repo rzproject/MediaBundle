@@ -40,10 +40,6 @@ class GalleryAdmin extends Admin
 
         $formMapper
             ->with('Options')
-                ->add('context', 'sonata_type_translatable_choice', array(
-                    'choices'   => $contexts,
-                    'catalogue' => 'SonataMediaBundle',
-                ))
                 ->add('enabled', null, array('required' => false))
                 ->add('name')
                 ->add('defaultFormat', 'choice', array('choices' => $formats))
@@ -53,7 +49,7 @@ class GalleryAdmin extends Admin
                         'cascade_validation' => true,
                     ), array(
                         'edit'              => 'inline',
-                        'inline'            => 'table',
+                        'inline'            => 'standard',
                         'sortable'          => 'position',
                         'link_parameters'   => array('context' => $context),
                         'admin_code'        => 'sonata.media.admin.gallery_has_media',
