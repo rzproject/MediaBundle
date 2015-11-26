@@ -1,13 +1,15 @@
 {% extends 'RzAdminBundle:CRUD:list.html.twig' %}
 
 {% block preview %}
-    <ul class="nav nav-pills">
-        {% for name, context in media_pool.contexts %}
-            {% if name == persistent_parameters.context %}
-                <li class="active"><a class="text-uppercase" href="{{ admin.generateUrl('list', {'context' : name }) }}">{{ name|trans({}, 'SonataMediaBundle') }}</a></li>
-            {% else %}
-                <li><a class="text-uppercase" href="{{ admin.generateUrl('list', {'context' : name }) }}">{{ name|trans({}, 'SonataMediaBundle') }}</a></li>
-            {% endif %}
-        {% endfor %}
-    </ul>
+    {% if not app.request.get('hide_collection') %}
+        <ul class="nav nav-pills">
+            {% for collection in collections %}
+                {% if current_collection and collection.slug == current_collection.slug %}
+                    <li class="active"><a class="text-uppercase" href="{{ admin.generateUrl('list', { 'collection': collection.slug }) }}">{{ collection.name }}</a></li>
+                {% else %}
+                    <li><a class="text-uppercase" href="{{ admin.generateUrl('list', { 'collection': collection.slug }) }}">{{ collection.name }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}

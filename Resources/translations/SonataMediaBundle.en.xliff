@@ -38,7 +38,14 @@
                 <source>gallery_has_media</source>
                 <target>Gallery Media</target>
             </trans-unit>
-
+            <trans-unit id="filter.label_collection">
+                <source>filter.label_collection</source>
+                <target>Collection</target>
+            </trans-unit>
+            <trans-unit id="filter.label_context">
+                <source>filter.label_context</source>
+                <target>Media Context</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

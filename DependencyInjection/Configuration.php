@@ -20,6 +20,7 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $node = $treeBuilder->root('rz_media');
+        $this->addModelSection($node);
         $this->addManagerSection($node);
         $this->addAdminSection($node);
         $this->addBlockSettings($node);
@@ -43,6 +44,26 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('gallery')->defaultValue('Rz\\MediaBundle\\Entity\\GalleryManager')->end()
                             ->end()
                         ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+     /**
+     * @param ArrayNodeDefinition $node
+     */
+    private function addModelSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('class')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('media')->defaultValue('AppBundle\\Entity\\Media\\Media')->end()
+                        ->scalarNode('gallery')->defaultValue('AppBundle\\Entity\\Media\\Gallery')->end()
+                        ->scalarNode('gallery_has_media')->defaultValue('AppBundle\\Entity\\Media\\GalleryHasMedia')->end()
+                        ->scalarNode('collection')->defaultValue('AppBundle\\Entity\\Classification\\Collection')->end()
                     ->end()
                 ->end()
             ->end()

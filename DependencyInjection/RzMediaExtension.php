@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -29,6 +30,7 @@ class RzMediaExtension extends Extension
         $this->configureManagerClass($config, $container);
         $this->configureAdminClass($config, $container);
         $this->configureBlocks($config['blocks'], $container);
+        $this->registerDoctrineMapping($config);
     }
 
     /**
@@ -82,5 +84,34 @@ class RzMediaExtension extends Extension
             }
             $container->setParameter('rz.media.block.media.templates', $templates);
         }
+    }
+
+    /**
+     * @param array $config
+     */
+    public function registerDoctrineMapping(array $config)
+    {
+        $collector = DoctrineCollector::getInstance();
+
+        if (interface_exists('Sonata\ClassificationBundle\Model\CollectionInterface')) {
+            $collector->addAssociation($config['class']['gallery'], 'mapManyToOne', array(
+                'fieldName'     => 'collection',
+                'targetEntity'  => $config['class']['collection'],
+                'cascade'       => array(
+                    'persist',
+                ),
+                'mappedBy'      => null,
+                'inversedBy'    => null,
+                'joinColumns'   => array(
+                    array(
+                        'name'                 => 'collection_id',
+                        'referencedColumnName' => 'id',
+                        'onDelete'             => 'SET NULL',
+                    ),
+                ),
+                'orphanRemoval' => false,
+            ));
+        }
+
     }
 }
