@@ -6,12 +6,17 @@ use Sonata\MediaBundle\Admin\GalleryAdmin as Admin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Rz\MediaBundle\Provider\Gallery\PoolInterface;
 
 class GalleryAdmin extends Admin
 {
     protected $collectionManager;
 
     protected $contextManager;
+
+    protected $galleryPool;
+
+    const GALLERY_DEFAULT_COLLECTION = 'default';
 
     /**
      * {@inheritdoc}
@@ -40,13 +45,23 @@ class GalleryAdmin extends Admin
             $contexts[$contextItem] = $contextItem;
         }
 
+        $provider = $this->getGalleryPoolProvider();
+        $instance = $this->getSubject();
+
+        if ($instance && $instance->getId()) {
+            $provider->load($instance);
+            $provider->buildEditForm($formMapper);
+        } else {
+            $provider->buildCreateForm($formMapper);
+        }
+
         $formMapper
-            ->with('Options')
+            ->with('Options', array('class' => 'col-md-4',))
                 ->add('enabled', null, array('required' => false))
                 ->add('name')
                 ->add('defaultFormat', 'choice', array('choices' => $formats))
             ->end()
-            ->with('Gallery')
+            ->with('Gallery', array('class' => 'col-md-8',))
                 ->add('galleryHasMedias', 'sonata_type_collection', array(
                         'cascade_validation' => true,
                     ), array(
@@ -89,7 +104,16 @@ class GalleryAdmin extends Admin
         }
 
         $datagridMapper
-            ->add('collection')
+            ->add('collection', 'doctrine_orm_model_autocomplete', array(), null, array(
+                'property' => 'name',
+                'callback' => function ($admin, $property, $value) {
+                    $datagrid = $admin->getDatagrid();
+                    $queryBuilder = $datagrid->getQuery();
+                    $queryBuilder->andWhere(sprintf('%s.context = :context', $queryBuilder->getRootAlias()));
+                    $queryBuilder->setParameter('context', 'gallery');
+                }
+
+            ))
             ->add('context', null, array(
                 'show_filter' => $this->getPersistentParameter('hide_context') !== true,
             ), 'choice', $options)
@@ -128,6 +152,50 @@ class GalleryAdmin extends Admin
     public function setContextManager($contextManager)
     {
         $this->contextManager = $contextManager;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGalleryPool()
+    {
+        return $this->galleryPool;
+    }
+
+    /**
+     * @param mixed $galleryPool
+     */
+    public function setGalleryPool(PoolInterface $galleryPool)
+    {
+        $this->galleryPool = $galleryPool;
+    }
+
+    protected function fetchCurrentCollection() {
+
+        $collectionSlug = $this->getPersistentParameter('collection');
+        $collection = null;
+        if($collectionSlug) {
+            $collection = $this->collectionManager->findOneBy(array('slug'=>$collectionSlug));
+        } else {
+            $collection = $this->collectionManager->findOneBy(array('slug'=>self::GALLERY_DEFAULT_COLLECTION));
+        }
+
+        if($collection) {
+            return $collection;
+        } else {
+            return;
+        }
+    }
+
+    protected function getGalleryPoolProvider() {
+        $currentCollection = $this->fetchCurrentCollection();
+        if ($this->galleryPool->hasCollection($currentCollection->getSlug())) {
+            $providerName = $this->galleryPool->getProviderNameByCollection($currentCollection->getSlug());
+        } else {
+            $providerName = $this->galleryPool->getProviderNameByCollection($this->galleryPool->getDefaultCollection());
+        }
+
+        return $this->galleryPool->getProvider($providerName);
     }
 
     /**
@@ -203,4 +271,5 @@ class GalleryAdmin extends Admin
 
         return $instance;
     }
+
 }

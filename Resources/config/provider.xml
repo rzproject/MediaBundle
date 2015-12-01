@@ -6,6 +6,18 @@
     <parameters>
         <parameter key="rz.media.provider.image.class">Rz\MediaBundle\Provider\ImageProvider</parameter>
         <parameter key="rz.media.provider.file.class">Rz\MediaBundle\Provider\FileProvider</parameter>
+        <parameter key="rz.media.gallery.pool.class">Rz\MediaBundle\Provider\Gallery\GalleryPool</parameter>
+        <parameter key="rz.media.gallery_provider.default.class">Rz\MediaBundle\Provider\Gallery\GalleryDefaultProvider</parameter>
     </parameters>
+
+    <services>
+        <service id="rz.media.gallery.pool" class="%rz.media.gallery.pool.class%" shared="true">
+            <argument />
+        </service>
+        <service id="rz.media.gallery_provider.default" class="%rz.media.gallery_provider.default.class%" shared="true">
+            <tag name="rz.media.gallery_provider" />
+            <argument>rz.media.gallery_provider.default</argument>
+        </service>
+    </services>
 
 </container>

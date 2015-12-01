@@ -24,6 +24,7 @@ class Configuration implements ConfigurationInterface
         $this->addManagerSection($node);
         $this->addAdminSection($node);
         $this->addBlockSettings($node);
+        $this->addProviderSection($node);
         return $treeBuilder;
     }
 
@@ -135,4 +136,26 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end();
     }
+
+    /**
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addProviderSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->scalarNode('default_collection')->isRequired()->end()
+                ->arrayNode('collections')
+                    ->useAttributeAsKey('id')
+                    ->isRequired()
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('provider')->isRequired()->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
 }

@@ -30,7 +30,9 @@ class RzMediaExtension extends Extension
         $this->configureManagerClass($config, $container);
         $this->configureAdminClass($config, $container);
         $this->configureBlocks($config['blocks'], $container);
+        $this->configureProviders($container, $config);
         $this->registerDoctrineMapping($config);
+
     }
 
     /**
@@ -84,6 +86,20 @@ class RzMediaExtension extends Extension
             }
             $container->setParameter('rz.media.block.media.templates', $templates);
         }
+    }
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param array                                                   $config
+     */
+    public function configureProviders(ContainerBuilder $container, $config)
+    {
+        $pool = $container->getDefinition('rz.media.gallery.pool');
+        $pool->replaceArgument(0, $config['default_collection']);
+
+        //set default collection
+        $container->setParameter('rz.media.default_collection', $config['default_collection']);
+        $container->setParameter('rz.media.provider.collections', $config['collections']);
     }
 
     /**
