@@ -46,6 +46,22 @@
                 <source>filter.label_context</source>
                 <target>Media Context</target>
             </trans-unit>
+            <trans-unit id="rz_gallery_settings">
+                <source>rz_gallery_settings</source>
+                <target>Settings</target>
+            </trans-unit>
+            <trans-unit id="form.label_settings">
+                <source>form.label_settings</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="form.label_abstract">
+                <source>form.label_abstract</source>
+                <target>Abstract</target>
+            </trans-unit>
+            <trans-unit id="form.label_content">
+                <source>form.label_content</source>
+                <target>Content</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
