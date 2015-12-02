@@ -54,6 +54,11 @@
                 <source>form.label_settings</source>
                 <target>Gallery Provider Settings</target>
             </trans-unit>
+
+            <trans-unit id="form.label_gallery_has_media_settings">
+                <source>form.label_gallery_has_media_settings</source>
+                <target>GalleryMedia Provider Settings</target>
+            </trans-unit>
             <trans-unit id="form.label_abstract">
                 <source>form.label_abstract</source>
                 <target>Abstract</target>

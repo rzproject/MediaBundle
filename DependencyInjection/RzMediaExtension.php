@@ -94,8 +94,11 @@ class RzMediaExtension extends Extension
      */
     public function configureProviders(ContainerBuilder $container, $config)
     {
-        $pool = $container->getDefinition('rz.media.gallery.pool');
-        $pool->replaceArgument(0, $config['default_collection']);
+        $galleryPool = $container->getDefinition('rz.media.gallery.pool');
+        $galleryPool->replaceArgument(0, $config['default_collection']);
+
+        $galleryHasMediaPool = $container->getDefinition('rz.media.gallery_has_media.pool');
+        $galleryHasMediaPool->replaceArgument(0, $config['default_collection']);
 
         //set default collection
         $container->setParameter('rz.media.default_collection', $config['default_collection']);

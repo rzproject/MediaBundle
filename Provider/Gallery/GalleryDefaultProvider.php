@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class GalleryDefaultProvider extends BaseProvider
+class GalleryDefaultProvider extends BaseGalleryProvider
 {
     /**
      * @param string $name

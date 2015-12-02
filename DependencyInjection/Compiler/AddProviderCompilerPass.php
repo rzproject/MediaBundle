@@ -23,15 +23,22 @@ class AddProviderCompilerPass implements CompilerPassInterface
      */
     public function attachProviders(ContainerBuilder $container)
     {
-        $pool = $container->getDefinition('rz.media.gallery.pool');
+        $galleryPool = $container->getDefinition('rz.media.gallery.pool');
+        $galleryHasMediaPool = $container->getDefinition('rz.media.gallery_has_media.pool');
 
         foreach ($container->findTaggedServiceIds('rz.media.gallery_provider') as $id => $attributes) {
-            $pool->addMethodCall('addProvider', array($id, new Reference($id)));
+            $galleryPool->addMethodCall('addProvider', array($id, new Reference($id)));
         }
+
+        foreach ($container->findTaggedServiceIds('rz.media.gallery_has_media_provider') as $id => $attributes) {
+            $galleryHasMediaPool->addMethodCall('addProvider', array($id, new Reference($id)));
+        }
+
         $collections = $container->getParameter('rz.media.provider.collections');
 
         foreach ($collections as $name => $settings) {
-            $pool->addMethodCall('addCollection', array($name, $settings['provider']));
+            $galleryPool->addMethodCall('addCollection', array($name, $settings['gallery_provider']));
+            $galleryHasMediaPool->addMethodCall('addCollection', array($name, $settings['gallery_has_media_provider']));
         }
     }
 }

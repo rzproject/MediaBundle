@@ -47,6 +47,9 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         $definition->setClass($container->getParameter('rz.media.admin.gallery_has_media.class'));
         $definition->addMethodCall('setTranslationDomain', array($container->getParameter('rz.media.admin.gallery_has_media.translation_domain')));
         $definition->addMethodCall('setBaseControllerName', array($container->getParameter('rz.media.admin.gallery_has_media.controller')));
+        $definition->addMethodCall('setCollectionManager', array(new Reference('sonata.classification.manager.collection')));
+        $definition->addMethodCall('setContextManager', array(new Reference('sonata.classification.manager.context')));
+        $definition->addMethodCall('setGalleryHasMediaPool', array(new Reference('rz.media.gallery_has_media.pool')));
 
         ##############################
         # Override File Provider Class

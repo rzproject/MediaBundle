@@ -8,6 +8,14 @@ use Sonata\AdminBundle\Form\FormMapper;
 
 class GalleryHasMediaAdmin extends Admin
 {
+    protected $collectionManager;
+
+    protected $contextManager;
+
+    protected $galleryHasMediaPool;
+
+    const GALLERY_HAS_MEDIA_DEFAULT_COLLECTION = 'default';
+
     /**
      * @param \Sonata\AdminBundle\Form\FormMapper $formMapper
      */
@@ -34,6 +42,16 @@ class GalleryHasMediaAdmin extends Admin
             ->add('enabled', null, array('required' => false))
             ->add('position', 'hidden')
         ;
+
+        $provider = $this->getGalleryHasMediaPoolProvider();
+        $instance = $this->getSubject();
+
+        if ($instance && $instance->getId()) {
+            $provider->load($instance);
+            $provider->buildEditForm($formMapper);
+        } else {
+            $provider->buildCreateForm($formMapper);
+        }
     }
 
     /**
@@ -47,5 +65,81 @@ class GalleryHasMediaAdmin extends Admin
             ->add('position')
             ->add('enabled')
         ;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCollectionManager()
+    {
+        return $this->collectionManager;
+    }
+
+    /**
+     * @param mixed $collectionManager
+     */
+    public function setCollectionManager($collectionManager)
+    {
+        $this->collectionManager = $collectionManager;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContextManager()
+    {
+        return $this->contextManager;
+    }
+
+    /**
+     * @param mixed $contextManager
+     */
+    public function setContextManager($contextManager)
+    {
+        $this->contextManager = $contextManager;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGalleryHasMediaPool()
+    {
+        return $this->galleryHasMediaPool;
+    }
+
+    /**
+     * @param mixed $galleryHasMediaPool
+     */
+    public function setGalleryHasMediaPool($galleryHasMediaPool)
+    {
+        $this->galleryHasMediaPool = $galleryHasMediaPool;
+    }
+
+    protected function fetchCurrentCollection() {
+
+        $collectionSlug = $this->getPersistentParameter('collection');
+        $collection = null;
+        if($collectionSlug) {
+            $collection = $this->collectionManager->findOneBy(array('slug'=>$collectionSlug));
+        } else {
+            $collection = $this->collectionManager->findOneBy(array('slug'=>self::GALLERY_HAS_MEDIA_DEFAULT_COLLECTION));
+        }
+
+        if($collection) {
+            return $collection;
+        } else {
+            return;
+        }
+    }
+
+    protected function getGalleryHasMediaPoolProvider() {
+        $currentCollection = $this->fetchCurrentCollection();
+        if ($this->galleryHasMediaPool->hasCollection($currentCollection->getSlug())) {
+            $providerName = $this->galleryHasMediaPool->getProviderNameByCollection($currentCollection->getSlug());
+        } else {
+            $providerName = $this->galleryHasMediaPool->getProviderNameByCollection($this->galleryHasMediaPool->getDefaultCollection());
+        }
+
+        return $this->galleryHasMediaPool->getProvider($providerName);
     }
 }

@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class GalleryHasMediaDefaultProvider extends BaseProvider
+class GalleryHasMediaDefaultProvider extends BaseGalleryHasMediaProvider
 {
     /**
      * @param string $name
@@ -33,9 +33,7 @@ class GalleryHasMediaDefaultProvider extends BaseProvider
     public function buildCreateForm(FormMapper $formMapper, $object = null)
     {
         $formMapper
-            ->with('Settings', array('class' => 'col-md-6'))
-                ->add('settings', 'sonata_type_immutable_array', array('keys' => $this->getFormSettingsKeys($formMapper, $object)))
-            ->end();
+            ->add('settings', 'sonata_type_immutable_array', array('keys' => $this->getFormSettingsKeys($formMapper, $object), 'required'=>false, 'label'=>'form.label_gallery_has_media_settings'));
     }
 
     /**
@@ -46,14 +44,13 @@ class GalleryHasMediaDefaultProvider extends BaseProvider
     public function getFormSettingsKeys(FormMapper $formMapper, $object = null)
     {
         $settings = array(
-            array('abstract', 'text', array('required' => false)),
+            array('abstract', 'text', array('required' => false,)),
             array('content', 'sonata_formatter_type', function (FormBuilderInterface $formBuilder) {
                 return array(
                     'event_dispatcher' => $formBuilder->getEventDispatcher(),
                     'format_field'     => array('format', '[format]'),
                     'source_field'     => array('rawContent', '[rawContent]'),
                     'target_field'     => '[content]',
-                    'label'            => 'form.label_content',
                 );
             }),
         );
