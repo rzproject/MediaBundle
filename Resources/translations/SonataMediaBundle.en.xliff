@@ -52,7 +52,7 @@
             </trans-unit>
             <trans-unit id="form.label_settings">
                 <source>form.label_settings</source>
-                <target></target>
+                <target>Gallery Provider Settings</target>
             </trans-unit>
             <trans-unit id="form.label_abstract">
                 <source>form.label_abstract</source>

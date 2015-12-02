@@ -25,8 +25,9 @@ class GalleryAdmin extends Admin
     {
         // define group zoning
         $formMapper
-            ->with($this->trans('Gallery'), array('class' => 'col-md-9'))->end()
-            ->with($this->trans('Options'), array('class' => 'col-md-3'))->end()
+            ->with('rz_gallery_settings',  array('class' => 'col-md-6'))->end()
+            ->with($this->trans('Options'),  array('class' => 'col-md-6'))->end()
+            ->with($this->trans('Gallery'),  array('class' => 'col-md-12'))->end()
         ;
 
         $context = $this->getPersistentParameter('context');
@@ -45,6 +46,29 @@ class GalleryAdmin extends Admin
             $contexts[$contextItem] = $contextItem;
         }
 
+        $formMapper
+            ->with('Options', array('class' => 'col-md-6',))
+                ->add('enabled', null, array('required' => false))
+                ->add('name')
+                ->add('defaultFormat', 'choice', array('choices' => $formats))
+            ->end()
+        ;
+
+        $formMapper
+            ->with('Gallery', array('class' => 'col-md-12',))
+            ->add('galleryHasMedias', 'sonata_type_collection', array(
+                'cascade_validation' => true,
+                    ), array(
+                            'edit'              => 'inline',
+                            'inline'            => 'standard',
+                            'sortable'          => 'position',
+                            'link_parameters'   => array('context' => $context),
+                            'admin_code'        => 'sonata.media.admin.gallery_has_media',
+                        )
+                    )
+            ->end()
+        ;
+
         $provider = $this->getGalleryPoolProvider();
         $instance = $this->getSubject();
 
@@ -54,26 +78,6 @@ class GalleryAdmin extends Admin
         } else {
             $provider->buildCreateForm($formMapper);
         }
-
-        $formMapper
-            ->with('Options', array('class' => 'col-md-4',))
-                ->add('enabled', null, array('required' => false))
-                ->add('name')
-                ->add('defaultFormat', 'choice', array('choices' => $formats))
-            ->end()
-            ->with('Gallery', array('class' => 'col-md-8',))
-                ->add('galleryHasMedias', 'sonata_type_collection', array(
-                        'cascade_validation' => true,
-                    ), array(
-                        'edit'              => 'inline',
-                        'inline'            => 'standard',
-                        'sortable'          => 'position',
-                        'link_parameters'   => array('context' => $context),
-                        'admin_code'        => 'sonata.media.admin.gallery_has_media',
-                    )
-                )
-            ->end()
-        ;
     }
 
     /**
