@@ -74,22 +74,14 @@
                 <source>rz_gallery_options</source>
                 <target>Options</target>
             </trans-unit>
-
-
             <trans-unit id="Media.rz_gallery_has_media_media">
                 <source>Media.rz_gallery_has_media_media</source>
                 <target>Media</target>
             </trans-unit>
-
             <trans-unit id="Settings.rz_gallery_has_media_settings">
                 <source>Settings.rz_gallery_has_media_settings</source>
                 <target>Settings</target>
             </trans-unit>
-
-
-
-
-
         </body>
     </file>
 </xliff>
