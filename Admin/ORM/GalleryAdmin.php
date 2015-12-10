@@ -23,11 +23,17 @@ class GalleryAdmin extends Admin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+
+
         // define group zoning
         $formMapper
-            ->with('rz_gallery_settings',  array('class' => 'col-md-6'))->end()
-            ->with($this->trans('Options'),  array('class' => 'col-md-6'))->end()
-            ->with($this->trans('Gallery'),  array('class' => 'col-md-12'))->end()
+            ->tab('Details')
+                ->with('rz_gallery_settings',  array('class' => 'col-md-6'))->end()
+                ->with('rz_gallery_options',  array('class' => 'col-md-6'))->end()
+            ->end()
+            ->tab('Media')
+                ->with('rz_gallery_gallery',  array('class' => 'col-md-12'))->end()
+            ->end()
         ;
 
         $context = $this->getPersistentParameter('context');
@@ -47,25 +53,29 @@ class GalleryAdmin extends Admin
         }
 
         $formMapper
-            ->with('Options', array('class' => 'col-md-6',))
-                ->add('enabled', null, array('required' => false))
-                ->add('name')
-                ->add('defaultFormat', 'choice', array('choices' => $formats))
+            ->tab('Details')
+                ->with('rz_gallery_options', array('class' => 'col-md-6',))
+                    ->add('enabled', null, array('required' => false))
+                    ->add('name')
+                    ->add('defaultFormat', 'choice', array('choices' => $formats))
+                ->end()
             ->end()
         ;
 
         $formMapper
-            ->with('Gallery', array('class' => 'col-md-12',))
-            ->add('galleryHasMedias', 'sonata_type_collection', array(
-                'cascade_validation' => true,
-                    ), array(
-                            'edit'              => 'inline',
-                            'inline'            => 'standard',
-                            'sortable'          => 'position',
-                            'link_parameters'   => array('context' => $context),
-                            'admin_code'        => 'sonata.media.admin.gallery_has_media',
-                        )
-                    )
+            ->tab('Media')
+                ->with('rz_gallery_gallery', array('class' => 'col-md-8',))
+                    ->add('galleryHasMedias', 'sonata_type_collection', array(
+                        'cascade_validation' => true,
+                            ), array(
+                                    'edit'              => 'inline',
+                                    'inline'            => 'standard',
+                                    'sortable'          => 'position',
+                                    'link_parameters'   => array('context' => $context),
+                                    'admin_code'        => 'sonata.media.admin.gallery_has_media',
+                                )
+                            )
+                ->end()
             ->end()
         ;
 

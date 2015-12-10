@@ -33,8 +33,10 @@ class GalleryDefaultProvider extends BaseGalleryProvider
     public function buildCreateForm(FormMapper $formMapper, $object = null)
     {
         $formMapper
-            ->with('rz_gallery_settings', array('class' => 'col-md-6',))
-                ->add('settings', 'sonata_type_immutable_array', array('keys' => $this->getFormSettingsKeys($formMapper, $object), 'required'=>false, 'label'=>'form.label_settings'))
+            ->tab('Details')
+                ->with('rz_gallery_settings', array('class' => 'col-md-6',))
+                    ->add('settings', 'sonata_type_immutable_array', array('keys' => $this->getFormSettingsKeys($formMapper, $object), 'required'=>false, 'label'=>'form.label_settings'))
+                ->end()
             ->end();
     }
 

@@ -32,8 +32,15 @@ class GalleryHasMediaDefaultProvider extends BaseGalleryHasMediaProvider
      */
     public function buildCreateForm(FormMapper $formMapper, $object = null)
     {
+
+
         $formMapper
-            ->add('settings', 'sonata_type_immutable_array', array('keys' => $this->getFormSettingsKeys($formMapper, $object), 'required'=>false, 'label'=>'form.label_gallery_has_media_settings'));
+            ->tab('Settings')
+                ->with('rz_gallery_has_media_settings',  array('class' => 'col-md-6'))
+                    ->add('settings', 'sonata_type_immutable_array', array('keys' => $this->getFormSettingsKeys($formMapper, $object), 'required'=>false, 'label'=>'form.label_gallery_has_media_settings'))
+                ->end()
+            ->end();
+
     }
 
     /**

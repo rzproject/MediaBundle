@@ -35,12 +35,27 @@ class GalleryHasMediaAdmin extends Admin
             }
         }
 
+
+        // define group zoning
         $formMapper
-            ->add('media', 'sonata_type_model_list', array('required' => false), array(
-                'link_parameters' => $link_parameters,
-            ))
-            ->add('enabled', null, array('required' => false))
-            ->add('position', 'hidden')
+            ->tab('Media')
+                ->with('rz_gallery_has_media_media',  array('class' => 'col-md-12'))->end()
+            ->end()
+            ->tab('Settings')
+                ->with('rz_gallery_has_media_settings',  array('class' => 'col-md-6'))->end()
+            ->end()
+        ;
+
+        $formMapper
+            ->tab('Media')
+                ->with('rz_gallery_has_media_media',  array('class' => 'col-md-12'))
+                    ->add('media', 'sonata_type_model_list', array('required' => false), array(
+                        'link_parameters' => $link_parameters,
+                    ))
+                    ->add('enabled', null, array('required' => false))
+                    ->add('position', 'hidden')
+                ->end()
+            ->end()
         ;
 
         $provider = $this->getGalleryHasMediaPoolProvider();
