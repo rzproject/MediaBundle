@@ -66,7 +66,7 @@ class MediaBlockService extends BaseMediaBlockService
             $keys[] = array('template', 'choice', array('choices'=>$this->getTemplates()));
         }
 
-        $formMapper->add('settings', 'sonata_type_immutable_array', array('keys' => $keys));
+        $formMapper->add('settings', 'sonata_type_immutable_array', array('keys' => $keys, 'attr'=>array('class'=>'rz-immutable-container')));
     }
 
     /**
