@@ -45,7 +45,7 @@ class MediaBlockService extends BaseMediaBlockService
      */
     public function getName()
     {
-        return 'Media (RZ)';
+        return 'rz_media_block';
     }
 
     /**

@@ -82,6 +82,10 @@
                 <source>Settings.rz_gallery_has_media_settings</source>
                 <target>Settings</target>
             </trans-unit>
+            <trans-unit id="rz_media_block">
+                <source>rz_media_block</source>
+                <target>Media Block (RZ)</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
