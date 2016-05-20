@@ -86,6 +86,14 @@
                 <source>rz_media_block</source>
                 <target>Media Block (RZ)</target>
             </trans-unit>
+            <trans-unit id="media_collection_menu_header">
+                <source>media_collection_menu_header</source>
+                <target>Media</target>
+            </trans-unit>
+            <trans-unit id="media_collection_menu_header_description">
+                <source>media_collection_menu_header_description</source>
+                <target>Gallery Types</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

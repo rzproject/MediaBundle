@@ -43,7 +43,7 @@ class GalleryAdminController extends Controller
             return $preResponse;
         }
 
-        if ($listMode = $request->get('_list_mode')) {
+        if ($listMode = $request->get('_list_mode', 'mosaic')) {
             $this->admin->setListMode($listMode);
         }
 

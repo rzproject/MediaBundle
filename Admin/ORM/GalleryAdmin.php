@@ -118,7 +118,7 @@ class GalleryAdmin extends Admin
         }
 
         $datagridMapper
-            ->add('collection', 'doctrine_orm_model_autocomplete', array(), null, array(
+            ->add('collection', 'doctrine_orm_model_autocomplete', array('show_filter' => false), null, array(
                 'property' => 'name',
                 'callback' => function ($admin, $property, $value) {
                     $datagrid = $admin->getDatagrid();
@@ -130,6 +130,7 @@ class GalleryAdmin extends Admin
             ))
             ->add('context', null, array(
                 'show_filter' => $this->getPersistentParameter('hide_context') !== true,
+                #'show_filter' => false,
             ), 'choice', $options)
             ->add('name')
             ->add('enabled')
