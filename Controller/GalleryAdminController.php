@@ -19,23 +19,6 @@ class GalleryAdminController extends Controller
     public function listAction(Request $request = null)
     {
 
-        $collectiontManager = $this->get('sonata.classification.manager.collection');
-
-        $currentCollection = null;
-
-        if ($collection = $request->get('collection')) {
-            $currentCollection = $collectiontManager->findOneBy(array('slug'=>$collection));
-        } else {
-            $currentCollection = $collectiontManager->findOneBy(array('slug'=>'default'));
-        }
-        $contextManager = $this->get('sonata.classification.manager.context');
-        $context = $contextManager->find('gallery');
-        $collections = $collectiontManager->findBy(array('context'=>$context));
-
-        if (!$currentCollection) {
-            $currentCollection = array_shift($collections);
-        }
-
         $this->admin->checkAccess('list');
 
         $preResponse = $this->preList($request);
@@ -49,24 +32,50 @@ class GalleryAdminController extends Controller
 
         $datagrid = $this->admin->getDatagrid();
 
-
         $filters = $request->get('filter');
 
         // set the default context
-        if (!$filters || !array_key_exists('context', $filters)) {
+        if (!$filters || !array_key_exists('context', $filters) || !$filters['context']['value']) {
             $context = $this->admin->getPersistentParameter('context',  $this->get('sonata.media.pool')->getDefaultContext());
         } else {
             $context = $filters['context']['value'];
         }
 
-        $datagrid->setValue('context', null, $context);
+        $context = $this->get('sonata.classification.manager.context')->findOneBy(array('id'=>$context));
 
-        if ($this->admin->getPersistentParameter('collection')) {
-            $collection = $collectiontManager->findOneBy(array('slug'=>$this->admin->getPersistentParameter('collection')));
-            $datagrid->setValue('collection', null, $collection->getId());
-        } else {
-            $datagrid->setValue('collection', null, $currentCollection->getId());
+        if(!$context) {
+            throw new \Exception('Context should be defined');
         }
+
+        $datagrid->setValue('context', null, $context->getId());
+
+
+        $collectiontManager = $this->get('sonata.classification.manager.collection');
+        $currentCollection = null;
+
+        if ($collection = $request->get('collection')) {
+            $currentCollection = $collectiontManager->findOneBy(array('slug'=>$collection, 'context'=>$context));
+        } else {
+            $currentCollection = $collectiontManager->findOneBy(array('context'=>$context));
+        }
+
+        $collections = $collectiontManager->findBy(array('context'=>$context));
+
+        if(count($collections)>0) {
+
+            if (!$currentCollection) {
+                $currentCollection = current(array_shift($collections));
+            }
+
+            if ($this->admin->getPersistentParameter('collection')) {
+                $collection = $collectiontManager->findOneBy(array('slug'=>$this->admin->getPersistentParameter('collection')));
+                $datagrid->setValue('collection', null, $collection->getId());
+            } else {
+                $datagrid->setValue('collection', null, $currentCollection->getId());
+            }
+        }
+
+
 
         $formView = $datagrid->getForm()->createView();
 
@@ -74,12 +83,13 @@ class GalleryAdminController extends Controller
         $this->get('twig')->getExtension('form')->renderer->setTheme($formView, $this->admin->getFilterTheme());
 
         return $this->render($this->admin->getTemplate('list'), array(
-            'action'           => 'list',
-            'current_collection'  => $currentCollection,
-            'collections'         => $collections,
-            'form'             => $formView,
-            'datagrid'         => $datagrid,
-            'csrf_token'       => $this->getCsrfToken('sonata.batch'),
+            'action'                => 'list',
+            'current_collection'    => $currentCollection,
+            'collections'           => $collections,
+            'context'               => $context,
+            'form'                  => $formView,
+            'datagrid'              => $datagrid,
+            'csrf_token'            => $this->getCsrfToken('sonata.batch'),
         ), null, $request);
     }
 }
