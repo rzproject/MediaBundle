@@ -102,7 +102,10 @@ class RzMediaExtension extends Extension
 
         //set default collection
         $container->setParameter('rz.media.default_collection', $config['default_collection']);
+        //set gallery context
+        $container->setParameter('rz.media.gellery.context', $config['gallery_context']);
         $container->setParameter('rz.media.provider.collections', $config['collections']);
+
     }
 
     /**

@@ -144,6 +144,7 @@ class Configuration implements ConfigurationInterface
     {
         $node
             ->children()
+                ->scalarNode('gallery_context')->isRequired()->end()
                 ->scalarNode('default_collection')->isRequired()->end()
                 ->arrayNode('collections')
                     ->useAttributeAsKey('id')

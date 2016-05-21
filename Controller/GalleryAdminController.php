@@ -53,13 +53,15 @@ class GalleryAdminController extends Controller
         $collectiontManager = $this->get('sonata.classification.manager.collection');
         $currentCollection = null;
 
+        $galleryContext = $this->container->getParameter('rz.media.gellery.context');
+
         if ($collection = $request->get('collection')) {
-            $currentCollection = $collectiontManager->findOneBy(array('slug'=>$collection, 'context'=>$context));
+            $currentCollection = $collectiontManager->findOneBy(array('slug'=>$collection, 'context'=>$galleryContext));
         } else {
-            $currentCollection = $collectiontManager->findOneBy(array('context'=>$context));
+            $currentCollection = $collectiontManager->findOneBy(array('context'=>$galleryContext));
         }
 
-        $collections = $collectiontManager->findBy(array('context'=>$context));
+        $collections = $collectiontManager->findBy(array('context'=>$galleryContext));
 
         if(count($collections)>0) {
 
@@ -74,9 +76,7 @@ class GalleryAdminController extends Controller
                 $datagrid->setValue('collection', null, $currentCollection->getId());
             }
         }
-
-
-
+        
         $formView = $datagrid->getForm()->createView();
 
         // set the theme for the current Admin Form
