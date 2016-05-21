@@ -76,7 +76,7 @@ class GalleryAdminController extends Controller
                 $datagrid->setValue('collection', null, $currentCollection->getId());
             }
         }
-        
+
         $formView = $datagrid->getForm()->createView();
 
         // set the theme for the current Admin Form

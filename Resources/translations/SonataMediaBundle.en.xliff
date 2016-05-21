@@ -94,6 +94,10 @@
                 <source>media_collection_menu_header_description</source>
                 <target>Gallery Types</target>
             </trans-unit>
+            <trans-unit id="form.label_gallery_has_medias_header">
+                <source>form.label_gallery_has_medias_header</source>
+                <target>Media Item</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
