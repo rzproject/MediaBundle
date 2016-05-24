@@ -34,8 +34,8 @@ class GalleryDefaultProvider extends BaseGalleryProvider
     {
         $formMapper
             ->tab('Details')
-                ->with('rz_gallery_settings', array('class' => 'col-md-6',))
-                    ->add('settings', 'sonata_type_immutable_array', array('keys' => $this->getFormSettingsKeys($formMapper, $object), 'required'=>false, 'label'=>'form.label_settings', 'attr'=>array('class'=>'rz-immutable-container')))
+                ->with('rz_gallery_settings', array('class' => 'col-md-8',))
+                    ->add('settings', 'sonata_type_immutable_array', array('keys' => $this->getFormSettingsKeys($formMapper, $object), 'required'=>false, 'label'=>false, 'attr'=>array('class'=>'rz-immutable-container')))
                 ->end()
             ->end();
     }

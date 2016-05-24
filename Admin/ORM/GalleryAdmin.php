@@ -23,13 +23,11 @@ class GalleryAdmin extends Admin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-
-
         // define group zoning
         $formMapper
             ->tab('Details')
-                ->with('rz_gallery_settings',  array('class' => 'col-md-6'))->end()
-                ->with('rz_gallery_options',  array('class' => 'col-md-6'))->end()
+                ->with('rz_gallery_settings',  array('class' => 'col-md-12'))->end()
+                ->with('rz_gallery_options',  array('class' => 'col-md-4'))->end()
             ->end()
             ->tab('Media')
                 ->with('rz_gallery_gallery',  array('class' => 'col-md-12'))->end()
@@ -54,7 +52,7 @@ class GalleryAdmin extends Admin
 
         $formMapper
             ->tab('Details')
-                ->with('rz_gallery_options', array('class' => 'col-md-6',))
+                ->with('rz_gallery_options', array('class' => 'col-md-4',))
                     ->add('enabled', null, array('required' => false))
                     ->add('name')
                     ->add('defaultFormat', 'choice', array('choices' => $formats))
