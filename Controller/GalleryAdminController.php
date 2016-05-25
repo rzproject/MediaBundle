@@ -61,10 +61,11 @@ class GalleryAdminController extends Controller
             $galleryContext = $contextManager->generateDefaultContext($defaultGalleryContext);
         }
 
+        $defaultGalleryCollection = $this->container->getParameter('rz.media.gallery.default_collection');
+
         if ($collection = $request->get('collection')) {
             $currentCollection = $collectiontManager->findOneBy(array('slug'=>$slugify->slugify($collection), 'context'=>$galleryContext));
         } else {
-            $defaultGalleryCollection = $this->container->getParameter('rz.media.gallery.default_collection');
             $currentCollection = $collectiontManager->findOneBy(array('slug'=>$slugify->slugify($defaultGalleryCollection), 'context'=>$galleryContext));
         }
 

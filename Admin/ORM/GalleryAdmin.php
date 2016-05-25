@@ -128,7 +128,7 @@ class GalleryAdmin extends Admin
                     $datagrid = $admin->getDatagrid();
                     $queryBuilder = $datagrid->getQuery();
                     $queryBuilder->andWhere(sprintf('%s.context = :context', $queryBuilder->getRootAlias()));
-                    $queryBuilder->setParameter('context', 'gallery');
+                    $queryBuilder->setParameter('context', $this->getDefaultContext());
                 }
 
             ))
@@ -320,7 +320,6 @@ class GalleryAdmin extends Admin
         $collection = $this->collectionManager->findOneBy(array('slug'=>$collectionSlug, 'context'=>$galleryContext));
 
         if (!$collections && !$collection && !$collection instanceof \Sonata\ClassificationBundle\Model\CollectionInterface) {
-
             $collection = $this->collectionManager->generateDefaultColection($galleryContext, $this->getDefaultCollection());
         }
 
