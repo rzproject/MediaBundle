@@ -73,8 +73,9 @@ class GalleryAdminController extends Controller
 
         if(!$currentCollection &&
            !$currentCollection instanceof \Sonata\ClassificationBundle\Model\CollectionInterface &&
-           $collections < 0) {
+            count($collections) === 0) {
             $currentCollection = $collectiontManager->generateDefaultColection($galleryContext, $defaultGalleryCollection);
+            $collections = $collectiontManager->findBy(array('context'=>$galleryContext));
         }
 
         if(count($collections)>0) {
