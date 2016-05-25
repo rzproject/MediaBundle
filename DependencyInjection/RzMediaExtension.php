@@ -30,7 +30,7 @@ class RzMediaExtension extends Extension
         $this->configureManagerClass($config, $container);
         $this->configureAdminClass($config, $container);
         $this->configureBlocks($config['blocks'], $container);
-        $this->configureProviders($container, $config);
+        $this->configureProviders($container, $config['providers']);
         $this->configureSettings($container, $config);
         $this->registerDoctrineMapping($config);
 
