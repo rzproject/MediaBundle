@@ -18,7 +18,6 @@ class GalleryAdminController extends Controller
      */
     public function listAction(Request $request = null)
     {
-
         $this->admin->checkAccess('list');
 
         $preResponse = $this->preList($request);
@@ -41,24 +40,36 @@ class GalleryAdminController extends Controller
             $context = $filters['context']['value'];
         }
 
-        $context = $this->get('sonata.classification.manager.context')->findOneBy(array('id'=>$context));
+        $contextManager = $this->get('sonata.classification.manager.context');
+        $context = $contextManager->findOneBy(array('id'=>$context));
 
         if(!$context) {
-            throw new \Exception('Context should be defined');
+            throw new \Exception('Media Context should be defined');
         }
 
         $datagrid->setValue('context', null, $context->getId());
 
-
         $collectiontManager = $this->get('sonata.classification.manager.collection');
         $currentCollection = null;
 
-        $galleryContext = $this->container->getParameter('rz.media.gellery.context');
+        //Gallery Collection Context
+        $slugify = $this->get($this->container->getParameter('rz.media.slugify_service'));
+        $defaultGalleryContext = $this->container->getParameter('rz.media.gallery.default_context');
+        $galleryContext = $contextManager->findOneBy(array('id'=>$slugify->slugify($defaultGalleryContext)));
+
+        if(!$galleryContext && !$galleryContext instanceof \Sonata\ClassificationBundle\Model\ContextInterface) {
+            $galleryContext = $contextManager->generateDefaultContext($defaultGalleryContext);
+        }
 
         if ($collection = $request->get('collection')) {
-            $currentCollection = $collectiontManager->findOneBy(array('slug'=>$collection, 'context'=>$galleryContext));
+            $currentCollection = $collectiontManager->findOneBy(array('slug'=>$slugify->slugify($collection), 'context'=>$galleryContext));
         } else {
-            $currentCollection = $collectiontManager->findOneBy(array('context'=>$galleryContext));
+            $defaultGalleryCollection = $this->container->getParameter('rz.media.gallery.default_collection');
+            $currentCollection = $collectiontManager->findOneBy(array('slug'=>$slugify->slugify($defaultGalleryCollection), 'context'=>$galleryContext));
+        }
+
+        if(!$currentCollection && !$currentCollection instanceof \Sonata\ClassificationBundle\Model\CollectionInterface) {
+            $currentCollection = $collectiontManager->generateDefaultColection($galleryContext, $defaultGalleryCollection);
         }
 
         $collections = $collectiontManager->findBy(array('context'=>$galleryContext));

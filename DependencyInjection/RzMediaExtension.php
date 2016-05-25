@@ -31,8 +31,18 @@ class RzMediaExtension extends Extension
         $this->configureAdminClass($config, $container);
         $this->configureBlocks($config['blocks'], $container);
         $this->configureProviders($container, $config);
+        $this->configureSettings($container, $config);
         $this->registerDoctrineMapping($config);
 
+    }
+
+    /**
+     * @param array            $config
+     * @param ContainerBuilder $container
+     */
+    public function configureSettings(ContainerBuilder $container, $config)
+    {
+        $container->setParameter('rz.media.slugify_service', $config['slugify_service']);
     }
 
     /**
@@ -95,17 +105,16 @@ class RzMediaExtension extends Extension
     public function configureProviders(ContainerBuilder $container, $config)
     {
         $galleryPool = $container->getDefinition('rz.media.gallery.pool');
-        $galleryPool->replaceArgument(0, $config['default_collection']);
+        $galleryPool->replaceArgument(0, $config['gallery']['default_provider_collection']);
 
         $galleryHasMediaPool = $container->getDefinition('rz.media.gallery_has_media.pool');
-        $galleryHasMediaPool->replaceArgument(0, $config['default_collection']);
+        $galleryHasMediaPool->replaceArgument(0, $config['gallery']['default_provider_collection']);
 
-        //set default collection
-        $container->setParameter('rz.media.default_collection', $config['default_collection']);
-        //set gallery context
-        $container->setParameter('rz.media.gellery.context', $config['gallery_context']);
-        $container->setParameter('rz.media.provider.collections', $config['collections']);
+        $container->setParameter('rz.media.gallery.default_context',             $config['gallery']['default_context']);
+        $container->setParameter('rz.media.gallery.default_collection',          $config['gallery']['default_collection']);
 
+        $container->setParameter('rz.media.gallery.provider.default_provider_collection', $config['gallery']['default_provider_collection']);
+        $container->setParameter('rz.media.gallery.provider.collections',                 $config['gallery']['collections']);
     }
 
     /**

@@ -16,6 +16,12 @@ class GalleryAdmin extends Admin
 
     protected $galleryPool;
 
+    protected $defaultContext;
+
+    protected $defaultCollection;
+
+    protected $slugify;
+
     const GALLERY_DEFAULT_COLLECTION = 'default';
 
     /**
@@ -138,6 +144,38 @@ class GalleryAdmin extends Admin
     /**
      * @return mixed
      */
+    public function getDefaultContext()
+    {
+        return $this->defaultContext;
+    }
+
+    /**
+     * @param mixed $defaultContext
+     */
+    public function setDefaultContext($defaultContext)
+    {
+        $this->defaultContext = $defaultContext;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultCollection()
+    {
+        return $this->defaultCollection;
+    }
+
+    /**
+     * @param mixed $defaultCollection
+     */
+    public function setDefaultCollection($defaultCollection)
+    {
+        $this->defaultCollection = $defaultCollection;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCollectionManager()
     {
         return $this->collectionManager;
@@ -183,6 +221,22 @@ class GalleryAdmin extends Admin
         $this->galleryPool = $galleryPool;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSlugify()
+    {
+        return $this->slugify;
+    }
+
+    /**
+     * @param mixed $slugify
+     */
+    public function setSlugify($slugify)
+    {
+        $this->slugify = $slugify;
+    }
+
     protected function fetchCurrentCollection() {
 
         $collectionSlug = $this->getPersistentParameter('collection');
@@ -190,7 +244,7 @@ class GalleryAdmin extends Admin
         if($collectionSlug) {
             $collection = $this->collectionManager->findOneBy(array('slug'=>$collectionSlug));
         } else {
-            $collection = $this->collectionManager->findOneBy(array('slug'=>self::GALLERY_DEFAULT_COLLECTION));
+            $collection = $this->collectionManager->findOneBy(array('slug'=>$this->getDefaultCollection()));
         }
 
         if($collection) {
@@ -217,29 +271,26 @@ class GalleryAdmin extends Admin
     public function getPersistentParameters()
     {
         $parameters = parent::getPersistentParameters();
+        $collectionSlug = $this->getSlugify()->slugify($this->getDefaultCollection());
         if(is_array($parameters)) {
             $parameters = array_merge($parameters, array(
-                'collection'      => 'default',
+                'collection'      => $collectionSlug,
                 'hide_collection' => $this->hasRequest() ? (int) $this->getRequest()->get('hide_collection', 0) : 0,));
         } else {
             $parameters = array(
-                'collection'      => 'default',
-                'hide_collection' => $this->hasRequest() ? (int) $this->getRequest()->get('hide_collection', 0) : 0,
-            );
+                'collection'      => $collectionSlug,
+                'hide_collection' => $this->hasRequest() ? (int) $this->getRequest()->get('hide_collection', 0) : 0,);
         }
 
         if ($this->getSubject()) {
-            $parameters['collection'] = $this->getSubject()->getCollection() ? $this->getSubject()->getCollection()->getSlug() : '';
-
+            $parameters['collection'] = $this->getSubject()->getCollection() ? $this->getSubject()->getCollection()->getSlug() : $collectionSlug;
             return $parameters;
         }
 
-        if ($this->hasRequest()) {
+        if ($this->hasRequest() && $this->getRequest()->get('collection')) {
             $parameters['collection'] = $this->getRequest()->get('collection');
-
             return $parameters;
         }
-
 
         return array_merge($parameters, array(
             'context'  => $this->getRequest()->get('context', $this->pool->getDefaultContext()),
@@ -254,33 +305,26 @@ class GalleryAdmin extends Admin
         $instance = parent::getNewInstance();
 
         if ($this->hasRequest()) {
-            $instance->setContext($this->getRequest()->get('context'));
+            $contextSlug = $this->getSlugify()->slugify($this->getRequest()->get('context'));
+            $instance->setContext($contextSlug);
         }
 
-        if ($collectionSlug = $this->getPersistentParameter('collection') ?: 'default') {
-            $collection = $this->collectionManager->findOneBy(array('slug'=>$collectionSlug));
+        $galleryContext = $this->contextManager->findOneBy(array('id'=>$this->getSlugify()->slugify($this->getDefaultContext())));
 
-            if (!$collection) {
-                //find 'news' context
-                $context = $this->contextManager->find('gallery');
-                if(!$context) {
-                    $context = $this->contextManager->create();
-                    $context->setEnabled(true);
-                    $context->setId($context);
-                    $context->setName($context);
-                    $this->contextManager->save($context);
-                }
-                //create collection
-                $collection = $this->collectionManager->create();
-                $collection->setContext($context);
-                $name = ucwords(str_replace('-', ' ',$collectionSlug));
-                $collection->setName($name);
-                $collection->setDescription($name);
-                $this->collectionManager->save($collection);
-            }
-
-            $instance->setCollection($collection);
+        if(!$galleryContext && !$galleryContext instanceof \Sonata\ClassificationBundle\Model\ContextInterface) {
+            $galleryContext = $this->getContextManager->generateDefaultContext($this->getDefaultContext());
         }
+
+        $collectionSlug = $this->getPersistentParameter('collection') ?: $this->getSlugify()->slugify($this->getDefaultCollection());
+        $collections = $this->collectionManager->findBy(array('context'=>$galleryContext));
+        $collection = $this->collectionManager->findOneBy(array('slug'=>$collectionSlug, 'context'=>$galleryContext));
+
+        if (!$collections && !$collection && !$collection instanceof \Sonata\ClassificationBundle\Model\CollectionInterface) {
+
+            $collection = $this->collectionManager->generateDefaultColection($galleryContext, $this->getDefaultCollection());
+        }
+
+        $instance->setCollection($collection);
 
         return $instance;
     }

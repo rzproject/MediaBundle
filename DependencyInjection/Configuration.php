@@ -25,7 +25,23 @@ class Configuration implements ConfigurationInterface
         $this->addAdminSection($node);
         $this->addBlockSettings($node);
         $this->addProviderSection($node);
+        $this->addSettingsSection($node);
         return $treeBuilder;
+    }
+
+    /**
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addSettingsSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->scalarNode('slugify_service')
+                    ->info('You should use: sonata.core.slugify.cocur, but for BC we keep \'sonata.core.slugify.native\' as default')
+                    ->defaultValue('sonata.core.slugify.cocur')
+                ->end()
+            ->end()
+        ;
     }
 
     /**
@@ -144,15 +160,21 @@ class Configuration implements ConfigurationInterface
     {
         $node
             ->children()
-                ->scalarNode('gallery_context')->isRequired()->end()
-                ->scalarNode('default_collection')->isRequired()->end()
-                ->arrayNode('collections')
-                    ->useAttributeAsKey('id')
-                    ->isRequired()
-                    ->prototype('array')
-                        ->children()
-                            ->scalarNode('gallery_provider')->isRequired()->end()
-                            ->scalarNode('gallery_has_media_provider')->isRequired()->end()
+                ->arrayNode('gallery')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('default_context')->isRequired()->end()
+                        ->scalarNode('default_collection')->isRequired()->end()
+                        ->scalarNode('default_provider_collection')->isRequired()->end()
+                        ->arrayNode('collections')
+                            ->useAttributeAsKey('id')
+                            ->isRequired()
+                            ->prototype('array')
+                                ->children()
+                                    ->scalarNode('gallery_provider')->isRequired()->end()
+                                    ->scalarNode('gallery_has_media_provider')->isRequired()->end()
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()

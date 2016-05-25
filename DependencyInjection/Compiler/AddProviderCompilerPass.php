@@ -34,7 +34,7 @@ class AddProviderCompilerPass implements CompilerPassInterface
             $galleryHasMediaPool->addMethodCall('addProvider', array($id, new Reference($id)));
         }
 
-        $collections = $container->getParameter('rz.media.provider.collections');
+        $collections = $container->getParameter('rz.media.gallery.provider.collections');
 
         foreach ($collections as $name => $settings) {
             $galleryPool->addMethodCall('addCollection', array($name, $settings['gallery_provider']));

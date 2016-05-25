@@ -39,6 +39,12 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         $definition->addMethodCall('setCollectionManager', array(new Reference('sonata.classification.manager.collection')));
         $definition->addMethodCall('setContextManager', array(new Reference('sonata.classification.manager.context')));
         $definition->addMethodCall('setGalleryPool', array(new Reference('rz.media.gallery.pool')));
+        $definition->addMethodCall('setDefaultContext', array($container->getParameter('rz.media.gallery.default_context')));
+        $definition->addMethodCall('setDefaultCollection', array($container->getParameter('rz.media.gallery.default_collection')));
+
+        #set slugify service
+        $serviceId = $container->getParameter('rz.media.slugify_service');
+        $definition->addMethodCall('setSlugify', array(new Reference($serviceId)));
 
         #####################################
         ## Override Gallery_Has_Media Admin
