@@ -98,6 +98,10 @@
                 <source>form.label_gallery_has_medias_header</source>
                 <target>Media Item</target>
             </trans-unit>
+            <trans-unit id="media_context_not_found">
+                <source>media_context_not_found</source>
+                <target>Media Context  %context_slug% should be defined</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
