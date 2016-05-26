@@ -35,7 +35,6 @@ class GalleryHasMediaAdmin extends Admin
             }
         }
 
-
         // define group zoning
         $formMapper
             ->tab('Media')
