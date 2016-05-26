@@ -12,14 +12,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class GalleryDefaultProvider extends BaseGalleryProvider
 {
     /**
-     * @param string $name
-     */
-    public function __construct($name)
-    {
-        parent::__construct($name);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function buildEditForm(FormMapper $formMapper, $object = null)

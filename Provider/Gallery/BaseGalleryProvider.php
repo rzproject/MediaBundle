@@ -5,53 +5,13 @@ namespace Rz\MediaBundle\Provider\Gallery;
 use Sonata\CoreBundle\Validator\ErrorElement;
 use Sonata\MediaBundle\Model\GalleryInterface;
 
-abstract class BaseGalleryProvider implements ProviderInterface
+abstract class BaseGalleryProvider extends BaseProvider
 {
-    /**
-     * @param string                                           $name
-     */
-    public function __construct($name)
-    {
-        $this->name          = $name;
-    }
+    public function postPersist(GalleryInterface $object){}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
+    public function postUpdate(GalleryInterface $object){}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
+    public function validate(ErrorElement $errorElement, GalleryInterface $object){}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function postPersist(GalleryInterface $object)
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function postUpdate(GalleryInterface $object)
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validate(ErrorElement $errorElement, GalleryInterface $object)
-    {
-    }
-
-    public function load(GalleryInterface $object) {
-    }
+    public function load(GalleryInterface $object){}
 }

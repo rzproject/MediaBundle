@@ -6,7 +6,7 @@ use Sonata\MediaBundle\Admin\GalleryAdmin as Admin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Rz\MediaBundle\Provider\Gallery\PoolInterface;
+use Rz\CoreBundle\Provider\PoolInterface;
 
 class GalleryAdmin extends Admin
 {
