@@ -21,6 +21,9 @@ class GalleryHasMediaAdmin extends Admin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+
+        $provider = $this->getGalleryHasMediaPoolProvider();
+
         $link_parameters = array();
 
         if ($this->hasParentFieldDescription()) {
@@ -35,15 +38,25 @@ class GalleryHasMediaAdmin extends Admin
             }
         }
 
-        // define group zoning
-        $formMapper
-            ->tab('Media')
-                ->with('rz_gallery_has_media_media',  array('class' => 'col-md-12'))->end()
-            ->end()
-            ->tab('Settings')
-                ->with('rz_gallery_has_media_settings',  array('class' => 'col-md-6'))->end()
-            ->end()
-        ;
+        if($provider) {
+            // define group zoning
+            $formMapper
+                ->tab('Media')
+                    ->with('rz_gallery_has_media_media',  array('class' => 'col-md-12'))->end()
+                ->end()
+                ->tab('Settings')
+                    ->with('rz_gallery_has_media_settings',  array('class' => 'col-md-6'))->end()
+                ->end()
+            ;
+        } else {
+            // define group zoning
+            $formMapper
+                ->tab('Media')
+                    ->with('rz_gallery_has_media_media',  array('class' => 'col-md-12'))->end()
+                ->end()
+            ;
+        }
+
 
         $formMapper
             ->tab('Media')
@@ -57,14 +70,15 @@ class GalleryHasMediaAdmin extends Admin
             ->end()
         ;
 
-        $provider = $this->getGalleryHasMediaPoolProvider();
-        $instance = $this->getSubject();
+        if($provider) {
+            $instance = $this->getSubject();
 
-        if ($instance && $instance->getId()) {
-            $provider->load($instance);
-            $provider->buildEditForm($formMapper);
-        } else {
-            $provider->buildCreateForm($formMapper);
+            if ($instance && $instance->getId()) {
+                $provider->load($instance);
+                $provider->buildEditForm($formMapper);
+            } else {
+                $provider->buildCreateForm($formMapper);
+            }
         }
     }
 
@@ -152,6 +166,10 @@ class GalleryHasMediaAdmin extends Admin
             $providerName = $this->galleryHasMediaPool->getProviderNameByCollection($currentCollection->getSlug());
         } else {
             $providerName = $this->galleryHasMediaPool->getProviderNameByCollection($this->galleryHasMediaPool->getDefaultCollection());
+        }
+
+        if(!$providerName) {
+            return null;
         }
 
         return $this->galleryHasMediaPool->getProvider($providerName);

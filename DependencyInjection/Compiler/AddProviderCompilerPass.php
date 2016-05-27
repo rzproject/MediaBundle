@@ -23,8 +23,14 @@ class AddProviderCompilerPass implements CompilerPassInterface
      */
     public function attachProviders(ContainerBuilder $container)
     {
+        #set slugify service
+        $serviceId = $container->getParameter('rz.media.slugify_service');
+
         $galleryPool = $container->getDefinition('rz.media.gallery.pool');
+        $galleryPool->addMethodCall('setSlugify', array(new Reference($serviceId)));
         $galleryHasMediaPool = $container->getDefinition('rz.media.gallery_has_media.pool');
+        $galleryHasMediaPool->addMethodCall('setSlugify', array(new Reference($serviceId)));
+
 
         foreach ($container->findTaggedServiceIds('rz.media.gallery_provider') as $id => $attributes) {
             $galleryPool->addMethodCall('addProvider', array($id, new Reference($id)));

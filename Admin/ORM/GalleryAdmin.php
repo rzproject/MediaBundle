@@ -16,6 +16,8 @@ class GalleryAdmin extends Admin
 
     protected $galleryPool;
 
+    protected $galleryHasMediaPool;
+
     protected $defaultContext;
 
     protected $defaultCollection;
@@ -29,16 +31,7 @@ class GalleryAdmin extends Admin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-        // define group zoning
-        $formMapper
-            ->tab('Details')
-                ->with('rz_gallery_settings',  array('class' => 'col-md-12'))->end()
-                ->with('rz_gallery_options',  array('class' => 'col-md-4'))->end()
-            ->end()
-            ->tab('Media')
-                ->with('rz_gallery_gallery',  array('class' => 'col-md-12'))->end()
-            ->end()
-        ;
+        $provider = $this->getPoolProvider($this->galleryPool);
 
         $context = $this->getPersistentParameter('context');
 
@@ -56,9 +49,51 @@ class GalleryAdmin extends Admin
             $contexts[$contextItem] = $contextItem;
         }
 
+        if($childProvider = $this->getPoolProvider($this->galleryHasMediaPool)) {
+            $mediaFieldOptions = array(
+                'edit'              => 'inline',
+                'inline'            => 'standard',
+                'sortable'          => 'position',
+                'link_parameters'   => array('context' => $context),
+                'admin_code'        => 'sonata.media.admin.gallery_has_media',
+            );
+            $mediaTabSettings = array('class' => 'col-md-8');
+        } else {
+            $mediaFieldOptions = array(
+                'edit'              => 'inline',
+                'inline'            => 'table',
+                'sortable'          => 'position',
+                'link_parameters'   => array('context' => $context),
+                'admin_code'        => 'sonata.media.admin.gallery_has_media',
+            );
+            $mediaTabSettings = array('class' => 'col-md-12');
+        }
+
+        if($provider) {
+
+            $formMapper
+                ->tab('Details')
+                    ->with('rz_gallery_settings',  array('class' => 'col-md-8'))->end()
+                    ->with('rz_gallery_options',  array('class' => 'col-md-4'))->end()
+                ->end()
+                ->tab('Media')
+                    ->with('rz_gallery_gallery',  $mediaTabSettings)->end()
+                ->end()
+            ;
+        } else {
+            $formMapper
+                ->tab('Details')
+                    ->with('rz_gallery_options',  array('class' => 'col-md-8'))->end()
+                ->end()
+                ->tab('Media')
+                    ->with('rz_gallery_gallery',  $mediaTabSettings)->end()
+                ->end()
+            ;
+        }
+
         $formMapper
             ->tab('Details')
-                ->with('rz_gallery_options', array('class' => 'col-md-4',))
+                ->with('rz_gallery_options')
                     ->add('enabled', null, array('required' => false))
                     ->add('name')
                     ->add('defaultFormat', 'choice', array('choices' => $formats))
@@ -66,31 +101,24 @@ class GalleryAdmin extends Admin
             ->end()
         ;
 
+
         $formMapper
             ->tab('Media')
-                ->with('rz_gallery_gallery', array('class' => 'col-md-8',))
-                    ->add('galleryHasMedias', 'sonata_type_collection', array(
-                        'cascade_validation' => true,
-                            ), array(
-                                    'edit'              => 'inline',
-                                    'inline'            => 'standard',
-                                    'sortable'          => 'position',
-                                    'link_parameters'   => array('context' => $context),
-                                    'admin_code'        => 'sonata.media.admin.gallery_has_media',
-                                )
-                            )
+                ->with('rz_gallery_gallery')
+                    ->add('galleryHasMedias', 'sonata_type_collection', array('cascade_validation' => true), $mediaFieldOptions)
                 ->end()
             ->end()
         ;
 
-        $provider = $this->getGalleryPoolProvider();
-        $instance = $this->getSubject();
+        if($provider) {
+            $instance = $this->getSubject();
 
-        if ($instance && $instance->getId()) {
-            $provider->load($instance);
-            $provider->buildEditForm($formMapper);
-        } else {
-            $provider->buildCreateForm($formMapper);
+            if ($instance && $instance->getId()) {
+                $provider->load($instance);
+                $provider->buildEditForm($formMapper);
+            } else {
+                $provider->buildCreateForm($formMapper);
+            }
         }
     }
 
@@ -224,6 +252,22 @@ class GalleryAdmin extends Admin
     /**
      * @return mixed
      */
+    public function getGalleryHasMediaPool()
+    {
+        return $this->galleryHasMediaPool;
+    }
+
+    /**
+     * @param mixed $galleryHasMediaPool
+     */
+    public function setGalleryHasMediaPool($galleryHasMediaPool)
+    {
+        $this->galleryHasMediaPool = $galleryHasMediaPool;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSlugify()
     {
         return $this->slugify;
@@ -254,15 +298,19 @@ class GalleryAdmin extends Admin
         }
     }
 
-    protected function getGalleryPoolProvider() {
+    protected function getPoolProvider($pool) {
         $currentCollection = $this->fetchCurrentCollection();
-        if ($this->galleryPool->hasCollection($currentCollection->getSlug())) {
-            $providerName = $this->galleryPool->getProviderNameByCollection($currentCollection->getSlug());
+        if ($pool->hasCollection($currentCollection->getSlug())) {
+            $providerName = $pool->getProviderNameByCollection($currentCollection->getSlug());
         } else {
-            $providerName = $this->galleryPool->getProviderNameByCollection($this->galleryPool->getDefaultCollection());
+            $providerName = $pool->getProviderNameByCollection($pool->getDefaultCollection());
         }
 
-        return $this->galleryPool->getProvider($providerName);
+        if(!$providerName) {
+            return null;
+        }
+
+        return $pool->getProvider($providerName);
     }
 
     /**
@@ -319,8 +367,9 @@ class GalleryAdmin extends Admin
         $collections = $this->collectionManager->findBy(array('context'=>$galleryContext));
         $collection = $this->collectionManager->findOneBy(array('slug'=>$collectionSlug, 'context'=>$galleryContext));
 
+
         if (!$collections && !$collection && !$collection instanceof \Sonata\ClassificationBundle\Model\CollectionInterface) {
-            $collection = $this->collectionManager->generateDefaultColection($galleryContext, $this->getDefaultCollection());
+            $collection = $this->collectionManager->generateDefaultCollection($galleryContext, $this->getDefaultCollection());
         }
 
         $instance->setCollection($collection);
