@@ -5,9 +5,32 @@ namespace Rz\MediaBundle\Admin\ORM;
 use Sonata\MediaBundle\Admin\ORM\MediaAdmin as Admin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\ClassificationBundle\Model\CategoryManagerInterface;
+use Sonata\MediaBundle\Provider\Pool;
 
 class MediaAdmin extends Admin
 {
+
+    protected $datagridValues = array(
+        '_page'       => 1,
+        '_per_page'   => 8,
+        '_sort_order' => 'DESC',
+        '_sort_by'    => 'publicationDateStart',
+    );
+
+    /**
+     * @param string                   $code
+     * @param string                   $class
+     * @param string                   $baseControllerName
+     * @param Pool                     $pool
+     * @param CategoryManagerInterface $categoryManager
+     */
+    public function __construct($code, $class, $baseControllerName, Pool $pool, CategoryManagerInterface $categoryManager)
+    {
+        $this->maxPerPage = 8;
+        $this->perPageOptions = array(8,12,16,32);
+        parent::__construct($code, $class, $baseControllerName, $pool, $categoryManager);
+    }
 
 
     /**
