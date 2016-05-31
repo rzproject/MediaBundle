@@ -43,8 +43,25 @@ class AddProviderCompilerPass implements CompilerPassInterface
         $collections = $container->getParameter('rz.media.gallery.provider.collections');
 
         foreach ($collections as $name => $settings) {
-            $galleryPool->addMethodCall('addCollection', array($name, $settings['gallery_provider']));
-            $galleryHasMediaPool->addMethodCall('addCollection', array($name, $settings['gallery_has_media_provider']));
+
+            $lookupContext  = $container->getParameter('rz.media.gallery.default_media_lookup_context');
+            $hideContext    = $container->getParameter('rz.media.gallery.default_media_lookup_hide_context');
+            $lookupCategory = $container->getParameter('rz.media.gallery.default_media_lookup_category');
+
+            if(array_key_exists('context', $settings['gallery']['media_lookup_settings'])) {
+                $lookupContext =$settings['gallery']['media_lookup_settings']['context'];
+            }
+
+            if(array_key_exists('hide_context', $settings['gallery']['media_lookup_settings'])) {
+                $hideContext =$settings['gallery']['media_lookup_settings']['hide_context'];
+            }
+
+            if(array_key_exists('category', $settings['gallery']['media_lookup_settings'])) {
+                $lookupCategory =$settings['gallery']['media_lookup_settings']['category'];
+            }
+
+            $galleryPool->addMethodCall('addCollection', array($name, $settings['gallery']['provider'], $lookupContext, $hideContext, $lookupCategory));
+            $galleryHasMediaPool->addMethodCall('addCollection', array($name, $settings['gallery_has_media']['provider']));
         }
     }
 }

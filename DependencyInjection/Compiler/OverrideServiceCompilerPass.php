@@ -38,10 +38,14 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         $definition->addMethodCall('setBaseControllerName', array($container->getParameter('rz.media.admin.gallery.controller')));
         $definition->addMethodCall('setCollectionManager', array(new Reference('sonata.classification.manager.collection')));
         $definition->addMethodCall('setContextManager', array(new Reference('sonata.classification.manager.context')));
+        $definition->addMethodCall('setCategoryManager', array(new Reference('sonata.classification.manager.category')));
         $definition->addMethodCall('setGalleryPool', array(new Reference('rz.media.gallery.pool')));
         $definition->addMethodCall('setGalleryHasMediaPool', array(new Reference('rz.media.gallery_has_media.pool')));
         $definition->addMethodCall('setDefaultContext', array($container->getParameter('rz.media.gallery.default_context')));
         $definition->addMethodCall('setDefaultCollection', array($container->getParameter('rz.media.gallery.default_collection')));
+        $definition->addMethodCall('setDefaultLookupCategory', array($container->getParameter('rz.media.gallery.default_media_lookup_category')));
+        $definition->addMethodCall('setDefaultLookupContext', array($container->getParameter('rz.media.gallery.default_media_lookup_context')));
+        $definition->addMethodCall('setDefaultLookupHideContext', array($container->getParameter('rz.media.gallery.default_media_lookup_hide_context')));
 
         #set slugify service
         $serviceId = $container->getParameter('rz.media.slugify_service');

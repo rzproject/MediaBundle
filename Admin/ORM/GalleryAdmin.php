@@ -10,21 +10,27 @@ use Rz\CoreBundle\Provider\PoolInterface;
 
 class GalleryAdmin extends Admin
 {
+    protected $contextManager;
+
     protected $collectionManager;
 
-    protected $contextManager;
+    protected $categoryManager;
 
     protected $galleryPool;
 
     protected $galleryHasMediaPool;
 
+    protected $slugify;
+
     protected $defaultContext;
 
     protected $defaultCollection;
 
-    protected $slugify;
+    protected $defaultLookupCategory;
 
-    const GALLERY_DEFAULT_COLLECTION = 'default';
+    protected $defaultLookupContext;
+
+    protected $defaultLookupHideContext;
 
     /**
      * {@inheritdoc}
@@ -49,23 +55,23 @@ class GalleryAdmin extends Admin
             $contexts[$contextItem] = $contextItem;
         }
 
+
+        $mediaDefaultContext = ($provider && $provider->getDefaultLookupContext()) ? $provider->getDefaultLookupContext() : $this->getDefaultLookupContext();
+        $mediaHideContext = ($provider && ($provider->getDefaultLookupHideContext() !== null)) ? $provider->getDefaultLookupHideContext() : $this->getDefaultLookupHideContext();
+        $mediaDefaultCategory =($provider && ($provider->getDefaultLookupCategory())) ? $provider->getDefaultLookupCategory() : $this->getDefaultLookupCategory();
+
+        $mediaFieldOptions = array(
+            'edit'              => 'inline',
+            'sortable'          => 'position',
+            'link_parameters'   => array('context' => $mediaDefaultContext, 'hide_context'=>$mediaHideContext, 'category'=>$mediaDefaultCategory),
+            'admin_code'        => 'sonata.media.admin.gallery_has_media',
+        );
+
         if($childProvider = $this->getPoolProvider($this->galleryHasMediaPool)) {
-            $mediaFieldOptions = array(
-                'edit'              => 'inline',
-                'inline'            => 'standard',
-                'sortable'          => 'position',
-                'link_parameters'   => array('context' => $context),
-                'admin_code'        => 'sonata.media.admin.gallery_has_media',
-            );
+            $mediaFieldOptions['inline'] = 'standard';
             $mediaTabSettings = array('class' => 'col-md-8');
         } else {
-            $mediaFieldOptions = array(
-                'edit'              => 'inline',
-                'inline'            => 'table',
-                'sortable'          => 'position',
-                'link_parameters'   => array('context' => $context),
-                'admin_code'        => 'sonata.media.admin.gallery_has_media',
-            );
+            $mediaFieldOptions['inline'] = 'table';
             $mediaTabSettings = array('class' => 'col-md-12');
         }
 
@@ -236,6 +242,22 @@ class GalleryAdmin extends Admin
     /**
      * @return mixed
      */
+    public function getCategoryManager()
+    {
+        return $this->categoryManager;
+    }
+
+    /**
+     * @param mixed $categoryManager
+     */
+    public function setCategoryManager($categoryManager)
+    {
+        $this->categoryManager = $categoryManager;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getGalleryPool()
     {
         return $this->galleryPool;
@@ -281,6 +303,54 @@ class GalleryAdmin extends Admin
         $this->slugify = $slugify;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDefaultLookupCategory()
+    {
+        return $this->defaultLookupCategory;
+    }
+
+    /**
+     * @param mixed $defaultLookupCategory
+     */
+    public function setDefaultLookupCategory($defaultLookupCategory)
+    {
+        $this->defaultLookupCategory = $defaultLookupCategory;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultLookupContext()
+    {
+        return $this->defaultLookupContext;
+    }
+
+    /**
+     * @param mixed $defaultLookupContext
+     */
+    public function setDefaultLookupContext($defaultLookupContext)
+    {
+        $this->defaultLookupContext = $defaultLookupContext;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultLookupHideContext()
+    {
+        return $this->defaultLookupHideContext;
+    }
+
+    /**
+     * @param mixed $defaultLookupHideContext
+     */
+    public function setDefaultLookupHideContext($defaultLookupHideContext)
+    {
+        $this->defaultLookupHideContext = $defaultLookupHideContext;
+    }
+
     protected function fetchCurrentCollection() {
 
         $collectionSlug = $this->getPersistentParameter('collection');
@@ -310,7 +380,23 @@ class GalleryAdmin extends Admin
             return null;
         }
 
-        return $pool->getProvider($providerName);
+        $provider = $pool->getProvider($providerName);
+
+        if($pool instanceof \Rz\MediaBundle\Provider\Gallery\GalleryPool) {
+            $defaultMediaLookupContext = $pool->getMediaLookupContextByCollection($currentCollection->getSlug());
+            $provider->setDefaultLookupContext($defaultMediaLookupContext);
+            $defaultMediaLookupHideContext = $pool->getMediaLookupHideContextByCollection($currentCollection->getSlug());
+            $provider->setDefaultLookupHideContext($defaultMediaLookupHideContext);
+            $defaultMediaLookupCategory = $pool->getMediaLookupCategoryByCollection($currentCollection->getSlug());
+            $category = $this->categoryManager->findOneBy(array('slug'=>$this->getSlugify()->slugify($defaultMediaLookupCategory), 'context'=>$defaultMediaLookupContext));
+            if($category) {
+                $provider->setDefaultLookupCategory($category->getId());
+            }
+        }
+
+        return $provider;
+
+
     }
 
     /**

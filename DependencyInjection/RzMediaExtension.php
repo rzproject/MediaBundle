@@ -113,6 +113,10 @@ class RzMediaExtension extends Extension
         $container->setParameter('rz.media.gallery.default_context',             $config['gallery']['default_context']);
         $container->setParameter('rz.media.gallery.default_collection',          $config['gallery']['default_collection']);
 
+        $container->setParameter('rz.media.gallery.default_media_lookup_category',       $config['gallery']['media_lookup_settings']['default_category']);
+        $container->setParameter('rz.media.gallery.default_media_lookup_context',        $config['gallery']['media_lookup_settings']['default_context']);
+        $container->setParameter('rz.media.gallery.default_media_lookup_hide_context',   $config['gallery']['media_lookup_settings']['hide_context']);
+
         $container->setParameter('rz.media.gallery.provider.default_provider_collection', $config['gallery']['default_provider_collection']);
         $container->setParameter('rz.media.gallery.provider.collections',                 $config['gallery']['collections']);
     }
