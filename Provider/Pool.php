@@ -1,9 +1,9 @@
 <?php
 
-namespace Rz\MediaBundle\Provider\Gallery;
+namespace Rz\MediaBundle\Provider;
 
 use Sonata\CoreBundle\Validator\ErrorElement;
-use Rz\MediaBundle\Provider\BasePool;
+use Rz\NewsBundle\Provider\BasePool;
 
 class Pool extends BasePool
 {

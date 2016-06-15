@@ -28,6 +28,7 @@ class AddProviderCompilerPass implements CompilerPassInterface
 
         $galleryPool = $container->getDefinition('rz.media.gallery.pool');
         $galleryPool->addMethodCall('setSlugify', array(new Reference($serviceId)));
+
         $galleryHasMediaPool = $container->getDefinition('rz.media.gallery_has_media.pool');
         $galleryHasMediaPool->addMethodCall('setSlugify', array(new Reference($serviceId)));
 
@@ -44,24 +45,22 @@ class AddProviderCompilerPass implements CompilerPassInterface
 
         foreach ($collections as $name => $settings) {
 
-            $lookupContext  = $container->getParameter('rz.media.gallery.default_media_lookup_context');
-            $hideContext    = $container->getParameter('rz.media.gallery.default_media_lookup_hide_context');
-            $lookupCategory = $container->getParameter('rz.media.gallery.default_media_lookup_category');
-
-            if(array_key_exists('context', $settings['gallery']['media_lookup_settings'])) {
-                $lookupContext =$settings['gallery']['media_lookup_settings']['context'];
+            if($settings['gallery']['provider']) {
+                $galleryPool->addMethodCall('addCollection', array($name, $settings['gallery']['provider'], array()));
+                if($container->hasDefinition($settings['gallery']['provider'])) {
+                    $provider = $container->getDefinition($settings['gallery']['provider']);
+                    $provider->addMethodCall('setSlugify', array(new Reference($serviceId)));
+                }
             }
 
-            if(array_key_exists('hide_context', $settings['gallery']['media_lookup_settings'])) {
-                $hideContext =$settings['gallery']['media_lookup_settings']['hide_context'];
+            if($settings['gallery_has_media']['provider']) {
+                $galleryHasMediaPool->addMethodCall('addCollection', array($name, $settings['gallery_has_media']['provider'], $settings['gallery_has_media']['settings']));
+                if($container->hasDefinition($settings['gallery_has_media']['provider'])) {
+                    $provider =$container->getDefinition($settings['gallery_has_media']['provider']);
+                    $provider->addMethodCall('setSlugify', array(new Reference($serviceId)));
+                    $provider->addMethodCall('setCategoryManager', array(new Reference('sonata.classification.manager.category')));
+                }
             }
-
-            if(array_key_exists('category', $settings['gallery']['media_lookup_settings'])) {
-                $lookupCategory =$settings['gallery']['media_lookup_settings']['category'];
-            }
-
-            $galleryPool->addMethodCall('addCollection', array($name, $settings['gallery']['provider'], $lookupContext, $hideContext, $lookupCategory));
-            $galleryHasMediaPool->addMethodCall('addCollection', array($name, $settings['gallery_has_media']['provider']));
         }
     }
 }

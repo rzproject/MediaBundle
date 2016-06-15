@@ -1,6 +1,6 @@
 <?php
 
-namespace Rz\MediaBundle\Provider\Gallery;
+namespace Rz\MediaBundle\Provider\GalleryHasMedia;
 
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\CoreBundle\Validator\ErrorElement;
@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class GalleryHasMediaDefaultProvider extends BaseGalleryHasMediaProvider
+class DefaultProvider extends BaseProvider
 {
     /**
      * {@inheritdoc}
@@ -24,8 +24,6 @@ class GalleryHasMediaDefaultProvider extends BaseGalleryHasMediaProvider
      */
     public function buildCreateForm(FormMapper $formMapper, $object = null)
     {
-
-
         $formMapper
             ->tab('Settings')
                 ->with('rz_gallery_has_media_settings',  array('class' => 'col-md-6'))

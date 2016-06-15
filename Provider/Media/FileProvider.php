@@ -1,6 +1,6 @@
 <?php
 
-namespace Rz\MediaBundle\Provider;
+namespace Rz\MediaBundle\Provider\Media;
 
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\MediaBundle\Provider\FileProvider as BaseFileProvider;

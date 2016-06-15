@@ -2,43 +2,32 @@
 
 namespace Rz\MediaBundle\Admin\ORM;
 
-use Sonata\MediaBundle\Admin\GalleryAdmin as Admin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Rz\CoreBundle\Provider\PoolInterface;
+use Rz\CoreBundle\Admin\AdminProviderInterface;
+use Sonata\CoreBundle\Validator\ErrorElement;
 
-class GalleryAdmin extends Admin
+class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterface
 {
-    protected $contextManager;
 
-    protected $collectionManager;
+    /**
+     * {@inheritdoc}
+     */
+    public function setSubject($subject)
+    {
+        parent::setSubject($subject);
+        $this->galleryProvider = $this->getPoolProvider($this->getGalleryPool());
+        $this->childGalleryProvider = $this->getPoolProvider($this->getChildGalleryPool());
+    }
 
-    protected $categoryManager;
-
-    protected $galleryPool;
-
-    protected $galleryHasMediaPool;
-
-    protected $slugify;
-
-    protected $defaultContext;
-
-    protected $defaultCollection;
-
-    protected $defaultLookupCategory;
-
-    protected $defaultLookupContext;
-
-    protected $defaultLookupHideContext;
 
     /**
      * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-        $provider = $this->getPoolProvider($this->galleryPool);
-
         $context = $this->getPersistentParameter('context');
 
         if (!$context) {
@@ -55,19 +44,14 @@ class GalleryAdmin extends Admin
             $contexts[$contextItem] = $contextItem;
         }
 
-
-        $mediaDefaultContext = ($provider && $provider->getDefaultLookupContext()) ? $provider->getDefaultLookupContext() : $this->getDefaultLookupContext();
-        $mediaHideContext = ($provider && ($provider->getDefaultLookupHideContext() !== null)) ? $provider->getDefaultLookupHideContext() : $this->getDefaultLookupHideContext();
-        $mediaDefaultCategory =($provider && ($provider->getDefaultLookupCategory())) ? $provider->getDefaultLookupCategory() : $this->getDefaultLookupCategory();
-
         $mediaFieldOptions = array(
             'edit'              => 'inline',
             'sortable'          => 'position',
-            'link_parameters'   => array('context' => $mediaDefaultContext, 'hide_context'=>$mediaHideContext, 'category'=>$mediaDefaultCategory),
+            'link_parameters'   => $this->getPersistentParameters(),
             'admin_code'        => 'sonata.media.admin.gallery_has_media',
         );
 
-        if($childProvider = $this->getPoolProvider($this->galleryHasMediaPool)) {
+        if($this->hasChildGalleryProvider()) {
             $mediaFieldOptions['inline'] = 'standard';
             $mediaTabSettings = array('class' => 'col-md-8');
         } else {
@@ -75,8 +59,7 @@ class GalleryAdmin extends Admin
             $mediaTabSettings = array('class' => 'col-md-12');
         }
 
-        if($provider) {
-
+        if($this->hasGalleryProvider()) {
             $formMapper
                 ->tab('Details')
                     ->with('rz_gallery_settings',  array('class' => 'col-md-8'))->end()
@@ -84,8 +67,7 @@ class GalleryAdmin extends Admin
                 ->end()
                 ->tab('Media')
                     ->with('rz_gallery_gallery',  $mediaTabSettings)->end()
-                ->end()
-            ;
+                ->end();
         } else {
             $formMapper
                 ->tab('Details')
@@ -116,14 +98,14 @@ class GalleryAdmin extends Admin
             ->end()
         ;
 
-        if($provider) {
+        if($this->hasGalleryProvider()) {
             $instance = $this->getSubject();
 
             if ($instance && $instance->getId()) {
-                $provider->load($instance);
-                $provider->buildEditForm($formMapper);
+                $this->galleryProvider->load($instance);
+                $this->galleryProvider->buildEditForm($formMapper);
             } else {
-                $provider->buildCreateForm($formMapper);
+                $this->galleryProvider->buildCreateForm($formMapper);
             }
         }
     }
@@ -175,184 +157,7 @@ class GalleryAdmin extends Admin
         ;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDefaultContext()
-    {
-        return $this->defaultContext;
-    }
-
-    /**
-     * @param mixed $defaultContext
-     */
-    public function setDefaultContext($defaultContext)
-    {
-        $this->defaultContext = $defaultContext;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultCollection()
-    {
-        return $this->defaultCollection;
-    }
-
-    /**
-     * @param mixed $defaultCollection
-     */
-    public function setDefaultCollection($defaultCollection)
-    {
-        $this->defaultCollection = $defaultCollection;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCollectionManager()
-    {
-        return $this->collectionManager;
-    }
-
-    /**
-     * @param mixed $collectionManager
-     */
-    public function setCollectionManager($collectionManager)
-    {
-        $this->collectionManager = $collectionManager;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContextManager()
-    {
-        return $this->contextManager;
-    }
-
-    /**
-     * @param mixed $contextManager
-     */
-    public function setContextManager($contextManager)
-    {
-        $this->contextManager = $contextManager;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCategoryManager()
-    {
-        return $this->categoryManager;
-    }
-
-    /**
-     * @param mixed $categoryManager
-     */
-    public function setCategoryManager($categoryManager)
-    {
-        $this->categoryManager = $categoryManager;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGalleryPool()
-    {
-        return $this->galleryPool;
-    }
-
-    /**
-     * @param mixed $galleryPool
-     */
-    public function setGalleryPool(PoolInterface $galleryPool)
-    {
-        $this->galleryPool = $galleryPool;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGalleryHasMediaPool()
-    {
-        return $this->galleryHasMediaPool;
-    }
-
-    /**
-     * @param mixed $galleryHasMediaPool
-     */
-    public function setGalleryHasMediaPool($galleryHasMediaPool)
-    {
-        $this->galleryHasMediaPool = $galleryHasMediaPool;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSlugify()
-    {
-        return $this->slugify;
-    }
-
-    /**
-     * @param mixed $slugify
-     */
-    public function setSlugify($slugify)
-    {
-        $this->slugify = $slugify;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultLookupCategory()
-    {
-        return $this->defaultLookupCategory;
-    }
-
-    /**
-     * @param mixed $defaultLookupCategory
-     */
-    public function setDefaultLookupCategory($defaultLookupCategory)
-    {
-        $this->defaultLookupCategory = $defaultLookupCategory;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultLookupContext()
-    {
-        return $this->defaultLookupContext;
-    }
-
-    /**
-     * @param mixed $defaultLookupContext
-     */
-    public function setDefaultLookupContext($defaultLookupContext)
-    {
-        $this->defaultLookupContext = $defaultLookupContext;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultLookupHideContext()
-    {
-        return $this->defaultLookupHideContext;
-    }
-
-    /**
-     * @param mixed $defaultLookupHideContext
-     */
-    public function setDefaultLookupHideContext($defaultLookupHideContext)
-    {
-        $this->defaultLookupHideContext = $defaultLookupHideContext;
-    }
-
-    protected function fetchCurrentCollection() {
-
+    public function fetchProviderKey() {
         $collectionSlug = $this->getPersistentParameter('collection');
         $collection = null;
         if($collectionSlug) {
@@ -368,35 +173,36 @@ class GalleryAdmin extends Admin
         }
     }
 
-    protected function getPoolProvider($pool) {
-        $currentCollection = $this->fetchCurrentCollection();
+    public function getPoolProvider(PoolInterface $pool) {
+        $currentCollection = $this->fetchProviderKey();
         if ($pool->hasCollection($currentCollection->getSlug())) {
             $providerName = $pool->getProviderNameByCollection($currentCollection->getSlug());
-        } else {
-            $providerName = $pool->getProviderNameByCollection($pool->getDefaultCollection());
-        }
 
-        if(!$providerName) {
-            return null;
-        }
-
-        $provider = $pool->getProvider($providerName);
-
-        if($pool instanceof \Rz\MediaBundle\Provider\Gallery\GalleryPool) {
-            $defaultMediaLookupContext = $pool->getMediaLookupContextByCollection($currentCollection->getSlug());
-            $provider->setDefaultLookupContext($defaultMediaLookupContext);
-            $defaultMediaLookupHideContext = $pool->getMediaLookupHideContextByCollection($currentCollection->getSlug());
-            $provider->setDefaultLookupHideContext($defaultMediaLookupHideContext);
-            $defaultMediaLookupCategory = $pool->getMediaLookupCategoryByCollection($currentCollection->getSlug());
-            $category = $this->categoryManager->findOneBy(array('slug'=>$this->getSlugify()->slugify($defaultMediaLookupCategory), 'context'=>$defaultMediaLookupContext));
-            if($category) {
-                $provider->setDefaultLookupCategory($category->getId());
+            if(!$providerName) {
+                return null;
             }
+            $provider = $pool->getProvider($providerName);
+            $params = $pool->getSettingsByCollection($currentCollection->getSlug());
+            $provider = $pool->getProvider($providerName);
+            ###############################
+            # Load provoder levelsettings
+            ###############################
+            $provider->setRawSettings($params);
+            return $provider;
+        }
+        return null;
+    }
+
+    public function getProviderName(PoolInterface $pool, $providerKey = null) {
+        if(!$providerKey) {
+            $providerKey = $this->fetchProviderKey();
         }
 
-        return $provider;
+        if ($providerKey && $pool->hasCollection($providerKey->getSlug())) {
+            return $pool->getProviderNameByCollection($providerKey->getSlug());
+        }
 
-
+        return null;
     }
 
     /**
@@ -405,24 +211,22 @@ class GalleryAdmin extends Admin
     public function getPersistentParameters()
     {
         $parameters = parent::getPersistentParameters();
-        $collectionSlug = $this->getSlugify()->slugify($this->getDefaultCollection());
-        if(is_array($parameters)) {
-            $parameters = array_merge($parameters, array(
-                'collection'      => $collectionSlug,
-                'hide_collection' => $this->hasRequest() ? (int) $this->getRequest()->get('hide_collection', 0) : 0,));
+
+        if ($this->hasRequest() && $this->getRequest()->get('collection')) {
+            $parameters['collection'] = $this->getRequest()->get('collection');
+        }
+
+        if(is_array($parameters) && isset($parameters['collection'])) {
+            $parameters = array_merge($parameters, array('hide_collection' => $this->hasRequest() ? (int) $this->getRequest()->get('hide_collection', 0) : 0));
         } else {
+            $collectionSlug = $this->getSlugify()->slugify($this->getDefaultCollection());
             $parameters = array(
                 'collection'      => $collectionSlug,
-                'hide_collection' => $this->hasRequest() ? (int) $this->getRequest()->get('hide_collection', 0) : 0,);
+                'hide_collection' => $this->hasRequest() ? (int) $this->getRequest()->get('hide_collection', 0) : 0);
         }
 
         if ($this->getSubject()) {
             $parameters['collection'] = $this->getSubject()->getCollection() ? $this->getSubject()->getCollection()->getSlug() : $collectionSlug;
-            return $parameters;
-        }
-
-        if ($this->hasRequest() && $this->getRequest()->get('collection')) {
-            $parameters['collection'] = $this->getRequest()->get('collection');
             return $parameters;
         }
 
@@ -463,4 +267,65 @@ class GalleryAdmin extends Admin
         return $instance;
     }
 
+    public function getGalleryHasMediaSettings() {
+        $settings = [];
+        $settings['collection'] = $this->getPersistentParameter('collection');
+        return $settings;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prePersist($object)
+    {
+        parent::prePersist($object);
+        if($this->hasGalleryProvider()) {
+            $this->getGalleryProvider()->prePersist($object);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function preUpdate($object)
+    {
+        parent::preUpdate($object);
+
+        if($this->hasGalleryProvider()) {
+            $this->getGalleryProvider()->preUpdate($object);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function postUpdate($object)
+    {
+        parent::postUpdate($object);
+        if($this->hasGalleryProvider()) {
+            $this->getGalleryProvider()->postUpdate($object);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function postPersist($object)
+    {
+        parent::postPersist($object);
+        if($this->hasGalleryProvider()) {
+            $this->getGalleryProvider()->postPersist($object);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validate(ErrorElement $errorElement, $object)
+    {
+        parent::validate($errorElement, $object);
+        if($this->hasGalleryProvider()) {
+            $this->getGalleryProvider()->validate($errorElement, $object);
+        }
+    }
 }

@@ -30,7 +30,7 @@ class RzMediaExtension extends Extension
         $this->configureManagerClass($config, $container);
         $this->configureAdminClass($config, $container);
         $this->configureBlocks($config['blocks'], $container);
-        $this->configureProviders($container, $config['providers']);
+        $this->configureProviders($container, $config);
         $this->configureSettings($container, $config);
         $this->registerDoctrineMapping($config);
 
@@ -42,7 +42,13 @@ class RzMediaExtension extends Extension
      */
     public function configureSettings(ContainerBuilder $container, $config)
     {
-        $container->setParameter('rz.media.slugify_service', $config['slugify_service']);
+        $container->setParameter('rz.media.slugify_service',                    $config['slugify_service']);
+        $container->setParameter('rz.media.settings.media',                     $config['settings']['media']);
+        $container->setParameter('rz.media.settings.gallery',                   $config['settings']['gallery']);
+        $container->setParameter('rz.media.settings.gallery_has_media',         $config['settings']['gallery_has_media']);
+
+        $container->setParameter('rz.media.gallery.default_context',             $config['settings']['gallery']['default_context']);
+        $container->setParameter('rz.media.gallery.default_collection',          $config['settings']['gallery']['default_collection']);
     }
 
     /**
@@ -104,21 +110,19 @@ class RzMediaExtension extends Extension
      */
     public function configureProviders(ContainerBuilder $container, $config)
     {
+        $container->setParameter('rz.media.gallery.pool.class',                         $config['providers']['class']['pool']['gallery']);
+        $container->setParameter('rz.media.gallery_has_media.pool.class',               $config['providers']['class']['pool']['gallery_has_media']);
+        $container->setParameter('rz.media.gallery_provider.default.class',             $config['providers']['class']['default_provider']['gallery']);
+        $container->setParameter('rz.media.gallery_has_media_provider.default.class',   $config['providers']['class']['default_provider']['gallery_has_media']);
+
         $galleryPool = $container->getDefinition('rz.media.gallery.pool');
-        $galleryPool->replaceArgument(0, $config['gallery']['default_provider_collection']);
+        $galleryPool->replaceArgument(0, $config['settings']['gallery']['default_collection']);
 
         $galleryHasMediaPool = $container->getDefinition('rz.media.gallery_has_media.pool');
-        $galleryHasMediaPool->replaceArgument(0, $config['gallery']['default_provider_collection']);
+        $galleryHasMediaPool->replaceArgument(0, $config['settings']['gallery']['default_collection']);
 
-        $container->setParameter('rz.media.gallery.default_context',             $config['gallery']['default_context']);
-        $container->setParameter('rz.media.gallery.default_collection',          $config['gallery']['default_collection']);
+        $container->setParameter('rz.media.gallery.provider.collections',        $config['providers']['gallery']['collections']);
 
-        $container->setParameter('rz.media.gallery.default_media_lookup_category',       $config['gallery']['media_lookup_settings']['default_category']);
-        $container->setParameter('rz.media.gallery.default_media_lookup_context',        $config['gallery']['media_lookup_settings']['default_context']);
-        $container->setParameter('rz.media.gallery.default_media_lookup_hide_context',   $config['gallery']['media_lookup_settings']['hide_context']);
-
-        $container->setParameter('rz.media.gallery.provider.default_provider_collection', $config['gallery']['default_provider_collection']);
-        $container->setParameter('rz.media.gallery.provider.collections',                 $config['gallery']['collections']);
     }
 
     /**

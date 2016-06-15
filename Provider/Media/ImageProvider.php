@@ -1,6 +1,6 @@
 <?php
 
-namespace Rz\MediaBundle\Provider;
+namespace Rz\MediaBundle\Provider\Media;
 
 use Gaufrette\Filesystem;
 use Imagine\Image\ImagineInterface;

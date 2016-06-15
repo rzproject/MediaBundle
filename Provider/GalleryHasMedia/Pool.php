@@ -1,6 +1,6 @@
 <?php
 
-namespace Rz\MediaBundle\Provider\Gallery;
+namespace Rz\MediaBundle\Provider\GalleryHasMedia;
 
 use Sonata\CoreBundle\Validator\ErrorElement;
 use Rz\MediaBundle\Provider\BasePool;

@@ -40,12 +40,11 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         $definition->addMethodCall('setContextManager', array(new Reference('sonata.classification.manager.context')));
         $definition->addMethodCall('setCategoryManager', array(new Reference('sonata.classification.manager.category')));
         $definition->addMethodCall('setGalleryPool', array(new Reference('rz.media.gallery.pool')));
-        $definition->addMethodCall('setGalleryHasMediaPool', array(new Reference('rz.media.gallery_has_media.pool')));
+        $definition->addMethodCall('setChildGalleryPool', array(new Reference('rz.media.gallery_has_media.pool')));
         $definition->addMethodCall('setDefaultContext', array($container->getParameter('rz.media.gallery.default_context')));
         $definition->addMethodCall('setDefaultCollection', array($container->getParameter('rz.media.gallery.default_collection')));
-        $definition->addMethodCall('setDefaultLookupCategory', array($container->getParameter('rz.media.gallery.default_media_lookup_category')));
-        $definition->addMethodCall('setDefaultLookupContext', array($container->getParameter('rz.media.gallery.default_media_lookup_context')));
-        $definition->addMethodCall('setDefaultLookupHideContext', array($container->getParameter('rz.media.gallery.default_media_lookup_hide_context')));
+        $definition->addMethodCall('setSettings', array($container->getParameter('rz.media.settings.gallery')));
+
 
         #set slugify service
         $serviceId = $container->getParameter('rz.media.slugify_service');
@@ -60,7 +59,12 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         $definition->addMethodCall('setBaseControllerName', array($container->getParameter('rz.media.admin.gallery_has_media.controller')));
         $definition->addMethodCall('setCollectionManager', array(new Reference('sonata.classification.manager.collection')));
         $definition->addMethodCall('setContextManager', array(new Reference('sonata.classification.manager.context')));
-        $definition->addMethodCall('setGalleryHasMediaPool', array(new Reference('rz.media.gallery_has_media.pool')));
+        $definition->addMethodCall('setCategoryManager', array(new Reference('sonata.classification.manager.category')));
+        $definition->addMethodCall('setPool', array(new Reference('rz.media.gallery_has_media.pool')));
+        $definition->addMethodCall('setDefaultContext', array($container->getParameter('rz.media.gallery.default_context')));
+        $definition->addMethodCall('setDefaultCollection', array($container->getParameter('rz.media.gallery.default_collection')));
+        $definition->addMethodCall('setSettings', array($container->getParameter('rz.media.settings.gallery_has_media')));
+        $definition->addMethodCall('setSlugify', array(new Reference($serviceId)));
 
         ##############################
         # Override File Provider Class

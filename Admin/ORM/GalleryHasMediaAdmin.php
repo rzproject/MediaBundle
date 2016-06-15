@@ -2,43 +2,30 @@
 
 namespace Rz\MediaBundle\Admin\ORM;
 
-use Sonata\MediaBundle\Admin\GalleryHasMediaAdmin as Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Rz\CoreBundle\Admin\AdminProviderInterface;
+use Rz\CoreBundle\Provider\PoolInterface;
+use Sonata\CoreBundle\Validator\ErrorElement;
 
-class GalleryHasMediaAdmin extends Admin
+class GalleryHasMediaAdmin extends AbstractGalleryHasMediaAdmin implements AdminProviderInterface
 {
-    protected $collectionManager;
 
-    protected $contextManager;
-
-    protected $galleryHasMediaPool;
-
-    const GALLERY_HAS_MEDIA_DEFAULT_COLLECTION = 'default';
+    /**
+     * {@inheritdoc}
+     */
+    public function setSubject($subject)
+    {
+        parent::setSubject($subject);
+        $this->provider = $this->getPoolProvider($this->getPool());
+    }
 
     /**
      * @param \Sonata\AdminBundle\Form\FormMapper $formMapper
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-
-        $provider = $this->getGalleryHasMediaPoolProvider();
-
-        $link_parameters = array();
-
-        if ($this->hasParentFieldDescription()) {
-            $link_parameters = $this->getParentFieldDescription()->getOption('link_parameters', array());
-        }
-
-        if ($this->hasRequest()) {
-            $context = $this->getRequest()->get('context', null);
-
-            if (null !== $context) {
-                $link_parameters['context'] = $context;
-            }
-        }
-
-        if($provider) {
+        if($this->hasProvider()) {
             // define group zoning
             $formMapper
                 ->tab('Media')
@@ -46,15 +33,13 @@ class GalleryHasMediaAdmin extends Admin
                 ->end()
                 ->tab('Settings')
                     ->with('rz_gallery_has_media_settings',  array('class' => 'col-md-6'))->end()
-                ->end()
-            ;
+                ->end();
         } else {
             // define group zoning
             $formMapper
                 ->tab('Media')
                     ->with('rz_gallery_has_media_media',  array('class' => 'col-md-12'))->end()
-                ->end()
-            ;
+                ->end();
         }
 
 
@@ -62,22 +47,20 @@ class GalleryHasMediaAdmin extends Admin
             ->tab('Media')
                 ->with('rz_gallery_has_media_media',  array('class' => 'col-md-12'))
                     ->add('media', 'sonata_type_model_list', array('required' => false), array(
-                        'link_parameters' => $link_parameters,
+                        'link_parameters' => $this->getMediaSettings(),
                     ))
                     ->add('enabled', null, array('required' => false))
                     ->add('position', 'hidden')
                 ->end()
-            ->end()
-        ;
+            ->end();
 
-        if($provider) {
+        if($this->hasProvider()) {
             $instance = $this->getSubject();
-
             if ($instance && $instance->getId()) {
-                $provider->load($instance);
-                $provider->buildEditForm($formMapper);
+                $this->provider->load($instance);
+                $this->provider->buildEditForm($formMapper);
             } else {
-                $provider->buildCreateForm($formMapper);
+                $this->provider->buildCreateForm($formMapper);
             }
         }
     }
@@ -91,66 +74,45 @@ class GalleryHasMediaAdmin extends Admin
             ->add('media')
             ->add('gallery')
             ->add('position')
-            ->add('enabled')
-        ;
+            ->add('enabled');
     }
+
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getCollectionManager()
+    public function getPersistentParameters()
     {
-        return $this->collectionManager;
+        $parameters = parent::getPersistentParameters();
+
+        if ($this->hasRequest() && $this->getRequest()->get('collection')) {
+            $parameters['collection'] = $this->getRequest()->get('collection');
+        }
+
+        if(is_array($parameters) && isset($parameters['collection'])) {
+            $parameters = array_merge($parameters, array('hide_collection' => $this->hasRequest() ? (int) $this->getRequest()->get('hide_collection', 0) : 0));
+        } else {
+            $collectionSlug = $this->getSlugify()->slugify($this->getDefaultCollection());
+            $parameters = array(
+                'collection'      => $collectionSlug,
+                'hide_collection' => $this->hasRequest() ? (int) $this->getRequest()->get('hide_collection', 0) : 0);
+        }
+
+        if ($this->getSubject() && $this->getSubject()->getGallery()) {
+            $parameters['collection'] = $this->getSubject()->getGallery()->getCollection() ? $this->getSubject()->getGallery()->getCollection()->getSlug() : $collectionSlug;
+            return $parameters;
+        }
+
+        return $parameters;
     }
 
-    /**
-     * @param mixed $collectionManager
-     */
-    public function setCollectionManager($collectionManager)
-    {
-        $this->collectionManager = $collectionManager;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContextManager()
-    {
-        return $this->contextManager;
-    }
-
-    /**
-     * @param mixed $contextManager
-     */
-    public function setContextManager($contextManager)
-    {
-        $this->contextManager = $contextManager;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGalleryHasMediaPool()
-    {
-        return $this->galleryHasMediaPool;
-    }
-
-    /**
-     * @param mixed $galleryHasMediaPool
-     */
-    public function setGalleryHasMediaPool($galleryHasMediaPool)
-    {
-        $this->galleryHasMediaPool = $galleryHasMediaPool;
-    }
-
-    protected function fetchCurrentCollection() {
+    public function fetchProviderKey() {
 
         $collectionSlug = $this->getPersistentParameter('collection');
+
         $collection = null;
         if($collectionSlug) {
             $collection = $this->collectionManager->findOneBy(array('slug'=>$collectionSlug));
-        } else {
-            $collection = $this->collectionManager->findOneBy(array('slug'=>self::GALLERY_HAS_MEDIA_DEFAULT_COLLECTION));
         }
 
         if($collection) {
@@ -160,18 +122,110 @@ class GalleryHasMediaAdmin extends Admin
         }
     }
 
-    protected function getGalleryHasMediaPoolProvider() {
-        $currentCollection = $this->fetchCurrentCollection();
-        if ($this->galleryHasMediaPool->hasCollection($currentCollection->getSlug())) {
-            $providerName = $this->galleryHasMediaPool->getProviderNameByCollection($currentCollection->getSlug());
-        } else {
-            $providerName = $this->galleryHasMediaPool->getProviderNameByCollection($this->galleryHasMediaPool->getDefaultCollection());
+    public function getPoolProvider(PoolInterface $pool) {
+        $currentCollection = $this->fetchProviderKey();
+
+        if ($pool->hasCollection($currentCollection->getSlug())) {
+            $providerName = $pool->getProviderNameByCollection($currentCollection->getSlug());
+
+            if(!$providerName) {
+                return null;
+            }
+            $provider = $pool->getProvider($providerName);
+            $params = $pool->getSettingsByCollection($currentCollection->getSlug());
+            $provider = $pool->getProvider($providerName);
+            ###############################
+            # Load provoder levelsettings
+            ###############################
+            $provider->setRawSettings($params);
+            return $provider;
+        }
+        return null;
+    }
+
+    public function getProviderName(PoolInterface $pool, $providerKey = null) {
+        if(!$providerKey) {
+            $providerKey = $this->fetchProviderKey();
         }
 
-        if(!$providerName) {
-            return null;
+        if ($providerKey && $pool->hasCollection($providerKey->getSlug())) {
+            return $pool->getProviderNameByCollection($providerKey->getSlug());
         }
 
-        return $this->galleryHasMediaPool->getProvider($providerName);
+        return null;
+    }
+
+    public function getMediaSettings() {
+
+        $settings = parent::getMediaSettings();
+
+        if(!$this->hasProvider()) {
+            return $settings;
+        }
+
+        $providerSettings = [];
+        $providerSettings = $this->getProvider()->getMediaSettings();
+
+        if($providerSettings) {
+            $settings = array_merge($settings, $providerSettings);
+        }
+
+        return $settings;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prePersist($object)
+    {
+        parent::prePersist($object);
+        if($this->hasProvider()) {
+            $this->getProvider()->prePersist($object);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function preUpdate($object)
+    {
+        parent::preUpdate($object);
+
+        if($this->hasProvider()) {
+            $this->getProvider()->preUpdate($object);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function postUpdate($object)
+    {
+        parent::postUpdate($object);
+        if($this->hasProvider()) {
+            $this->getProvider()->postUpdate($object);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function postPersist($object)
+    {
+        parent::postPersist($object);
+        if($this->hasProvider()) {
+            $this->getProvider()->postPersist($object);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validate(ErrorElement $errorElement, $object)
+    {
+        parent::validate($errorElement, $object);
+        if($this->hasProvider()) {
+            $this->getProvider()->validate($errorElement, $object);
+        }
     }
 }
