@@ -15,7 +15,7 @@ class MediaAdmin extends Admin
         '_page'       => 1,
         '_per_page'   => 8,
         '_sort_order' => 'DESC',
-        '_sort_by'    => 'publicationDateStart',
+        '_sort_by'    => 'createdAt',
     );
 
     /**
