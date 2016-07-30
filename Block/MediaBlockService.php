@@ -62,7 +62,7 @@ class MediaBlockService extends BaseMediaBlockService
         $keys[] = array('title', 'text', array('required' => false));
         $keys[] = array($this->getMediaBuilder($formMapper), null, array());
         $keys[] = array('format', 'choice', array('required' => count($formatChoices) > 0, 'choices' => $formatChoices));
-        if($this->getTemplates()) {
+        if ($this->getTemplates()) {
             $keys[] = array('template', 'choice', array('choices'=>$this->getTemplates()));
         }
 

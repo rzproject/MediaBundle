@@ -51,7 +51,7 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
             'admin_code'        => 'sonata.media.admin.gallery_has_media',
         );
 
-        if($this->hasChildGalleryProvider()) {
+        if ($this->hasChildGalleryProvider()) {
             $mediaFieldOptions['inline'] = 'standard';
             $mediaTabSettings = array('class' => 'col-md-8');
         } else {
@@ -59,7 +59,7 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
             $mediaTabSettings = array('class' => 'col-md-12');
         }
 
-        if($this->hasGalleryProvider()) {
+        if ($this->hasGalleryProvider()) {
             $formMapper
                 ->tab('Details')
                     ->with('rz_gallery_settings',  array('class' => 'col-md-8'))->end()
@@ -98,7 +98,7 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
             ->end()
         ;
 
-        if($this->hasGalleryProvider()) {
+        if ($this->hasGalleryProvider()) {
             $instance = $this->getSubject();
 
             if ($instance && $instance->getId()) {
@@ -118,8 +118,8 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
         $listMapper
             ->addIdentifier('name')
             ->add('enabled', 'boolean', array('editable' => true, 'footable'=>array('attr'=>array('data-breakpoints'=>array('xs', 'sm')))))
-            ->add('context', 'trans', array('catalogue' => 'SonataMediaBundle','footable'=>array('attr'=>array('data-breakpoints'=>array('all')))))
-            ->add('defaultFormat', 'trans', array('catalogue' => 'SonataMediaBundle','footable'=>array('attr'=>array('data-breakpoints'=>array('xs', 'sm')))))
+            ->add('context', 'trans', array('catalogue' => 'SonataMediaBundle', 'footable'=>array('attr'=>array('data-breakpoints'=>array('all')))))
+            ->add('defaultFormat', 'trans', array('catalogue' => 'SonataMediaBundle', 'footable'=>array('attr'=>array('data-breakpoints'=>array('xs', 'sm')))))
         ;
     }
 
@@ -128,7 +128,6 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
-
         $options = array(
             'choices' => array(),
         );
@@ -157,28 +156,30 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
         ;
     }
 
-    public function fetchProviderKey() {
+    public function fetchProviderKey()
+    {
         $collectionSlug = $this->getPersistentParameter('collection');
         $collection = null;
-        if($collectionSlug) {
+        if ($collectionSlug) {
             $collection = $this->collectionManager->findOneBy(array('slug'=>$collectionSlug));
         } else {
             $collection = $this->collectionManager->findOneBy(array('slug'=>$this->getDefaultCollection()));
         }
 
-        if($collection) {
+        if ($collection) {
             return $collection;
         } else {
             return;
         }
     }
 
-    public function getPoolProvider(PoolInterface $pool) {
+    public function getPoolProvider(PoolInterface $pool)
+    {
         $currentCollection = $this->fetchProviderKey();
         if ($pool->hasCollection($currentCollection->getSlug())) {
             $providerName = $pool->getProviderNameByCollection($currentCollection->getSlug());
 
-            if(!$providerName) {
+            if (!$providerName) {
                 return null;
             }
             $provider = $pool->getProvider($providerName);
@@ -193,8 +194,9 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
         return null;
     }
 
-    public function getProviderName(PoolInterface $pool, $providerKey = null) {
-        if(!$providerKey) {
+    public function getProviderName(PoolInterface $pool, $providerKey = null)
+    {
+        if (!$providerKey) {
             $providerKey = $this->fetchProviderKey();
         }
 
@@ -216,7 +218,7 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
             $parameters['collection'] = $this->getRequest()->get('collection');
         }
 
-        if(is_array($parameters) && isset($parameters['collection'])) {
+        if (is_array($parameters) && isset($parameters['collection'])) {
             $parameters = array_merge($parameters, array('hide_collection' => $this->hasRequest() ? (int) $this->getRequest()->get('hide_collection', 0) : 0));
         } else {
             $collectionSlug = $this->getSlugify()->slugify($this->getDefaultCollection());
@@ -249,7 +251,7 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
 
         $galleryContext = $this->contextManager->findOneBy(array('id'=>$this->getSlugify()->slugify($this->getDefaultContext())));
 
-        if(!$galleryContext && !$galleryContext instanceof \Sonata\ClassificationBundle\Model\ContextInterface) {
+        if (!$galleryContext && !$galleryContext instanceof \Sonata\ClassificationBundle\Model\ContextInterface) {
             $galleryContext = $this->getContextManager->generateDefaultContext($this->getDefaultContext());
         }
 
@@ -267,7 +269,8 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
         return $instance;
     }
 
-    public function getGalleryHasMediaSettings() {
+    public function getGalleryHasMediaSettings()
+    {
         $settings = [];
         $settings['collection'] = $this->getPersistentParameter('collection');
         return $settings;
@@ -279,7 +282,7 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
     public function prePersist($object)
     {
         parent::prePersist($object);
-        if($this->hasGalleryProvider()) {
+        if ($this->hasGalleryProvider()) {
             $this->getGalleryProvider()->prePersist($object);
         }
     }
@@ -291,7 +294,7 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
     {
         parent::preUpdate($object);
 
-        if($this->hasGalleryProvider()) {
+        if ($this->hasGalleryProvider()) {
             $this->getGalleryProvider()->preUpdate($object);
         }
     }
@@ -302,7 +305,7 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
     public function postUpdate($object)
     {
         parent::postUpdate($object);
-        if($this->hasGalleryProvider()) {
+        if ($this->hasGalleryProvider()) {
             $this->getGalleryProvider()->postUpdate($object);
         }
     }
@@ -313,7 +316,7 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
     public function postPersist($object)
     {
         parent::postPersist($object);
-        if($this->hasGalleryProvider()) {
+        if ($this->hasGalleryProvider()) {
             $this->getGalleryProvider()->postPersist($object);
         }
     }
@@ -324,7 +327,7 @@ class GalleryAdmin extends AbstractGalleryAdmin implements AdminProviderInterfac
     public function validate(ErrorElement $errorElement, $object)
     {
         parent::validate($errorElement, $object);
-        if($this->hasGalleryProvider()) {
+        if ($this->hasGalleryProvider()) {
             $this->getGalleryProvider()->validate($errorElement, $object);
         }
     }

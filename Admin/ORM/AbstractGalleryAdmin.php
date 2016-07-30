@@ -194,11 +194,11 @@ class AbstractGalleryAdmin extends Admin
      */
     public function hasChildGalleryProvider($interface = null)
     {
-        if(!$interface) {
+        if (!$interface) {
             return isset($this->childGalleryProvider);
         }
 
-        if($this->childGalleryProvider instanceof $interface) {
+        if ($this->childGalleryProvider instanceof $interface) {
             return true;
         }
 
@@ -210,11 +210,11 @@ class AbstractGalleryAdmin extends Admin
      */
     public function hasGalleryProvider($interface = null)
     {
-        if(!$interface) {
+        if (!$interface) {
             return isset($this->galleryProvider);
         }
 
-        if($this->galleryProvider instanceof $interface) {
+        if ($this->galleryProvider instanceof $interface) {
             return true;
         }
 

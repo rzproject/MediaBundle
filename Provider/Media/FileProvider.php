@@ -12,7 +12,6 @@ class FileProvider extends BaseFileProvider
      */
     public function buildEditForm(FormMapper $formMapper)
     {
-
         $subject = $formMapper->getAdmin()->getSubject();
         $formMapper->add('name');
         $formMapper->add('enabled', null, array('required' => false));

@@ -31,29 +31,41 @@ abstract class BaseProvider extends Provider
     /**
      * {@inheritdoc}
      */
-    public function prePersist(GalleryHasMediaInterface $object){}
+    public function prePersist(GalleryHasMediaInterface $object)
+    {
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function preUpdate(GalleryHasMediaInterface $object){}
+    public function preUpdate(GalleryHasMediaInterface $object)
+    {
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function postPersist(GalleryHasMediaInterface $object){}
+    public function postPersist(GalleryHasMediaInterface $object)
+    {
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function postUpdate(GalleryHasMediaInterface $object){}
+    public function postUpdate(GalleryHasMediaInterface $object)
+    {
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function validate(ErrorElement $errorElement, GalleryHasMediaInterface $object){}
+    public function validate(ErrorElement $errorElement, GalleryHasMediaInterface $object)
+    {
+    }
 
-    public function load(GalleryHasMediaInterface $object) {}
+    public function load(GalleryHasMediaInterface $object)
+    {
+    }
 
     /**
      * @return mixed
@@ -87,11 +99,11 @@ abstract class BaseProvider extends Provider
         $this->categoryManager = $categoryManager;
     }
 
-    public function getMediaSettings() {
+    public function getMediaSettings()
+    {
         $params = $this->getSetting('media');
         $settings = [];
-        if($params) {
-
+        if ($params) {
             $default = isset($this->defaultSettings['post_has_media']) && isset($this->defaultSettings['post_has_media']['default_context']) ? $this->defaultSettings['post_has_media']['default_context'] : null;
             $settings['context'] = isset($params['context']) && $params['context'] !== null ? $params['context'] : $default;
 
@@ -102,9 +114,9 @@ abstract class BaseProvider extends Provider
             $default = isset($this->defaultSettings['post_has_media']) && isset($this->defaultSettings['post_has_media']['default_category']) ? $this->defaultSettings['post_has_media']['default_category'] : null;
             $category = isset($params['category']) && $params['category'] !== null ? $params['category'] : $default;
 
-            if($category !== null) {
+            if ($category !== null) {
                 $category = $this->categoryManager->findOneBy(array('slug'=>$this->getSlugify()->slugify($params['category']), 'context'=>$settings['context']));
-                if($category) {
+                if ($category) {
                     $settings['category'] = $category->getId();
                 }
             }
