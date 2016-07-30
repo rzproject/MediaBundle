@@ -120,7 +120,8 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-     private function addAdminSection(ArrayNodeDefinition $node) {
+    private function addAdminSection(ArrayNodeDefinition $node)
+    {
         $node
             ->children()
                 ->arrayNode('admin')
@@ -159,7 +160,8 @@ class Configuration implements ConfigurationInterface
     /**
      * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
      */
-    private function addBlockSettings(ArrayNodeDefinition $node) {
+    private function addBlockSettings(ArrayNodeDefinition $node)
+    {
         $node
             ->children()
                 ->arrayNode('blocks')

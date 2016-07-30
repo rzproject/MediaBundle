@@ -168,11 +168,11 @@ class AbstractGalleryHasMediaAdmin extends Admin
      */
     public function hasProvider($interface = null)
     {
-        if(!$interface) {
+        if (!$interface) {
             return isset($this->provider);
         }
 
-        if($this->provider instanceof $interface) {
+        if ($this->provider instanceof $interface) {
             return true;
         }
 
@@ -195,15 +195,16 @@ class AbstractGalleryHasMediaAdmin extends Admin
         $this->settings[$name] = $value;
     }
 
-    public function getMediaSettings() {
+    public function getMediaSettings()
+    {
         $params = $this->getSetting('media');
         $settings = [];
         $settings['context'] = isset($params['default_context']) && $params['default_context'] !== null ? $params['default_context'] : $this->getDefaultContext();
         $settings['hide_context'] = isset($params['hide_context']) && $params['hide_context'] !== null ? $params['hide_context'] : false;
 
-        if(isset($params['default_category']) && $params['default_category'] !== null) {
+        if (isset($params['default_category']) && $params['default_category'] !== null) {
             $category = $this->categoryManager->findOneBy(array('slug'=>$this->getSlugify()->slugify($params['default_category']), 'context'=>$settings['context']));
-            if($category) {
+            if ($category) {
                 $settings['category'] = $category->getId();
             }
         }

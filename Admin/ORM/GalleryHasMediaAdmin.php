@@ -25,7 +25,7 @@ class GalleryHasMediaAdmin extends AbstractGalleryHasMediaAdmin implements Admin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-        if($this->hasProvider()) {
+        if ($this->hasProvider()) {
             // define group zoning
             $formMapper
                 ->tab('Media')
@@ -54,7 +54,7 @@ class GalleryHasMediaAdmin extends AbstractGalleryHasMediaAdmin implements Admin
                 ->end()
             ->end();
 
-        if($this->hasProvider()) {
+        if ($this->hasProvider()) {
             $instance = $this->getSubject();
             if ($instance && $instance->getId()) {
                 $this->provider->load($instance);
@@ -89,7 +89,7 @@ class GalleryHasMediaAdmin extends AbstractGalleryHasMediaAdmin implements Admin
             $parameters['collection'] = $this->getRequest()->get('collection');
         }
 
-        if(is_array($parameters) && isset($parameters['collection'])) {
+        if (is_array($parameters) && isset($parameters['collection'])) {
             $parameters = array_merge($parameters, array('hide_collection' => $this->hasRequest() ? (int) $this->getRequest()->get('hide_collection', 0) : 0));
         } else {
             $collectionSlug = $this->getSlugify()->slugify($this->getDefaultCollection());
@@ -106,29 +106,30 @@ class GalleryHasMediaAdmin extends AbstractGalleryHasMediaAdmin implements Admin
         return $parameters;
     }
 
-    public function fetchProviderKey() {
-
+    public function fetchProviderKey()
+    {
         $collectionSlug = $this->getPersistentParameter('collection');
 
         $collection = null;
-        if($collectionSlug) {
+        if ($collectionSlug) {
             $collection = $this->collectionManager->findOneBy(array('slug'=>$collectionSlug));
         }
 
-        if($collection) {
+        if ($collection) {
             return $collection;
         } else {
             return;
         }
     }
 
-    public function getPoolProvider(PoolInterface $pool) {
+    public function getPoolProvider(PoolInterface $pool)
+    {
         $currentCollection = $this->fetchProviderKey();
 
         if ($pool->hasCollection($currentCollection->getSlug())) {
             $providerName = $pool->getProviderNameByCollection($currentCollection->getSlug());
 
-            if(!$providerName) {
+            if (!$providerName) {
                 return null;
             }
             $provider = $pool->getProvider($providerName);
@@ -143,8 +144,9 @@ class GalleryHasMediaAdmin extends AbstractGalleryHasMediaAdmin implements Admin
         return null;
     }
 
-    public function getProviderName(PoolInterface $pool, $providerKey = null) {
-        if(!$providerKey) {
+    public function getProviderName(PoolInterface $pool, $providerKey = null)
+    {
+        if (!$providerKey) {
             $providerKey = $this->fetchProviderKey();
         }
 
@@ -155,18 +157,18 @@ class GalleryHasMediaAdmin extends AbstractGalleryHasMediaAdmin implements Admin
         return null;
     }
 
-    public function getMediaSettings() {
-
+    public function getMediaSettings()
+    {
         $settings = parent::getMediaSettings();
 
-        if(!$this->hasProvider()) {
+        if (!$this->hasProvider()) {
             return $settings;
         }
 
         $providerSettings = [];
         $providerSettings = $this->getProvider()->getMediaSettings();
 
-        if($providerSettings) {
+        if ($providerSettings) {
             $settings = array_merge($settings, $providerSettings);
         }
 
@@ -179,7 +181,7 @@ class GalleryHasMediaAdmin extends AbstractGalleryHasMediaAdmin implements Admin
     public function prePersist($object)
     {
         parent::prePersist($object);
-        if($this->hasProvider()) {
+        if ($this->hasProvider()) {
             $this->getProvider()->prePersist($object);
         }
     }
@@ -191,7 +193,7 @@ class GalleryHasMediaAdmin extends AbstractGalleryHasMediaAdmin implements Admin
     {
         parent::preUpdate($object);
 
-        if($this->hasProvider()) {
+        if ($this->hasProvider()) {
             $this->getProvider()->preUpdate($object);
         }
     }
@@ -202,7 +204,7 @@ class GalleryHasMediaAdmin extends AbstractGalleryHasMediaAdmin implements Admin
     public function postUpdate($object)
     {
         parent::postUpdate($object);
-        if($this->hasProvider()) {
+        if ($this->hasProvider()) {
             $this->getProvider()->postUpdate($object);
         }
     }
@@ -213,7 +215,7 @@ class GalleryHasMediaAdmin extends AbstractGalleryHasMediaAdmin implements Admin
     public function postPersist($object)
     {
         parent::postPersist($object);
-        if($this->hasProvider()) {
+        if ($this->hasProvider()) {
             $this->getProvider()->postPersist($object);
         }
     }
@@ -224,7 +226,7 @@ class GalleryHasMediaAdmin extends AbstractGalleryHasMediaAdmin implements Admin
     public function validate(ErrorElement $errorElement, $object)
     {
         parent::validate($errorElement, $object);
-        if($this->hasProvider()) {
+        if ($this->hasProvider()) {
             $this->getProvider()->validate($errorElement, $object);
         }
     }

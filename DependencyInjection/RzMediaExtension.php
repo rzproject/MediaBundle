@@ -33,7 +33,6 @@ class RzMediaExtension extends Extension
         $this->configureProviders($container, $config);
         $this->configureSettings($container, $config);
         $this->registerDoctrineMapping($config);
-
     }
 
     /**
@@ -95,7 +94,7 @@ class RzMediaExtension extends Extension
         # class
         $container->setParameter('rz.media.block.media.class', $config['media']['class']);
         # template
-        if($temp = $config['media']['templates']) {
+        if ($temp = $config['media']['templates']) {
             $templates = array();
             foreach ($temp as $template) {
                 $templates[$template['path']] = $template['name'];
@@ -122,7 +121,6 @@ class RzMediaExtension extends Extension
         $galleryHasMediaPool->replaceArgument(0, $config['settings']['gallery']['default_collection']);
 
         $container->setParameter('rz.media.gallery.provider.collections',        $config['providers']['gallery']['collections']);
-
     }
 
     /**
@@ -151,6 +149,5 @@ class RzMediaExtension extends Extension
                 'orphanRemoval' => false,
             ));
         }
-
     }
 }

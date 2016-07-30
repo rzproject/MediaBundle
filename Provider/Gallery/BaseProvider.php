@@ -29,29 +29,41 @@ abstract class BaseProvider extends Provider
     /**
      * {@inheritdoc}
      */
-    public function prePersist(GalleryInterface $object){}
+    public function prePersist(GalleryInterface $object)
+    {
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function preUpdate(GalleryInterface $object){}
+    public function preUpdate(GalleryInterface $object)
+    {
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function postPersist(GalleryInterface $object){}
+    public function postPersist(GalleryInterface $object)
+    {
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function postUpdate(GalleryInterface $object){}
+    public function postUpdate(GalleryInterface $object)
+    {
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function validate(ErrorElement $errorElement, GalleryInterface $object){}
+    public function validate(ErrorElement $errorElement, GalleryInterface $object)
+    {
+    }
 
-    public function load(GalleryInterface $object) {}
+    public function load(GalleryInterface $object)
+    {
+    }
 
     /**
      * @return mixed

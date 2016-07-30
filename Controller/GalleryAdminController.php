@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 
-
 class GalleryAdminController extends Controller
 {
     /**
@@ -43,7 +42,7 @@ class GalleryAdminController extends Controller
         $contextManager = $this->get('sonata.classification.manager.context');
         $context = $contextManager->findOneBy(array('id'=>$contextSlug));
 
-        if(!$context) {
+        if (!$context) {
             throw $this->createNotFoundException($this->get('translator')->trans('media_context_not_found', array('%context_slug%'=>$contextSlug), 'SonataMediaBundle'));
         }
 
@@ -57,7 +56,7 @@ class GalleryAdminController extends Controller
         $defaultGalleryContext = $this->container->getParameter('rz.media.gallery.default_context');
         $galleryContext = $contextManager->findOneBy(array('id'=>$slugify->slugify($defaultGalleryContext)));
 
-        if(!$galleryContext && !$galleryContext instanceof \Sonata\ClassificationBundle\Model\ContextInterface) {
+        if (!$galleryContext && !$galleryContext instanceof \Sonata\ClassificationBundle\Model\ContextInterface) {
             $galleryContext = $contextManager->generateDefaultContext($defaultGalleryContext);
         }
 
@@ -71,22 +70,21 @@ class GalleryAdminController extends Controller
 
         $collections = $collectiontManager->findBy(array('context'=>$galleryContext));
 
-        if(!$currentCollection &&
+        if (!$currentCollection &&
            !$currentCollection instanceof \Sonata\ClassificationBundle\Model\CollectionInterface &&
             count($collections) === 0) {
             $currentCollection = $collectiontManager->generateDefaultCollection($galleryContext, $defaultGalleryCollection);
             $collections = $collectiontManager->findBy(array('context'=>$galleryContext));
         }
 
-        if(count($collections)>0) {
-
+        if (count($collections)>0) {
             if (!$currentCollection) {
                 $currentCollection = current(array_shift($collections));
             }
 
             if ($this->admin->getPersistentParameter('collection')) {
                 $collection = $collectiontManager->findOneBy(array('context'=>$galleryContext, 'slug'=>$this->admin->getPersistentParameter('collection')));
-                if($collection && $collection instanceof \Sonata\ClassificationBundle\Model\CollectionInterface) {
+                if ($collection && $collection instanceof \Sonata\ClassificationBundle\Model\CollectionInterface) {
                     $datagrid->setValue('collection', null, $collection->getId());
                 } else {
                     throw $this->createNotFoundException($this->get('translator')->trans('page_not_found', array(), 'SonataAdminBundle'));

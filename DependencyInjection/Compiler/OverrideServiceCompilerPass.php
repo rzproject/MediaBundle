@@ -82,7 +82,7 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         # BLOCK add rz.media.block.media template
         #########################################
         $definition = $container->getDefinition('rz.media.block.media');
-        if($container->hasParameter('rz.media.block.media.templates')) {
+        if ($container->hasParameter('rz.media.block.media.templates')) {
             $definition->addMethodCall('setTemplates', array($container->getParameter('rz.media.block.media.templates')));
         }
     }

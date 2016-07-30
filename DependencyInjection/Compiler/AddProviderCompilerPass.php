@@ -44,18 +44,17 @@ class AddProviderCompilerPass implements CompilerPassInterface
         $collections = $container->getParameter('rz.media.gallery.provider.collections');
 
         foreach ($collections as $name => $settings) {
-
-            if($settings['gallery']['provider']) {
+            if ($settings['gallery']['provider']) {
                 $galleryPool->addMethodCall('addCollection', array($name, $settings['gallery']['provider'], array()));
-                if($container->hasDefinition($settings['gallery']['provider'])) {
+                if ($container->hasDefinition($settings['gallery']['provider'])) {
                     $provider = $container->getDefinition($settings['gallery']['provider']);
                     $provider->addMethodCall('setSlugify', array(new Reference($serviceId)));
                 }
             }
 
-            if($settings['gallery_has_media']['provider']) {
+            if ($settings['gallery_has_media']['provider']) {
                 $galleryHasMediaPool->addMethodCall('addCollection', array($name, $settings['gallery_has_media']['provider'], $settings['gallery_has_media']['settings']));
-                if($container->hasDefinition($settings['gallery_has_media']['provider'])) {
+                if ($container->hasDefinition($settings['gallery_has_media']['provider'])) {
                     $provider =$container->getDefinition($settings['gallery_has_media']['provider']);
                     $provider->addMethodCall('setSlugify', array(new Reference($serviceId)));
                     $provider->addMethodCall('setCategoryManager', array(new Reference('sonata.classification.manager.category')));
