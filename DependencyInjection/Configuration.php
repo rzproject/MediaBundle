@@ -33,6 +33,7 @@ class Configuration implements ConfigurationInterface
         $this->addModelSection($node);
         $this->addManagerSection($node);
         $this->addBlockSettings($node);
+        $this->addProviderSection($node);
 
         $node
             ->children()
@@ -368,4 +369,24 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end();
     }
+    /**
+     * @param \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $node
+     */
+    private function addProviderSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('providers')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('class')
+                            ->addDefaultsIfNotSet()
+                            ->children() 
+								->scalarNode('youtube')->cannotBeEmpty()->defaultValue('Rz\\MediaBundle\\Provider\\YouTubeProvider')->end()     
+                            ->end()
+                        ->end()
+					->end()
+				->end()
+			->end();
+	}
 }

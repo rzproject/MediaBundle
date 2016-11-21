@@ -93,5 +93,11 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
         if($container->hasParameter('rz_media.block.breadcrumb_media.templates')) {
             $definition->addMethodCall('setTemplates', array($container->getParameter('rz_media.block.breadcrumb_media.templates')));
         }
+		
+	//Youtube Provider override 				
+        $definition = $container->getDefinition('sonata.media.provider.youtube');		
+        if($container->hasParameter('mosaic.media.provider.class.youtube')) { 
+            $definition->setClass($container->getParameter('mosaic.media.provider.class.youtube'));
+        } 
     }
 }
