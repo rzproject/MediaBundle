@@ -22,11 +22,12 @@ class YouTubeProvider extends BaseYoutubeVideoProvider
      */
     public function updateMetadata(MediaInterface $media, $force = false)
     {
-        $url = sprintf('http://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=%s&format=json', $media->getProviderReference());
+        $url       = sprintf('http://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=%s&format=json', $media->getProviderReference());
+	$maxResUrl = sprintf("https://i.ytimg.com/vi/%s/maxresdefault.jpg",$media->getProviderReference()); 
 
         try {
-            $metadata				= $this->getMetadata($media, $url); 
-			$metadata['maxres_url'] = "https://i.ytimg.com/vi/".$media->getProviderReference()."/maxresdefault.jpg";  
+            $metadata		    = $this->getMetadata($media, $url); 
+	    $metadata['maxres_url'] = $maxResUrl; 
         } catch (\RuntimeException $e) {
             $media->setEnabled(false);
             $media->setProviderStatus(MediaInterface::STATUS_ERROR);
@@ -50,7 +51,7 @@ class YouTubeProvider extends BaseYoutubeVideoProvider
      * {@inheritdoc}
      */
     public function getReferenceImage(MediaInterface $media, $url = "thumbnail_url")
-    {  
+    {   
         return $media->getMetadataValue($url);
     }
 	
@@ -86,7 +87,7 @@ class YouTubeProvider extends BaseYoutubeVideoProvider
      * {@inheritdoc}
      */
 	protected function fetchHighestRes($videoid) {    
-		$imgUrl = "https://i.ytimg.com/vi/$videoid/maxresdefault.jpg";
+		$imgUrl = sprintf("https://i.ytimg.com/vi/%s/maxresdefault.jpg",$videoid);
 		if(@getimagesize($imgUrl)){
 			return $imgUrl;
 		}
