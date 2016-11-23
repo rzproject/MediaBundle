@@ -63,6 +63,7 @@ class RzMediaExtension extends Extension
         $this->configureController($config, $container);
         $this->configureRzTemplates($config, $container);
         $this->configureManagers($config, $container);
+	$this->configureProviders($config, $container);
 
         $container->setParameter('rz_media.configuration.templates', $config['templates']);
 
@@ -262,6 +263,17 @@ class RzMediaExtension extends Extension
             'orphanRemoval' => false,
         ));
     }
+	
+	
+    /**
+     * @param array                                                   $config
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     */
+    public function configureProviders($config, ContainerBuilder $container)
+    { 
+		$container->setParameter('mosaic.media.provider.class.youtube',$config['providers']['class']['youtube']); 
+    }
+	
 
     /**
      * Add class to compile
